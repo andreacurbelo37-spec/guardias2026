@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Guardias COVISUEL 2025</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #1a1a2e; color: white; min-height: 100vh; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; color: #00d4ff; margin-bottom: 10px; font-size: 1.8rem; }
+        .subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+        .controls { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 30px; align-items: center; }
+        select, button { padding: 12px 20px; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; }
+        select { background: #16213e; color: white; border: 2px solid #00d4ff; }
+        button { background: linear-gradient(135deg, #00d4ff, #0099cc); color: white; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(0, 212, 255, 0.4); }
+        .btn-export { background: linear-gradient(135deg, #00c853, #009624); }
+        .btn-reset { background: linear-gradient(135deg, #ff5252, #d32f2f); }
+        .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 30px; }
+        .day-header { background: #16213e; padding: 15px 5px; text-align: center; font-weight: bold; color: #00d4ff; border-radius: 8px; font-size: 0.9rem; }
+        .day-cell { background: #16213e; border-radius: 12px; padding: 10px; min-height: 120px; border: 2px solid transparent; transition: all 0.3s; }
+        .day-cell:hover { border-color: #00d4ff; transform: scale(1.02); }
+        .day-cell.empty { background: transparent; border: none; }
+        .day-number { font-size: 1.4rem; font-weight: bold; color: #00d4ff; margin-bottom: 8px; }
+        .turno { margin: 4px 0; padding: 6px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .turno-tarde { background: linear-gradient(135deg, #ff9800, #f57c00); }
+        .turno-noche { background: linear-gradient(135deg, #3f51b5, #303f9f); }
+        .turno:hover { transform: scale(1.05); box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
+        .turno-registrado { opacity: 0.9; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 1000; }
+        .modal.active { display: flex; }
+        .modal-content { background: #16213e; padding: 30px; border-radius: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; border: 2px solid #00d4ff; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .modal-header h2 { color: #00d4ff; font-size: 1.3rem; }
+        .close-btn { background: #ff5252; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+        .socio-list { max-height: 300px; overflow-y: auto; }
+        .socio-item { display: flex; align-items: center; padding: 12px; margin: 8px 0; background: #1a1a2e; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .socio-item:hover { background: #2a2a4e; transform: translateX(5px); }
+        .socio-item.registrado { border-left: 4px solid #00c853; }
+        .socio-item input { margin-right: 12px; width: 20px; height: 20px; cursor: pointer; }
+        .registrados-list { margin-top: 15px; padding-top: 15px; border-top: 1px solid #333; }
+        .registrados-list h4 { color: #00c853; margin-bottom: 10px; }
+        .registrado-tag { display: inline-block; background: #00c853; color: white; padding: 5px 12px; border-radius: 15px; margin: 4px; font-size: 0.85rem; }
+        .stats { background: #16213e; padding: 20px; border-radius: 15px; margin-bottom: 30px; }
+        .stats h3 { color: #00d4ff; margin-bottom: 15px; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+        .stat-item { text-align: center; padding: 15px; background: #1a1a2e; border-radius: 10px; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #00d4ff; }
+        .stat-label { color: #888; font-size: 0.9rem; }
+        @media (max-width: 768px) {
+            .calendar { grid-template-columns: repeat(7, 1fr); gap: 4px; }
+            .day-cell { min-height: 80px; padding: 5px; }
+            .day-number { font-size: 1rem; }
+            .turno { font-size: 0.65rem; padding: 4px; }
+            .day-header { padding: 8px 2px; font-size: 0.7rem; }
+            h1 { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Sistema de Guardias COVISUEL 2025</h1>
+        <p class="subtitle">Selecciona un turno para registrar socios</p>
+        
+        <div class="controls">
+            <select id="mes-selector"></select>
+            <button class="btn-export" onclick="exportarCSV()">📊 Exportar CSV</button>
+            <button class="btn-reset" onclick="resetearTodo()">🗑️ Resetear Todo</button>
+        </div>
+
+        <div class="stats">
+            <h3>📈 Estadísticas del Mes</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-registros">0</div>
+                    <div class="stat-label">Registros Totales</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="turnos-tarde">0</div>
+                    <div class="stat-label">Turnos Tarde</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="turnos-noche">0</div>
+                    <div class="stat-label">Turnos Noche</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="dias-cubiertos">0</div>
+                    <div class="stat-label">Días con Guardias</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="calendar" id="calendario"></div>
+    </div>
+
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-titulo">Seleccionar Socios</h2>
+                <button class="close-btn" onclick="cerrarModal()">×</button>
+            </div>
+            <div id="registrados-actuales"></div>
+            <div class="socio-list" id="lista-socios"></div>
+            <button style="width: 100%; margin-top: 20px; padding: 15px;" onclick="guardarRegistros()">💾 Guardar Registros</button>
+        </div>
+    </div>
+
+    <script>
+        const SOCIOS = [
+            {id: 215, nombre: "Mary Yacqueline Cunha Gómez"},
+            {id: 222, nombre: "Mariana Gissel Arias D'ottone"},
+            {id: 223, nombre: "Claudia Erika Peña Mármol"},
+            {id: 225, nombre: "Stephanie Arias"},
+            {id: 228, nombre: "Eduardo Sequeira"},
+            {id: 230, nombre: "Alejandra Cabrera"},
+            {id: 236, nombre: "Jorge Almada"},
+            {id: 237, nombre: "Gonzalo Correa"},
+            {id: 238, nombre: "Pablo Mercadal"},
+            {id: 239, nombre: "Verónica Echevarría"},
+            {id: 240, nombre: "Andrea Curbelo"},
+            {id: 241, nombre: "Washington Villar"},
+            {id: 242, nombre: "Sabrina Aguilar"},
+            {id: 243, nombre: "Soraya Buelmo"},
+            {id: 244, nombre: "Marlon Goes"},
+            {id: 245, nombre: "Virginia Diaz"},
+            {id: 246, nombre: "Oscar Ibarra"},
+            {id: 247, nombre: "Claudia Sequeira"},
+            {id: 248, nombre: "Claudia Buelmo"},
+            {id: 249, nombre: "Mayra Buelmo"},
+            {id: 251, nombre: "Adriana Menéndez"},
+            {id: 253, nombre: "Juan Pablo Gallulo"},
+            {id: 254, nombre: "Belén González"},
+            {id: 256, nombre: "Francesca Delgado"},
+            {id: 257, nombre: "Juan Rosa"},
+            {id: 258, nombre: "Florencia Muñoz"},
+            {id: 259, nombre: "Jorge Coímbra"},
+            {id: 261, nombre: "Roberto Martínez"},
+            {id: 262, nombre: "Katherine Cheda"},
+            {id: 265, nombre: "Kevin Guaraglia"},
+            {id: 266, nombre: "María Noel Carbajal"},
+            {id: 267, nombre: "Martin Salfibia"},
+            {id: 268, nombre: "Maximiliano Cisnero"},
+            {id: 269, nombre: "Claudia Rios"}
+        ];
+
+        const MESES = [
+            {num: 4, nombre: "Abril 2025"}, {num: 5, nombre: "Mayo 2025"}, {num: 6, nombre: "Junio 2025"},
+            {num: 7, nombre: "Julio 2025"}, {num: 8, nombre: "Agosto 2025"}, {num: 9, nombre: "Septiembre 2025"},
+            {num: 10, nombre: "Octubre 2025"}, {num: 11, nombre: "Noviembre 2025"}, {num: 12, nombre: "Diciembre 2025"}
+        ];
+
+        let registros = JSON.parse(localStorage.getItem('guardias2025')) || {};
+        let turnoActual = null;
+
+        function init() {
+            const selector = document.getElementById('mes-selector');
+            MESES.forEach(mes => {
+                const option = document.createElement('option');
+                option.value = mes.num;
+                option.textContent = mes.nombre;
+                selector.appendChild(option);
+            });
+            selector.value = 4;
+            selector.addEventListener('change', renderCalendario);
+            renderCalendario();
+        }
+
+        function renderCalendario() {
+            const mes = parseInt(document.getElementById('mes-selector').value);
+            const calendario = document.getElementById('calendario');
+            const primerDia = new Date(2025, mes - 1, 1);
+            const ultimoDia = new Date(2025, mes, 0);
+            const diasEnMes = ultimoDia.getDate();
+            let diaInicio = primerDia.getDay();
+            diaInicio = diaInicio === 0 ? 6 : diaInicio - 1;
+
+            const dias = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+            let html = dias.map(d => `<div class="day-header">${d}</div>`).join('');
+
+            for (let i = 0; i < diaInicio; i++) {
+                html += '<div class="day-cell empty"></div>';
+            }
+
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const fecha = `2025-${String(mes).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                const tardeKey = `${fecha}-tarde`;
+                const nocheKey = `${fecha}-noche`;
+                const regTarde = registros[tardeKey] || [];
+                const regNoche = registros[nocheKey] || [];
+
+                html += `
+                    <div class="day-cell">
+                        <div class="day-number">${dia}</div>
+                        <div class="turno turno-tarde ${regTarde.length ? 'turno-registrado' : ''}" onclick="abrirModal('${fecha}', 'tarde')">
+                            🌅 Tarde ${regTarde.length ? `(${regTarde.length})` : ''}
+                        </div>
+                        <div class="turno turno-noche ${regNoche.length ? 'turno-registrado' : ''}" onclick="abrirModal('${fecha}', 'noche')">
+                            🌙 Noche ${regNoche.length ? `(${regNoche.length})` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+            calendario.innerHTML = html;
+            actualizarEstadisticas();
+        }
+
+        function abrirModal(fecha, turno) {
+            turnoActual = {fecha, turno};
+            const key = `${fecha}-${turno}`;
+            const registrados = registros[key] || [];
+            
+            const fechaObj = new Date(fecha + 'T12:00:00');
+            const opciones = {weekday: 'long', day: 'numeric', month: 'long'};
+            const fechaFormateada = fechaObj.toLocaleDateString('es-ES', opciones);
+            const turnoTexto = turno === 'tarde' ? '🌅 Tarde (18:00-23:00)' : '🌙 Noche (23:00-07:00)';
+            
+            document.getElementById('modal-titulo').textContent = `${fechaFormateada} - ${turnoTexto}`;
+            
+            let registradosHtml = '';
+            if (registrados.length > 0) {
+                registradosHtml = `<div class="registrados-list"><h4>✅ Registrados:</h4>`;
+                registrados.forEach(id => {
+                    const socio = SOCIOS.find(s => s.id === id);
+                    if (socio) registradosHtml += `<span class="registrado-tag">${socio.id} - ${socio.nombre}</span>`;
+                });
+                registradosHtml += '</div>';
+            }
+            document.getElementById('registrados-actuales').innerHTML = registradosHtml;
+
+            let sociosHtml = '';
+            SOCIOS.forEach(socio => {
+                const checked = registrados.includes(socio.id) ? 'checked' : '';
+                sociosHtml += `
+                    <label class="socio-item ${checked ? 'registrado' : ''}">
+                        <input type="checkbox" value="${socio.id}" ${checked}>
+                        ${socio.id} - ${socio.nombre}
+                    </label>
+                `;
+            });
+            document.getElementById('lista-socios').innerHTML = sociosHtml;
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modal').classList.remove('active');
+            turnoActual = null;
+        }
+
+        function guardarRegistros() {
+            if (!turnoActual) return;
+            const key = `${turnoActual.fecha}-${turnoActual.turno}`;
+            const checkboxes = document.querySelectorAll('#lista-socios input:checked');
+            registros[key] = Array.from(checkboxes).map(cb => parseInt(cb.value));
+            localStorage.setItem('guardias2025', JSON.stringify(registros));
+            cerrarModal();
+            renderCalendario();
+        }
+
+        function actualizarEstadisticas() {
+            const mes = parseInt(document.getElementById('mes-selector').value);
+            let totalReg = 0, tarde = 0, noche = 0, diasSet = new Set();
+            
+            Object.keys(registros).forEach(key => {
+                if (key.startsWith(`2025-${String(mes).padStart(2, '0')}`)) {
+                    const cantidad = registros[key].length;
+                    totalReg += cantidad;
+                    if (key.includes('-tarde')) tarde += cantidad;
+                    if (key.includes('-noche')) noche += cantidad;
+                    if (cantidad > 0) diasSet.add(key.split('-').slice(0, 3).join('-'));
+                }
+            });
+            
+            document.getElementById('total-registros').textContent = totalReg;
+            document.getElementById('turnos-tarde').textContent = tarde;
+            document.getElementById('turnos-noche').textContent = noche;
+            document.getElementById('dias-cubiertos').textContent = diasSet.size;
+        }
+
+        function exportarCSV() {
+            let csv = 'Fecha,Turno,Horario,ID Socio,Nombre Socio\n';
+            Object.keys(registros).sort().forEach(key => {
+                const [año, mes, dia, turno] = key.split('-');
+                const fecha = `${dia}/${mes}/${año}`;
+                const horario = turno === 'tarde' ? '18:00-23:00' : '23:00-07:00';
+                registros[key].forEach(id => {
+                    const socio = SOCIOS.find(s => s.id === id);
+                    if (socio) csv += `${fecha},${turno},${horario},${id},${socio.nombre}\n`;
+                });
+            });
+            
+            const blob = new Blob([csv], {type: 'text/csv;charset=utf-8;'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'guardias_covisuel_2025.csv';
+            link.click();
+        }
+
+        function resetearTodo() {
+            if (confirm('¿Estás seguro de que querés borrar TODOS los registros?')) {
+                registros = {};
+                localStorage.removeItem('guardias2025');
+                renderCalendario();
+                alert('Todos los registros han sido eliminados.');
+            }
+        }
+
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) cerrarModal();
+        });
+
+        init();
+    </script>
+</body>
+</html>
