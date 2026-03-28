@@ -1,1 +1,506 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Guardias 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        header p {
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        .nav-btn.primary {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            color: #fff;
+        }
+        .nav-btn.secondary {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a5a);
+            color: #fff;
+        }
+        .nav-btn.success {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: #fff;
+        }
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .section {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            color: #00d4ff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            background: rgba(255,255,255,0.9);
+            color: #333;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        th {
+            background: rgba(0,212,255,0.3);
+            font-weight: bold;
+        }
+        tr:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        .badge {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .badge-tarde {
+            background: #f39c12;
+            color: #fff;
+        }
+        .badge-noche {
+            background: #9b59b6;
+            color: #fff;
+        }
+        .btn-delete {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            font-size: 2em;
+            color: #00d4ff;
+        }
+        .hidden {
+            display: none;
+        }
+        .month-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .month-btn {
+            padding: 8px 15px;
+            border: 2px solid #00d4ff;
+            background: transparent;
+            color: #00d4ff;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .month-btn:hover, .month-btn.active {
+            background: #00d4ff;
+            color: #1a1a2e;
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            table {
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Sistema de Guardias 2025</h1>
+            <p>COVISUEL - Gestión de Turnos de Vigilancia</p>
+        </header>
 
+        <div class="nav-buttons">
+            <button class="nav-btn primary" onclick="showSection('registro')">📝 Registrar Guardia</button>
+            <button class="nav-btn success" onclick="showSection('listado')">📋 Ver Guardias</button>
+            <button class="nav-btn secondary" onclick="exportarCSV()">📊 Exportar CSV</button>
+            <button class="nav-btn secondary" onclick="resetearTodo()">🗑️ Resetear Todo</button>
+        </div>
+
+        <!-- Sección Registro -->
+        <div id="registro" class="section">
+            <h2>📝 Registrar Nueva Guardia</h2>
+            <form id="formGuardia" onsubmit="registrarGuardia(event)">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>👤 Socio:</label>
+                        <select id="socio" required>
+                            <option value="">Seleccionar socio...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Fecha:</label>
+                        <input type="date" id="fecha" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>🕐 Turno:</label>
+                        <select id="turno" required>
+                            <option value="">Seleccionar turno...</option>
+                            <option value="Tarde">🌅 Tarde (18:00 - 23:00)</option>
+                            <option value="Noche">🌙 Noche (23:00 - 07:00)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>📅 Mes:</label>
+                        <select id="mes" required>
+                            <option value="">Seleccionar mes...</option>
+                            <option value="Abril">Abril 2025</option>
+                            <option value="Mayo">Mayo 2025</option>
+                            <option value="Junio">Junio 2025</option>
+                            <option value="Julio">Julio 2025</option>
+                            <option value="Agosto">Agosto 2025</option>
+                            <option value="Septiembre">Septiembre 2025</option>
+                            <option value="Octubre">Octubre 2025</option>
+                            <option value="Noviembre">Noviembre 2025</option>
+                            <option value="Diciembre">Diciembre 2025</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn-submit">✅ Registrar Guardia</button>
+            </form>
+        </div>
+
+        <!-- Sección Listado -->
+        <div id="listado" class="section hidden">
+            <h2>📋 Guardias Registradas</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalGuardias">0</h3>
+                    <p>Total Guardias</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalTarde">0</h3>
+                    <p>Turno Tarde</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalNoche">0</h3>
+                    <p>Turno Noche</p>
+                </div>
+            </div>
+
+            <div class="month-select">
+                <button class="month-btn active" onclick="filtrarMes('todos')">Todos</button>
+                <button class="month-btn" onclick="filtrarMes('Abril')">Abril</button>
+                <button class="month-btn" onclick="filtrarMes('Mayo')">Mayo</button>
+                <button class="month-btn" onclick="filtrarMes('Junio')">Junio</button>
+                <button class="month-btn" onclick="filtrarMes('Julio')">Julio</button>
+                <button class="month-btn" onclick="filtrarMes('Agosto')">Agosto</button>
+                <button class="month-btn" onclick="filtrarMes('Septiembre')">Sept</button>
+                <button class="month-btn" onclick="filtrarMes('Octubre')">Oct</button>
+                <button class="month-btn" onclick="filtrarMes('Noviembre')">Nov</button>
+                <button class="month-btn" onclick="filtrarMes('Diciembre')">Dic</button>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Socio</th>
+                            <th>Fecha</th>
+                            <th>Mes</th>
+                            <th>Turno</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaGuardias">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Lista de socios actualizada
+        const socios = [
+            { id: 215, nombre: "Mary Yacqueline Cunha Gómez" },
+            { id: 222, nombre: "Mariana Gissel Arias D'ottone" },
+            { id: 223, nombre: "Claudia Erika Peña Mármol" },
+            { id: 225, nombre: "Stephanie Arias" },
+            { id: 228, nombre: "Eduardo Sequeira" },
+            { id: 230, nombre: "Alejandra Cabrera" },
+            { id: 236, nombre: "Jorge Almada" },
+            { id: 237, nombre: "Gonzalo Correa" },
+            { id: 238, nombre: "Pablo Mercadal" },
+            { id: 239, nombre: "Verónica Echevarría" },
+            { id: 240, nombre: "Andrea Curbelo" },
+            { id: 241, nombre: "Washington Villar" },
+            { id: 242, nombre: "Sabrina Aguilar" },
+            { id: 243, nombre: "Soraya Buelmo" },
+            { id: 244, nombre: "Marlon Goes" },
+            { id: 245, nombre: "Virginia Diaz" },
+            { id: 246, nombre: "Oscar Ibarra" },
+            { id: 247, nombre: "Claudia Sequeira" },
+            { id: 248, nombre: "Claudia Buelmo" },
+            { id: 249, nombre: "Mayra Buelmo" },
+            { id: 251, nombre: "Adriana Menéndez" },
+            { id: 253, nombre: "Juan Pablo Gallulo" },
+            { id: 254, nombre: "Belén González" },
+            { id: 256, nombre: "Francesca Delgado" },
+            { id: 257, nombre: "Juan Rosa" },
+            { id: 258, nombre: "Florencia Muñoz" },
+            { id: 259, nombre: "Jorge Coímbra" },
+            { id: 261, nombre: "Roberto Martínez" },
+            { id: 262, nombre: "Katherine Cheda" },
+            { id: 265, nombre: "Kevin Guaraglia" },
+            { id: 266, nombre: "María Noel Carbajal" },
+            { id: 267, nombre: "Martin Salfibia" },
+            { id: 268, nombre: "Maximiliano Cisnero" },
+            { id: 269, nombre: "Claudia Rios" }
+        ];
+
+        let guardias = JSON.parse(localStorage.getItem('guardias2025')) || [];
+        let filtroActual = 'todos';
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarSocios();
+            actualizarTabla();
+            actualizarEstadisticas();
+            
+            // Fecha mínima: hoy
+            const hoy = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').setAttribute('min', '2025-04-01');
+            document.getElementById('fecha').setAttribute('max', '2025-12-31');
+        });
+
+        function cargarSocios() {
+            const select = document.getElementById('socio');
+            socios.forEach(socio => {
+                const option = document.createElement('option');
+                option.value = JSON.stringify(socio);
+                option.textContent = `${socio.id} - ${socio.nombre}`;
+                select.appendChild(option);
+            });
+        }
+
+        function showSection(seccion) {
+            document.getElementById('registro').classList.add('hidden');
+            document.getElementById('listado').classList.add('hidden');
+            document.getElementById(seccion).classList.remove('hidden');
+            
+            if (seccion === 'listado') {
+                actualizarTabla();
+                actualizarEstadisticas();
+            }
+        }
+
+        function registrarGuardia(event) {
+            event.preventDefault();
+            
+            const socioData = JSON.parse(document.getElementById('socio').value);
+            const fecha = document.getElementById('fecha').value;
+            const turno = document.getElementById('turno').value;
+            const mes = document.getElementById('mes').value;
+
+            const nuevaGuardia = {
+                id: Date.now(),
+                socioId: socioData.id,
+                socioNombre: socioData.nombre,
+                fecha: fecha,
+                mes: mes,
+                turno: turno,
+                fechaRegistro: new Date().toLocaleString()
+            };
+
+            guardias.push(nuevaGuardia);
+            localStorage.setItem('guardias2025', JSON.stringify(guardias));
+            
+            alert(`✅ Guardia registrada!\n\n👤 ${socioData.nombre}\n📅 ${fecha}\n🕐 ${turno}\n📆 ${mes}`);
+            
+            document.getElementById('formGuardia').reset();
+            actualizarTabla();
+            actualizarEstadisticas();
+        }
+
+        function actualizarTabla() {
+            const tbody = document.getElementById('tablaGuardias');
+            tbody.innerHTML = '';
+            
+            let guardiasFiltradas = guardias;
+            if (filtroActual !== 'todos') {
+                guardiasFiltradas = guardias.filter(g => g.mes === filtroActual);
+            }
+
+            guardiasFiltradas.forEach(guardia => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${guardia.socioId}</td>
+                    <td>${guardia.socioNombre}</td>
+                    <td>${guardia.fecha}</td>
+                    <td>${guardia.mes}</td>
+                    <td><span class="badge badge-${guardia.turno.toLowerCase()}">${guardia.turno}</span></td>
+                    <td><button class="btn-delete" onclick="eliminarGuardia(${guardia.id})">🗑️</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('totalGuardias').textContent = guardias.length;
+            document.getElementById('totalTarde').textContent = guardias.filter(g => g.turno === 'Tarde').length;
+            document.getElementById('totalNoche').textContent = guardias.filter(g => g.turno === 'Noche').length;
+        }
+
+        function filtrarMes(mes) {
+            filtroActual = mes;
+            document.querySelectorAll('.month-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            actualizarTabla();
+        }
+
+        function eliminarGuardia(id) {
+            if (confirm('¿Eliminar esta guardia?')) {
+                guardias = guardias.filter(g => g.id !== id);
+                localStorage.setItem('guardias2025', JSON.stringify(guardias));
+                actualizarTabla();
+                actualizarEstadisticas();
+            }
+        }
+
+        function exportarCSV() {
+            if (guardias.length === 0) {
+                alert('No hay guardias para exportar');
+                return;
+            }
+
+            let csv = 'ID Socio,Nombre,Fecha,Mes,Turno,Fecha Registro\n';
+            guardias.forEach(g => {
+                csv += `${g.socioId},"${g.socioNombre}",${g.fecha},${g.mes},${g.turno},"${g.fechaRegistro}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'guardias_2025.csv';
+            a.click();
+        }
+
+        function resetearTodo() {
+            if (confirm('⚠️ ¿Estás seguro de eliminar TODAS las guardias?\n\nEsta acción no se puede deshacer.')) {
+                guardias = [];
+                localStorage.removeItem('guardias2025');
+                actualizarTabla();
+                actualizarEstadisticas();
+                alert('✅ Todas las guardias han sido eliminadas');
+            }
+        }
+    </script>
+</body>
+</html>
