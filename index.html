@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Guardias 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: white;
+            padding: 10px;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+        .month-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .month-nav button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .month-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+            margin-bottom: 5px;
+        }
+        .calendar-header div {
+            text-align: center;
+            font-weight: bold;
+            font-size: 0.8rem;
+            color: #667eea;
+        }
+        .calendar-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 3px;
+        }
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .calendar-day:hover, .calendar-day:active {
+            background: #667eea;
+            transform: scale(1.05);
+        }
+        .calendar-day.selected {
+            background: #27ae60;
+            transform: scale(1.1);
+        }
+        .calendar-day.empty {
+            background: transparent;
+            cursor: default;
+        }
+        .calendar-day.has-guards {
+            background: linear-gradient(135deg, #f39c12, #e74c3c);
+        }
+        .form-section {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            border: none;
+            font-size: 1rem;
+        }
+        select {
+            background: white;
+            color: black;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+            cursor: pointer;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+            cursor: pointer;
+        }
+        .guards-list {
+            margin-top: 15px;
+        }
+        .guard-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .guard-item .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .turno-tarde {
+            border-left: 4px solid #f39c12;
+        }
+        .turno-noche {
+            border-left: 4px solid #3498db;
+        }
+        .actions-section {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .summary-box {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+            display: none;
+        }
+        .summary-box.active {
+            display: block;
+        }
+        .summary-box h3 {
+            color: #27ae60;
+            margin-bottom: 10px;
+        }
+        .summary-text {
+            background: #000;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .progress-container {
+            margin-top: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 15px;
+        }
+        .progress-bar {
+            height: 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ Guardias 2025</h1>
+        
+        <div class="month-nav">
+            <button id="prevMonth">◀</button>
+            <span class="month-name" id="monthName">Abril 2025</span>
+            <button id="nextMonth">▶</button>
+        </div>
+        
+        <div class="calendar-header">
+            <div>Do</div>
+            <div>Lu</div>
+            <div>Ma</div>
+            <div>Mi</div>
+            <div>Ju</div>
+            <div>Vi</div>
+            <div>Sá</div>
+        </div>
+        
+        <div class="calendar-days" id="calendarDays"></div>
+        
+        <div class="form-section" id="formSection">
+            <h3 id="selectedDateTitle">Fecha seleccionada</h3>
+            
+            <label>Turno:</label>
+            <select id="selectTurno">
+                <option value="">-- Seleccionar turno --</option>
+                <option value="tarde">🌅 Tarde (18:00 - 23:00)</option>
+                <option value="noche">🌙 Noche (23:00 - 07:00)</option>
+            </select>
+            
+            <label>Socio:</label>
+            <select id="selectSocio">
+                <option value="">-- Seleccionar socio --</option>
+            </select>
+            
+            <button class="btn-primary" id="btnAgregar">➕ Agregar Guardia</button>
+            
+            <div class="guards-list" id="guardsList"></div>
+        </div>
+        
+        <div class="progress-container">
+            <strong>📊 Progreso del mes:</strong>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <p id="progressText" style="text-align:center; margin-top:5px;">0 guardias registradas</p>
+        </div>
+        
+        <div class="actions-section">
+            <button class="btn-success" id="btnResumen">📋 Ver Resumen del Mes</button>
+            <button class="btn-primary" id="btnWhatsApp">📱 Enviar por WhatsApp</button>
+            <button class="btn-danger" id="btnExcel">📊 Exportar a Excel</button>
+        </div>
+        
+        <div class="summary-box" id="summaryBox">
+            <h3>📋 Resumen</h3>
+            <div class="summary-text" id="summaryText"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // ===== DATOS =====
+        const SOCIOS = [
+            { id: 215, nombre: "Walter Ariel Cabrera" },
+            { id: 216, nombre: "Walter Godoy" },
+            { id: 217, nombre: "Sergio Arriola" },
+            { id: 218, nombre: "Victor Cattaneo" },
+            { id: 219, nombre: "Miguel Farias" },
+            { id: 220, nombre: "Oscar de los Santos" },
+            { id: 221, nombre: "Carlos Rodríguez" },
+            { id: 222, nombre: "Matías Arriola" },
+            { id: 223, nombre: "Richard Romero" },
+            { id: 224, nombre: "Gastón Arriola" },
+            { id: 225, nombre: "Nicolás Martínez" },
+            { id: 226, nombre: "Mauricio Maldonado" },
+            { id: 227, nombre: "Cristian Rodríguez" },
+            { id: 228, nombre: "Ruben Quiroz" },
+            { id: 229, nombre: "Nicolás Alsina" },
+            { id: 230, nombre: "Héctor Sosa" },
+            { id: 231, nombre: "Leonardo Alaniz" },
+            { id: 232, nombre: "Eduardo García" },
+            { id: 233, nombre: "Pablo Fuentes" },
+            { id: 234, nombre: "Andrea Curbelo" },
+            { id: 236, nombre: "Claudio Rodríguez" },
+            { id: 237, nombre: "Pedro Medina" },
+            { id: 238, nombre: "Julio Enrique" },
+            { id: 239, nombre: "Leonardo Quiroz" },
+            { id: 240, nombre: "Omar Monti" },
+            { id: 241, nombre: "Erwin Walter" },
+            { id: 242, nombre: "Aníbal Sosa" },
+            { id: 243, nombre: "Carlos Barneche" },
+            { id: 244, nombre: "Carlos Pirez" },
+            { id: 245, nombre: "Walter Techera" },
+            { id: 269, nombre: "Alcides Geymonat" },
+            { id: 266, nombre: "José Techera" },
+            { id: 267, nombre: "Omar Martínez" },
+            { id: 268, nombre: "Diego Pérez" }
+        ];
+
+        const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+
+        let mesActual = 3; // Abril (0-indexed)
+        let añoActual = 2025;
+        let fechaSeleccionada = null;
+        let guardias = JSON.parse(localStorage.getItem('guardias2025')) || {};
+
+        // ===== INICIALIZACIÓN =====
+        function init() {
+            cargarSocios();
+            renderCalendar();
+            setupEventListeners();
+            actualizarProgreso();
+        }
+
+        function cargarSocios() {
+            const select = document.getElementById('selectSocio');
+            select.innerHTML = '<option value="">-- Seleccionar socio --</option>';
+            SOCIOS.forEach(s => {
+                const option = document.createElement('option');
+                option.value = s.id;
+                option.textContent = `#${s.id} - ${s.nombre}`;
+                select.appendChild(option);
+            });
+        }
+
+        // ===== CALENDARIO =====
+        function renderCalendar() {
+            const container = document.getElementById('calendarDays');
+            container.innerHTML = '';
+            
+            document.getElementById('monthName').textContent = `${MESES[mesActual]} ${añoActual}`;
+            
+            const primerDia = new Date(añoActual, mesActual, 1);
+            const ultimoDia = new Date(añoActual, mesActual + 1, 0);
+            const diasEnMes = ultimoDia.getDate();
+            const diaSemanaInicio = primerDia.getDay();
+            
+            // Días vacíos
+            for (let i = 0; i < diaSemanaInicio; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.className = 'calendar-day empty';
+                container.appendChild(emptyDiv);
+            }
+            
+            // Días del mes
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.className = 'calendar-day';
+                dayDiv.textContent = dia;
+                
+                const fechaKey = `${añoActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                
+                if (guardias[fechaKey] && guardias[fechaKey].length > 0) {
+                    dayDiv.classList.add('has-guards');
+                }
+                
+                if (fechaKey === fechaSeleccionada) {
+                    dayDiv.classList.add('selected');
+                }
+                
+                // Event listeners para touch y click
+                dayDiv.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    seleccionarFecha(fechaKey);
+                });
+                
+                dayDiv.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    seleccionarFecha(fechaKey);
+                });
+                
+                container.appendChild(dayDiv);
+            }
+        }
+
+        function seleccionarFecha(fecha) {
+            console.log('Fecha seleccionada:', fecha);
+            fechaSeleccionada = fecha;
+            
+            const partes = fecha.split('-');
+            const dia = parseInt(partes[2]);
+            const mes = parseInt(partes[1]) - 1;
+            
+            document.getElementById('selectedDateTitle').textContent = 
+                `📅 ${dia} de ${MESES[mes]} ${añoActual}`;
+            
+            document.getElementById('formSection').classList.add('active');
+            
+            renderCalendar();
+            mostrarGuardiasDia();
+        }
+
+        // ===== GUARDIAS =====
+        function mostrarGuardiasDia() {
+            const container = document.getElementById('guardsList');
+            const guardiasDelDia = guardias[fechaSeleccionada] || [];
+            
+            if (guardiasDelDia.length === 0) {
+                container.innerHTML = '<p style="text-align:center; opacity:0.7;">No hay guardias registradas</p>';
+                return;
+            }
+            
+            container.innerHTML = guardiasDelDia.map((g, index) => {
+                const socio = SOCIOS.find(s => s.id == g.socioId);
+                const turnoClass = g.turno === 'tarde' ? 'turno-tarde' : 'turno-noche';
+                const turnoIcon = g.turno === 'tarde' ? '🌅' : '🌙';
+                return `
+                    <div class="guard-item ${turnoClass}">
+                        <span>${turnoIcon} #${g.socioId} - ${socio ? socio.nombre : 'Desconocido'}</span>
+                        <button class="delete-btn" data-index="${index}">✕</button>
+                    </div>
+                `;
+            }).join('');
+            
+            container.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    eliminarGuardia(parseInt(this.dataset.index));
+                });
+            });
+        }
+
+        function agregarGuardia() {
+            const turno = document.getElementById('selectTurno').value;
+            const socioId = document.getElementById('selectSocio').value;
+            
+            if (!fechaSeleccionada) {
+                alert('⚠️ Seleccioná una fecha primero');
+                return;
+            }
+            if (!turno) {
+                alert('⚠️ Seleccioná un turno');
+                return;
+            }
+            if (!socioId) {
+                alert('⚠️ Seleccioná un socio');
+                return;
+            }
+            
+            if (!guardias[fechaSeleccionada]) {
+                guardias[fechaSeleccionada] = [];
+            }
+            
+            // Verificar duplicados
+            const existe = guardias[fechaSeleccionada].find(
+                g => g.socioId == socioId && g.turno === turno
+            );
+            
+            if (existe) {
+                alert('⚠️ Este socio ya tiene este turno asignado');
+                return;
+            }
+            
+            guardias[fechaSeleccionada].push({ socioId, turno });
+            guardarDatos();
+            
+            // Limpiar selección
+            document.getElementById('selectTurno').value = '';
+            document.getElementById('selectSocio').value = '';
+            
+            renderCalendar();
+            mostrarGuardiasDia();
+            actualizarProgreso();
+            
+            alert('✅ Guardia agregada');
+        }
+
+        function eliminarGuardia(index) {
+            if (confirm('¿Eliminar esta guardia?')) {
+                guardias[fechaSeleccionada].splice(index, 1);
+                if (guardias[fechaSeleccionada].length === 0) {
+                    delete guardias[fechaSeleccionada];
+                }
+                guardarDatos();
+                renderCalendar();
+                mostrarGuardiasDia();
+                actualizarProgreso();
+            }
+        }
+
+        function guardarDatos() {
+            localStorage.setItem('guardias2025', JSON.stringify(guardias));
+        }
+
+        // ===== PROGRESO =====
+        function actualizarProgreso() {
+            const ultimoDia = new Date(añoActual, mesActual + 1, 0).getDate();
+            const totalTurnos = ultimoDia * 2;
+            
+            let turnosOcupados = 0;
+            for (let dia = 1; dia <= ultimoDia; dia++) {
+                const fechaKey = `${añoActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                if (guardias[fechaKey]) {
+                    const tieneTarde = guardias[fechaKey].some(g => g.turno === 'tarde');
+                    const tieneNoche = guardias[fechaKey].some(g => g.turno === 'noche');
+                    if (tieneTarde) turnosOcupados++;
+                    if (tieneNoche) turnosOcupados++;
+                }
+            }
+            
+            const porcentaje = Math.round((turnosOcupados / totalTurnos) * 100);
+            document.getElementById('progressFill').style.width = porcentaje + '%';
+            document.getElementById('progressText').textContent = 
+                `${turnosOcupados} de ${totalTurnos} turnos cubiertos (${porcentaje}%)`;
+        }
+
+        // ===== RESUMEN =====
+        function generarResumen() {
+            const ultimoDia = new Date(añoActual, mesActual + 1, 0).getDate();
+            let texto = `🛡️ GUARDIAS ${MESES[mesActual].toUpperCase()} ${añoActual}\n`;
+            texto += '═'.repeat(30) + '\n\n';
+            
+            for (let dia = 1; dia <= ultimoDia; dia++) {
+                const fechaKey = `${añoActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                const guardiasDelDia = guardias[fechaKey] || [];
+                
+                if (guardiasDelDia.length > 0) {
+                    texto += `📅 ${dia}/${mesActual + 1}\n`;
+                    guardiasDelDia.forEach(g => {
+                        const socio = SOCIOS.find(s => s.id == g.socioId);
+                        const icon = g.turno === 'tarde' ? '🌅' : '🌙';
+                        texto += `  ${icon} ${g.turno.toUpperCase()}: #${g.socioId} ${socio ? socio.nombre : ''}\n`;
+                    });
+                    texto += '\n';
+                }
+            }
+            
+            return texto;
+        }
+
+        function mostrarResumen() {
+            const texto = generarResumen();
+            document.getElementById('summaryText').textContent = texto;
+            document.getElementById('summaryBox').classList.toggle('active');
+        }
+
+        function enviarWhatsApp() {
+            const texto = generarResumen();
+            const url = 'https://wa.me/?text=' + encodeURIComponent(texto);
+            window.open(url, '_blank');
+        }
+
+        function exportarExcel() {
+            const datos = [];
+            const ultimoDia = new Date(añoActual, mesActual + 1, 0).getDate();
+            
+            for (let dia = 1; dia <= ultimoDia; dia++) {
+                const fechaKey = `${añoActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+                const guardiasDelDia = guardias[fechaKey] || [];
+                
+                guardiasDelDia.forEach(g => {
+                    const socio = SOCIOS.find(s => s.id == g.socioId);
+                    datos.push({
+                        Fecha: `${dia}/${mesActual + 1}/${añoActual}`,
+                        Turno: g.turno.toUpperCase(),
+                        'Nro Socio': g.socioId,
+                        Nombre: socio ? socio.nombre : 'Desconocido'
+                    });
+                });
+            }
+            
+            if (datos.length === 0) {
+                alert('No hay datos para exportar');
+                return;
+            }
+            
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(datos);
+            XLSX.utils.book_append_sheet(wb, ws, 'Guardias');
+            XLSX.writeFile(wb, `Guardias_${MESES[mesActual]}_${añoActual}.xlsx`);
+        }
+
+        // ===== EVENT LISTENERS =====
+        function setupEventListeners() {
+            document.getElementById('prevMonth').addEventListener('click', function() {
+                if (mesActual > 3 || (mesActual === 3 && añoActual > 2025)) {
+                    mesActual--;
+                    if (mesActual < 0) {
+                        mesActual = 11;
+                        añoActual--;
+                    }
+                    fechaSeleccionada = null;
+                    document.getElementById('formSection').classList.remove('active');
+                    renderCalendar();
+                    actualizarProgreso();
+                }
+            });
+
+            document.getElementById('nextMonth').addEventListener('click', function() {
+                if (mesActual < 11) {
+                    mesActual++;
+                    fechaSeleccionada = null;
+                    document.getElementById('formSection').classList.remove('active');
+                    renderCalendar();
+                    actualizarProgreso();
+                }
+            });
+
+            document.getElementById('btnAgregar').addEventListener('click', agregarGuardia);
+            document.getElementById('btnResumen').addEventListener('click', mostrarResumen);
+            document.getElementById('btnWhatsApp').addEventListener('click', enviarWhatsApp);
+            document.getElementById('btnExcel').addEventListener('click', exportarExcel);
+        }
+
+        // ===== INICIAR =====
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
