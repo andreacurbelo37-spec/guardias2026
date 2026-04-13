@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guardias COVISUEL 2026-2027</title>
+    <title>Sistema de Guardias - COVISUEL</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #1a5276, #2980b9, #3498db);
             min-height: 100vh;
             padding: 20px;
         }
@@ -25,19 +25,24 @@
 
         header {
             text-align: center;
-            color: white;
-            margin-bottom: 30px;
             padding: 20px;
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
         .logo-container {
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            overflow: hidden;
             margin: 0 auto 15px;
-            border: 3px solid white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #1a5276, #2980b9);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            overflow: hidden;
         }
 
         .logo-container img {
@@ -47,29 +52,208 @@
         }
 
         h1 {
-            font-size: 2rem;
+            color: #1a5276;
+            font-size: 1.8em;
             margin-bottom: 5px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .subtitle {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            color: #666;
+            font-size: 1em;
         }
 
-        .panel {
+        .nav-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .year-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .year-btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background: #ecf0f1;
+            color: #1a5276;
+        }
+
+        .year-btn.active {
+            background: linear-gradient(135deg, #1a5276, #2980b9);
+            color: white;
+        }
+
+        .month-selector {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .month-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #ecf0f1;
+            color: #1a5276;
+            font-size: 0.9em;
+        }
+
+        .month-btn.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .month-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .calendar-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .calendar-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-header h2 {
+            color: #1a5276;
+            font-size: 1.5em;
+        }
+
+        .weekdays {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .weekday {
+            text-align: center;
+            font-weight: bold;
+            color: #1a5276;
+            padding: 10px;
+            font-size: 0.9em;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 70px;
+            position: relative;
+        }
+
+        .day-cell:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .day-cell.empty {
+            background: transparent;
+            cursor: default;
+        }
+
+        .day-cell.empty:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .day-number {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1a5276;
+        }
+
+        .day-count {
+            font-size: 0.7em;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .day-cell.green { background: linear-gradient(135deg, #a8e6cf, #88d8b0); }
+        .day-cell.yellow { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+        .day-cell.red { background: linear-gradient(135deg, #ff7675, #d63031); }
+        .day-cell.red .day-number, .day-cell.red .day-count { color: white; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
             background: white;
             border-radius: 15px;
             padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .panel h2 {
-            color: #1e3c72;
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+
+        .modal-header h3 {
+            color: #1a5276;
+            font-size: 1.3em;
+        }
+
+        .close-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
         }
 
         .form-group {
@@ -79,193 +263,164 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
+            color: #1a5276;
+            font-weight: bold;
         }
 
-        select {
+        .form-group select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            border: 2px solid #ecf0f1;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: 1em;
             transition: border-color 0.3s;
         }
 
-        select:focus {
+        .form-group select:focus {
+            border-color: #3498db;
             outline: none;
-            border-color: #2a5298;
         }
 
-        .btn-group {
+        /* Botones de tipo toggle para Núcleo y Colaborador */
+        .role-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .btn {
+        .role-btn {
             flex: 1;
-            min-width: 150px;
-            padding: 15px 25px;
-            border: none;
+            padding: 12px;
+            border: 2px solid #bdc3c7;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: bold;
             transition: all 0.3s;
+            background: #ecf0f1;
+            color: #7f8c8d;
+            text-align: center;
         }
 
-        .btn-nucleo {
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        .role-btn:hover {
+            border-color: #3498db;
+        }
+
+        .role-btn.active-nucleo {
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
+            border-color: #2980b9;
         }
 
-        .btn-nucleo:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(30, 60, 114, 0.4);
-        }
-
-        .btn-colaborador {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        .role-btn.active-colaborador {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
             color: white;
+            border-color: #8e44ad;
         }
 
-        .btn-colaborador:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
-        }
-
-        .colaborador-section {
+        .colaborador-dropdown {
             display: none;
-            margin-top: 15px;
-            padding: 15px;
-            background: #fff5f5;
-            border-radius: 8px;
-            border: 2px solid #f5576c;
+            margin-top: 10px;
         }
 
-        .colaborador-section.active {
+        .colaborador-dropdown.show {
             display: block;
-            animation: slideDown 0.3s ease;
         }
 
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .btn-confirmar-colaborador {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            margin-top: 15px;
-        }
-
-        .nav-meses {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .nav-meses button {
-            background: #1e3c72;
+        .btn-registrar {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
             border: none;
-            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .nav-meses button:hover {
-            background: #2a5298;
-        }
-
-        .nav-meses span {
-            font-size: 1.3rem;
+            font-size: 1.1em;
             font-weight: bold;
-            color: #1e3c72;
-            min-width: 200px;
-            text-align: center;
-        }
-
-        .calendario {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-        }
-
-        .dia-header {
-            background: #1e3c72;
-            color: white;
-            padding: 10px;
-            text-align: center;
-            font-weight: 600;
-            border-radius: 5px;
-        }
-
-        .dia {
-            background: #f5f5f5;
-            border-radius: 8px;
-            padding: 10px;
-            min-height: 100px;
-            cursor: pointer;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            margin-top: 10px;
         }
 
-        .dia:hover {
-            border-color: #2a5298;
+        .btn-registrar:hover {
             transform: scale(1.02);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        .dia.vacio {
-            background: transparent;
-            cursor: default;
+        .turnos-section {
+            margin-top: 25px;
         }
 
-        .dia.vacio:hover {
-            border-color: transparent;
-            transform: none;
+        .turno-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
 
-        .dia-numero {
+        .turno-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .turno-title {
             font-weight: bold;
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 5px;
+            color: #1a5276;
         }
 
-        .dia.verde { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); }
-        .dia.amarillo { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); }
-        .dia.rojo { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); }
+        .turno-time {
+            font-size: 0.85em;
+            color: #666;
+        }
 
-        .turno-indicador {
-            font-size: 0.75rem;
-            padding: 2px 6px;
+        .guardia-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .guardia-nombre {
+            color: #2c3e50;
+        }
+
+        .guardia-tipo {
+            font-size: 0.8em;
+            padding: 3px 8px;
             border-radius: 4px;
-            margin-top: 3px;
-            display: inline-block;
+            font-weight: bold;
         }
 
-        .turno-tarde {
-            background: #ffeaa7;
-            color: #856404;
+        .tipo-nucleo {
+            background: #3498db;
+            color: white;
         }
 
-        .turno-noche {
-            background: #74b9ff;
-            color: #0c5460;
+        .tipo-colaborador {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .sin-guardias {
+            color: #999;
+            font-style: italic;
+            text-align: center;
+            padding: 10px;
         }
 
         .leyenda {
@@ -280,154 +435,37 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .leyenda-color {
-            width: 25px;
-            height: 25px;
-            border-radius: 5px;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
+            font-size: 0.9em;
             color: #666;
         }
 
-        .guardia-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .guardia-item.colaborador {
-            background: #fff0f3;
-            border-left: 4px solid #f5576c;
-        }
-
-        .btn-eliminar {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 15px;
+        .leyenda-color {
+            width: 20px;
+            height: 20px;
             border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.85rem;
         }
 
-        .btn-whatsapp {
-            background: #25D366;
-            color: white;
-            width: 100%;
-            margin-top: 15px;
+        .leyenda-color.green { background: linear-gradient(135deg, #a8e6cf, #88d8b0); }
+        .leyenda-color.yellow { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+        .leyenda-color.red { background: linear-gradient(135deg, #ff7675, #d63031); }
+
+        .role-info {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #f0f8ff;
+            border-radius: 6px;
+            border-left: 3px solid #3498db;
         }
 
-        .admin-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px dashed #e0e0e0;
-        }
-
-        .admin-section input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-
-        .btn-admin {
-            background: #6c757d;
-            color: white;
-            width: 100%;
-        }
-
-        .mensaje {
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .mensaje.exito {
-            background: #d4edda;
-            color: #155724;
-            display: block;
-        }
-
-        .mensaje.error {
-            background: #f8d7da;
-            color: #721c24;
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .calendario {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 3px;
-            }
-
-            .dia {
-                padding: 5px;
-                min-height: 70px;
-            }
-
-            .dia-numero {
-                font-size: 0.9rem;
-            }
-
-            .turno-indicador {
-                font-size: 0.6rem;
-                padding: 1px 3px;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-
-            h1 {
-                font-size: 1.5rem;
-            }
+        @media (max-width: 600px) {
+            .day-cell { min-height: 50px; }
+            .day-number { font-size: 0.9em; }
+            .day-count { font-size: 0.6em; }
+            .weekday { font-size: 0.7em; padding: 5px; }
+            h1 { font-size: 1.4em; }
         }
     </style>
 </head>
@@ -435,114 +473,120 @@
     <div class="container">
         <header>
             <div class="logo-container">
-                <img src="Covisuel logo para llavero.jpg" alt="Logo COVISUEL">
+                <img src="https://i.imgur.com/8J5KLXZ.png" alt="COVISUEL Logo" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\"color:white;font-weight:bold;font-size:1.2em;\">CV</span>';">
             </div>
             <h1>🛡️ Sistema de Guardias</h1>
             <p class="subtitle">COVISUEL - Abril 2026 a Diciembre 2027</p>
         </header>
 
-        <div class="panel">
-            <h2>📝 Registrar Guardia</h2>
-            <div id="mensaje" class="mensaje"></div>
-            
+        <nav class="nav-section">
+            <div class="year-selector" id="yearSelector"></div>
+            <div class="month-selector" id="monthSelector"></div>
+        </nav>
+
+        <main class="calendar-container">
+            <div class="calendar-header">
+                <h2 id="currentMonthYear">Abril 2026</h2>
+            </div>
+            <div class="weekdays">
+                <div class="weekday">DOM</div>
+                <div class="weekday">LUN</div>
+                <div class="weekday">MAR</div>
+                <div class="weekday">MIÉ</div>
+                <div class="weekday">JUE</div>
+                <div class="weekday">VIE</div>
+                <div class="weekday">SÁB</div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+            <div class="leyenda">
+                <div class="leyenda-item">
+                    <div class="leyenda-color green"></div>
+                    <span>0-1 guardias</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color yellow"></div>
+                    <span>2-5 guardias</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color red"></div>
+                    <span>6 guardias (Completo)</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Guardias - 1 de Abril 2026</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+
             <div class="form-group">
-                <label for="socio">👤 Seleccionar Socio:</label>
-                <select id="socio">
-                    <option value="">-- Seleccione un socio --</option>
+                <label for="socioSelect">👤 Seleccionar Socio:</label>
+                <select id="socioSelect">
+                    <option value="">-- Elegir socio --</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="turno">⏰ Seleccionar Turno:</label>
-                <select id="turno">
-                    <option value="">-- Seleccione un turno --</option>
+                <label for="turnoSelect">⏰ Seleccionar Turno:</label>
+                <select id="turnoSelect">
+                    <option value="">-- Elegir turno --</option>
                     <option value="tarde">🌅 Tarde (18:00 - 23:00)</option>
                     <option value="noche">🌙 Noche (23:00 - 07:00)</option>
                 </select>
             </div>
 
-            <div class="btn-group">
-                <button class="btn btn-nucleo" onclick="registrarNucleo()">
-                    🔵 Soy Núcleo
-                </button>
-                <button class="btn btn-colaborador" onclick="mostrarColaborador()">
-                    🤝 Soy Colaborador
-                </button>
-            </div>
-
-            <div id="colaboradorSection" class="colaborador-section">
-                <div class="form-group">
-                    <label for="socioCubierto">¿A qué socio estás cubriendo?</label>
-                    <select id="socioCubierto">
-                        <option value="">-- Seleccione el socio que cubre --</option>
+            <div class="form-group">
+                <label>📋 Tipo de participación (opcional):</label>
+                <div class="role-info">
+                    ℹ️ Si no seleccionas ninguna opción, te registrarás como socio regular
+                </div>
+                <div class="role-buttons">
+                    <div class="role-btn" id="btnNucleo" onclick="toggleNucleo()">
+                        🔵 Soy Núcleo
+                    </div>
+                    <div class="role-btn" id="btnColaborador" onclick="toggleColaborador()">
+                        🤝 Soy Colaborador
+                    </div>
+                </div>
+                <div class="colaborador-dropdown" id="colaboradorDropdown">
+                    <label for="cubreSelect">¿A quién cubrís?</label>
+                    <select id="cubreSelect">
+                        <option value="">-- Seleccionar socio a cubrir --</option>
                     </select>
                 </div>
-                <button class="btn btn-confirmar-colaborador" onclick="registrarColaborador()">
-                    ✅ Confirmar como Colaborador
-                </button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2>📅 Calendario de Guardias</h2>
-            
-            <div class="nav-meses">
-                <button onclick="cambiarMes(-1)">◀ Anterior</button>
-                <span id="mesActual">Abril 2026</span>
-                <button onclick="cambiarMes(1)">Siguiente ▶</button>
             </div>
 
-            <div class="calendario" id="calendario">
-                <div class="dia-header">Dom</div>
-                <div class="dia-header">Lun</div>
-                <div class="dia-header">Mar</div>
-                <div class="dia-header">Mié</div>
-                <div class="dia-header">Jue</div>
-                <div class="dia-header">Vie</div>
-                <div class="dia-header">Sáb</div>
-            </div>
-
-            <div class="leyenda">
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);"></div>
-                    <span>0-1 guardias</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);"></div>
-                    <span>2-5 guardias</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);"></div>
-                    <span>6 guardias (Completo)</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel admin-section">
-            <h2>🔐 Acceso Administrador</h2>
-            <p style="color: #666; margin-bottom: 15px;">Solo administradores pueden eliminar registros.</p>
-            <input type="password" id="adminPassword" placeholder="Contraseña de administrador">
-            <button class="btn btn-admin" onclick="verificarAdmin()">Acceder como Administrador</button>
-        </div>
-    </div>
-
-    <!-- Modal para ver detalles del día -->
-    <div class="modal" id="modalDia">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitulo">Guardias del día</h3>
-                <button class="modal-close" onclick="cerrarModal()">✕</button>
-            </div>
-            <div id="modalContenido"></div>
-            <button class="btn btn-whatsapp" onclick="compartirWhatsApp()">
-                📱 Compartir por WhatsApp
+            <button class="btn-registrar" onclick="registrarGuardia()">
+                ✅ Registrar Guardia
             </button>
+
+            <div class="turnos-section">
+                <div class="turno-card">
+                    <div class="turno-header">
+                        <span class="turno-title">🌅 Turno Tarde</span>
+                        <span class="turno-time">18:00 - 23:00</span>
+                    </div>
+                    <div id="listaTarde"></div>
+                </div>
+
+                <div class="turno-card">
+                    <div class="turno-header">
+                        <span class="turno-title">🌙 Turno Noche</span>
+                        <span class="turno-time">23:00 - 07:00</span>
+                    </div>
+                    <div id="listaNoche"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Lista de socios con sus IDs
-        const socios = [
+        // Lista de socios
+        const SOCIOS = [
             { id: 215, nombre: "Mary Yacqueline Cunha Gómez" },
             { id: 222, nombre: "Mariana Gissel Arias D'ottone" },
             { id: 223, nombre: "Claudia Erika Peña Mármol" },
@@ -580,383 +624,348 @@
         ];
 
         // Administradores autorizados
-        const administradores = [240, 245, 266]; // Andrea Curbelo, Virginia Diaz, María Noel Carbajal
-        const passwordAdmin = "Molas2026";
+        const ADMINS = [240, 245, 266];
+        const ADMIN_PASSWORD = "Molas2026";
+
+        // Meses del sistema
+        const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
         // Estado de la aplicación
-        let mesActual = 3; // Abril (0-indexed: 3)
-        let anioActual = 2026;
-        let esAdmin = false;
-        let diaSeleccionado = null;
+        let currentYear = 2026;
+        let currentMonth = 3; // Abril (0-indexed)
+        let selectedDate = null;
+        let guardias = {};
+        let selectedRole = null; // null, 'nucleo', o 'colaborador'
 
-        // Cargar guardias del localStorage
-        function cargarGuardias() {
-            const data = localStorage.getItem('guardias_covisuel_2026_2027');
-            return data ? JSON.parse(data) : {};
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarDatos();
+            inicializarSelectSocios();
+            renderYearSelector();
+            renderMonthSelector();
+            renderCalendar();
+        });
+
+        function cargarDatos() {
+            const stored = localStorage.getItem('guardias_covisuel_2026_2027');
+            if (stored) {
+                guardias = JSON.parse(stored);
+            }
         }
 
-        // Guardar guardias en localStorage
-        function guardarGuardias(guardias) {
+        function guardarDatos() {
             localStorage.setItem('guardias_covisuel_2026_2027', JSON.stringify(guardias));
         }
 
-        // Inicializar selectores de socios
-        function inicializarSocios() {
-            const selectSocio = document.getElementById('socio');
-            const selectCubierto = document.getElementById('socioCubierto');
+        function inicializarSelectSocios() {
+            const socioSelect = document.getElementById('socioSelect');
+            const cubreSelect = document.getElementById('cubreSelect');
             
-            socios.forEach(socio => {
-                const option1 = new Option(`${socio.nombre} (${socio.id})`, socio.id);
-                const option2 = new Option(`${socio.nombre} (${socio.id})`, socio.id);
-                selectSocio.add(option1);
-                selectCubierto.add(option2);
+            SOCIOS.forEach(socio => {
+                const option1 = document.createElement('option');
+                option1.value = socio.id;
+                option1.textContent = `${socio.nombre} (${socio.id})`;
+                socioSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = socio.id;
+                option2.textContent = `${socio.nombre} (${socio.id})`;
+                cubreSelect.appendChild(option2);
             });
         }
 
-        // Mostrar mensaje
-        function mostrarMensaje(texto, tipo) {
-            const mensaje = document.getElementById('mensaje');
-            mensaje.textContent = texto;
-            mensaje.className = `mensaje ${tipo}`;
-            setTimeout(() => {
-                mensaje.className = 'mensaje';
-            }, 4000);
+        function renderYearSelector() {
+            const container = document.getElementById('yearSelector');
+            container.innerHTML = '';
+            
+            [2026, 2027].forEach(year => {
+                const btn = document.createElement('button');
+                btn.className = `year-btn ${year === currentYear ? 'active' : ''}`;
+                btn.textContent = year;
+                btn.onclick = () => selectYear(year);
+                container.appendChild(btn);
+            });
         }
 
-        // Mostrar sección de colaborador
-        function mostrarColaborador() {
-            const section = document.getElementById('colaboradorSection');
-            section.classList.toggle('active');
+        function selectYear(year) {
+            currentYear = year;
+            if (year === 2026 && currentMonth < 3) {
+                currentMonth = 3; // Mínimo abril para 2026
+            }
+            renderYearSelector();
+            renderMonthSelector();
+            renderCalendar();
         }
 
-        // Validar selección
-        function validarSeleccion() {
-            const socioId = document.getElementById('socio').value;
-            const turno = document.getElementById('turno').value;
+        function renderMonthSelector() {
+            const container = document.getElementById('monthSelector');
+            container.innerHTML = '';
+            
+            const startMonth = currentYear === 2026 ? 3 : 0; // Abril para 2026, Enero para 2027
+            
+            for (let i = startMonth; i < 12; i++) {
+                const btn = document.createElement('button');
+                btn.className = `month-btn ${i === currentMonth ? 'active' : ''}`;
+                btn.textContent = MESES[i].substring(0, 3);
+                btn.onclick = () => selectMonth(i);
+                container.appendChild(btn);
+            }
+        }
 
+        function selectMonth(month) {
+            currentMonth = month;
+            renderMonthSelector();
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendarGrid');
+            const header = document.getElementById('currentMonthYear');
+            
+            header.textContent = `${MESES[currentMonth]} ${currentYear}`;
+            grid.innerHTML = '';
+            
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            
+            // Celdas vacías iniciales
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day-cell empty';
+                grid.appendChild(emptyCell);
+            }
+            
+            // Días del mes
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const count = getGuardiasCount(dateKey);
+                
+                let colorClass = 'green';
+                if (count >= 6) colorClass = 'red';
+                else if (count >= 2) colorClass = 'yellow';
+                
+                cell.className = `day-cell ${colorClass}`;
+                cell.innerHTML = `
+                    <span class="day-number">${day}</span>
+                    <span class="day-count">${count}/6</span>
+                `;
+                cell.onclick = () => openModal(dateKey, day);
+                grid.appendChild(cell);
+            }
+        }
+
+        function getGuardiasCount(dateKey) {
+            if (!guardias[dateKey]) return 0;
+            const tarde = guardias[dateKey].tarde ? guardias[dateKey].tarde.length : 0;
+            const noche = guardias[dateKey].noche ? guardias[dateKey].noche.length : 0;
+            return tarde + noche;
+        }
+
+        function openModal(dateKey, day) {
+            selectedDate = dateKey;
+            selectedRole = null; // Reset role selection
+            
+            document.getElementById('modalTitle').textContent = 
+                `Guardias - ${day} de ${MESES[currentMonth]} ${currentYear}`;
+            
+            document.getElementById('socioSelect').value = '';
+            document.getElementById('turnoSelect').value = '';
+            document.getElementById('cubreSelect').value = '';
+            
+            // Reset buttons
+            document.getElementById('btnNucleo').className = 'role-btn';
+            document.getElementById('btnColaborador').className = 'role-btn';
+            document.getElementById('colaboradorDropdown').classList.remove('show');
+            
+            actualizarListasGuardias();
+            document.getElementById('modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('active');
+            selectedDate = null;
+            selectedRole = null;
+        }
+
+        function toggleNucleo() {
+            const btnNucleo = document.getElementById('btnNucleo');
+            const btnColaborador = document.getElementById('btnColaborador');
+            const dropdown = document.getElementById('colaboradorDropdown');
+            
+            if (selectedRole === 'nucleo') {
+                // Deselect
+                selectedRole = null;
+                btnNucleo.className = 'role-btn';
+            } else {
+                // Select núcleo, deselect colaborador
+                selectedRole = 'nucleo';
+                btnNucleo.className = 'role-btn active-nucleo';
+                btnColaborador.className = 'role-btn';
+                dropdown.classList.remove('show');
+                document.getElementById('cubreSelect').value = '';
+            }
+        }
+
+        function toggleColaborador() {
+            const btnNucleo = document.getElementById('btnNucleo');
+            const btnColaborador = document.getElementById('btnColaborador');
+            const dropdown = document.getElementById('colaboradorDropdown');
+            
+            if (selectedRole === 'colaborador') {
+                // Deselect
+                selectedRole = null;
+                btnColaborador.className = 'role-btn';
+                dropdown.classList.remove('show');
+                document.getElementById('cubreSelect').value = '';
+            } else {
+                // Select colaborador, deselect núcleo
+                selectedRole = 'colaborador';
+                btnColaborador.className = 'role-btn active-colaborador';
+                btnNucleo.className = 'role-btn';
+                dropdown.classList.add('show');
+            }
+        }
+
+        function registrarGuardia() {
+            const socioId = document.getElementById('socioSelect').value;
+            const turno = document.getElementById('turnoSelect').value;
+            const cubreId = document.getElementById('cubreSelect').value;
+            
             if (!socioId) {
-                mostrarMensaje('Por favor seleccione un socio', 'error');
-                return null;
+                alert('⚠️ Por favor, selecciona un socio');
+                return;
             }
+            
             if (!turno) {
-                mostrarMensaje('Por favor seleccione un turno', 'error');
-                return null;
-            }
-
-            return { socioId: parseInt(socioId), turno };
-        }
-
-        // Registrar como núcleo
-        function registrarNucleo() {
-            const datos = validarSeleccion();
-            if (!datos) return;
-
-            const hoy = new Date();
-            const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-            
-            registrarGuardia(fecha, datos.socioId, datos.turno, 'nucleo', null);
-        }
-
-        // Registrar como colaborador
-        function registrarColaborador() {
-            const datos = validarSeleccion();
-            if (!datos) return;
-
-            const socioCubierto = document.getElementById('socioCubierto').value;
-            if (!socioCubierto) {
-                mostrarMensaje('Por favor seleccione el socio que está cubriendo', 'error');
+                alert('⚠️ Por favor, selecciona un turno');
                 return;
             }
-
-            const hoy = new Date();
-            const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
             
-            registrarGuardia(fecha, datos.socioId, datos.turno, 'colaborador', parseInt(socioCubierto));
-        }
-
-        // Registrar guardia
-        function registrarGuardia(fecha, socioId, turno, tipo, socioCubierto) {
-            const guardias = cargarGuardias();
-            const clave = `${fecha}_${turno}`;
-
-            if (!guardias[clave]) {
-                guardias[clave] = [];
+            if (selectedRole === 'colaborador' && !cubreId) {
+                alert('⚠️ Como colaborador, debes seleccionar a quién cubrís');
+                return;
             }
-
+            
             // Verificar límite de 3 por turno
-            if (guardias[clave].length >= 3) {
-                mostrarMensaje(`El turno de ${turno} para esta fecha ya está completo (3 socios máximo)`, 'error');
+            if (!guardias[selectedDate]) {
+                guardias[selectedDate] = { tarde: [], noche: [] };
+            }
+            
+            if (guardias[selectedDate][turno].length >= 3) {
+                alert('⚠️ Este turno ya tiene 3 socios registrados (máximo permitido)');
                 return;
             }
-
-            // Verificar si el socio ya está registrado en este turno
-            if (guardias[clave].some(g => g.socioId === socioId)) {
-                mostrarMensaje('Este socio ya está registrado en este turno', 'error');
+            
+            // Verificar si ya está registrado en ese turno
+            const yaRegistrado = guardias[selectedDate][turno].some(g => g.socioId == socioId);
+            if (yaRegistrado) {
+                alert('⚠️ Este socio ya está registrado en este turno');
                 return;
             }
-
-            const socio = socios.find(s => s.id === socioId);
+            
+            const socio = SOCIOS.find(s => s.id == socioId);
+            
+            // Crear registro según el rol seleccionado
             const registro = {
-                socioId,
+                socioId: parseInt(socioId),
                 nombre: socio.nombre,
-                tipo,
-                socioCubierto: socioCubierto ? socios.find(s => s.id === socioCubierto)?.nombre : null,
+                tipo: selectedRole || 'regular', // 'nucleo', 'colaborador', o 'regular'
                 timestamp: new Date().toISOString()
             };
-
-            guardias[clave].push(registro);
-            guardarGuardias(guardias);
-
-            // Limpiar formulario
-            document.getElementById('socio').value = '';
-            document.getElementById('turno').value = '';
-            document.getElementById('socioCubierto').value = '';
-            document.getElementById('colaboradorSection').classList.remove('active');
-
-            mostrarMensaje(`✅ ${socio.nombre} registrado como ${tipo} en turno ${turno}`, 'exito');
-            renderizarCalendario();
+            
+            // Si es colaborador, agregar info de a quién cubre
+            if (selectedRole === 'colaborador' && cubreId) {
+                const cubreSocio = SOCIOS.find(s => s.id == cubreId);
+                registro.cubreA = {
+                    id: parseInt(cubreId),
+                    nombre: cubreSocio.nombre
+                };
+            }
+            
+            guardias[selectedDate][turno].push(registro);
+            guardarDatos();
+            actualizarListasGuardias();
+            renderCalendar();
+            
+            // Reset form
+            document.getElementById('socioSelect').value = '';
+            document.getElementById('turnoSelect').value = '';
+            document.getElementById('cubreSelect').value = '';
+            selectedRole = null;
+            document.getElementById('btnNucleo').className = 'role-btn';
+            document.getElementById('btnColaborador').className = 'role-btn';
+            document.getElementById('colaboradorDropdown').classList.remove('show');
+            
+            alert('✅ Guardia registrada correctamente');
         }
 
-        // Cambiar mes
-        function cambiarMes(direccion) {
-            mesActual += direccion;
+        function actualizarListasGuardias() {
+            const listaTarde = document.getElementById('listaTarde');
+            const listaNoche = document.getElementById('listaNoche');
             
-            if (mesActual > 11) {
-                mesActual = 0;
-                anioActual++;
-            } else if (mesActual < 0) {
-                mesActual = 11;
-                anioActual--;
-            }
-
-            // Limitar al rango abril 2026 - diciembre 2027
-            if (anioActual < 2026 || (anioActual === 2026 && mesActual < 3)) {
-                mesActual = 3;
-                anioActual = 2026;
-            }
-            if (anioActual > 2027 || (anioActual === 2027 && mesActual > 11)) {
-                mesActual = 11;
-                anioActual = 2027;
-            }
-
-            renderizarCalendario();
+            listaTarde.innerHTML = renderListaGuardias('tarde');
+            listaNoche.innerHTML = renderListaGuardias('noche');
         }
 
-        // Renderizar calendario
-        function renderizarCalendario() {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            
-            document.getElementById('mesActual').textContent = `${meses[mesActual]} ${anioActual}`;
-
-            const calendario = document.getElementById('calendario');
-            // Mantener los headers
-            calendario.innerHTML = `
-                <div class="dia-header">Dom</div>
-                <div class="dia-header">Lun</div>
-                <div class="dia-header">Mar</div>
-                <div class="dia-header">Mié</div>
-                <div class="dia-header">Jue</div>
-                <div class="dia-header">Vie</div>
-                <div class="dia-header">Sáb</div>
-            `;
-
-            const primerDia = new Date(anioActual, mesActual, 1);
-            const ultimoDia = new Date(anioActual, mesActual + 1, 0);
-            const diasEnMes = ultimoDia.getDate();
-            const primerDiaSemana = primerDia.getDay();
-
-            const guardias = cargarGuardias();
-
-            // Días vacíos al inicio
-            for (let i = 0; i < primerDiaSemana; i++) {
-                const diaVacio = document.createElement('div');
-                diaVacio.className = 'dia vacio';
-                calendario.appendChild(diaVacio);
+        function renderListaGuardias(turno) {
+            if (!guardias[selectedDate] || !guardias[selectedDate][turno] || guardias[selectedDate][turno].length === 0) {
+                return '<div class="sin-guardias">No hay guardias registradas</div>';
             }
-
-            // Días del mes
-            for (let dia = 1; dia <= diasEnMes; dia++) {
-                const fecha = `${anioActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-                const claveTarde = `${fecha}_tarde`;
-                const claveNoche = `${fecha}_noche`;
-
-                const guardiasTarde = guardias[claveTarde] || [];
-                const guardiasNoche = guardias[claveNoche] || [];
-                const totalGuardias = guardiasTarde.length + guardiasNoche.length;
-
-                const diaDiv = document.createElement('div');
-                diaDiv.className = 'dia';
+            
+            return guardias[selectedDate][turno].map((g, index) => {
+                let tipoHtml = '';
+                let nombreDisplay = `${g.nombre} (${g.socioId})`;
                 
-                // Determinar color según cantidad de guardias
-                if (totalGuardias >= 6) {
-                    diaDiv.classList.add('rojo');
-                } else if (totalGuardias >= 2) {
-                    diaDiv.classList.add('amarillo');
-                } else {
-                    diaDiv.classList.add('verde');
+                if (g.tipo === 'nucleo') {
+                    tipoHtml = '<span class="guardia-tipo tipo-nucleo">NÚCLEO</span>';
+                } else if (g.tipo === 'colaborador' && g.cubreA) {
+                    tipoHtml = `<span class="guardia-tipo tipo-colaborador">Cubre a: ${g.cubreA.nombre}</span>`;
                 }
-
-                diaDiv.innerHTML = `
-                    <div class="dia-numero">${dia}</div>
-                    ${guardiasTarde.length > 0 ? `<span class="turno-indicador turno-tarde">T: ${guardiasTarde.length}/3</span>` : ''}
-                    ${guardiasNoche.length > 0 ? `<span class="turno-indicador turno-noche">N: ${guardiasNoche.length}/3</span>` : ''}
-                `;
-
-                diaDiv.onclick = () => abrirModal(fecha, guardiasTarde, guardiasNoche);
-                calendario.appendChild(diaDiv);
-            }
-        }
-
-        // Abrir modal con detalles del día
-        function abrirModal(fecha, guardiasTarde, guardiasNoche) {
-            diaSeleccionado = fecha;
-            const modal = document.getElementById('modalDia');
-            const titulo = document.getElementById('modalTitulo');
-            const contenido = document.getElementById('modalContenido');
-
-            const fechaFormateada = new Date(fecha + 'T12:00:00').toLocaleDateString('es-UY', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-
-            titulo.textContent = `📅 ${fechaFormateada}`;
-
-            let html = '';
-
-            if (guardiasTarde.length > 0 || guardiasNoche.length > 0) {
-                if (guardiasTarde.length > 0) {
-                    html += '<h4 style="margin: 15px 0 10px; color: #856404;">🌅 Turno Tarde (18:00 - 23:00)</h4>';
-                    guardiasTarde.forEach((g, idx) => {
-                        html += crearItemGuardia(g, 'tarde', idx);
-                    });
-                }
-
-                if (guardiasNoche.length > 0) {
-                    html += '<h4 style="margin: 15px 0 10px; color: #0c5460;">🌙 Turno Noche (23:00 - 07:00)</h4>';
-                    guardiasNoche.forEach((g, idx) => {
-                        html += crearItemGuardia(g, 'noche', idx);
-                    });
-                }
-            } else {
-                html = '<p style="text-align: center; color: #666; padding: 30px;">No hay guardias registradas para este día.</p>';
-            }
-
-            contenido.innerHTML = html;
-            modal.classList.add('active');
-        }
-
-        // Crear item de guardia
-        function crearItemGuardia(guardia, turno, index) {
-            const esColaborador = guardia.tipo === 'colaborador';
-            return `
-                <div class="guardia-item ${esColaborador ? 'colaborador' : ''}">
-                    <div>
-                        <strong>${guardia.nombre}</strong>
-                        <br>
-                        <small>${esColaborador ? `🤝 Colaborador (cubre a ${guardia.socioCubierto})` : '🔵 Núcleo'}</small>
+                
+                return `
+                    <div class="guardia-item">
+                        <div>
+                            <span class="guardia-nombre">${nombreDisplay}</span>
+                            ${tipoHtml}
+                        </div>
+                        <button class="btn-delete" onclick="eliminarGuardia('${turno}', ${index})">🗑️</button>
                     </div>
-                    ${esAdmin ? `<button class="btn-eliminar" onclick="eliminarGuardia('${turno}', ${index})">🗑️ Eliminar</button>` : ''}
-                </div>
-            `;
+                `;
+            }).join('');
         }
 
-        // Cerrar modal
-        function cerrarModal() {
-            document.getElementById('modalDia').classList.remove('active');
-        }
-
-        // Eliminar guardia (solo admin)
         function eliminarGuardia(turno, index) {
-            if (!esAdmin) {
-                alert('Solo los administradores pueden eliminar guardias.');
+            const adminId = prompt('Ingresa tu ID de socio para eliminar:');
+            
+            if (!adminId) return;
+            
+            if (!ADMINS.includes(parseInt(adminId))) {
+                alert('❌ No tienes permisos de administrador');
                 return;
             }
-
-            if (!confirm('¿Está seguro de eliminar esta guardia?')) return;
-
-            const guardias = cargarGuardias();
-            const clave = `${diaSeleccionado}_${turno}`;
-
-            if (guardias[clave] && guardias[clave][index]) {
-                guardias[clave].splice(index, 1);
-                if (guardias[clave].length === 0) {
-                    delete guardias[clave];
-                }
-                guardarGuardias(guardias);
-                renderizarCalendario();
-                
-                // Recargar modal
-                const guardiasTarde = guardias[`${diaSeleccionado}_tarde`] || [];
-                const guardiasNoche = guardias[`${diaSeleccionado}_noche`] || [];
-                abrirModal(diaSeleccionado, guardiasTarde, guardiasNoche);
-            }
-        }
-
-        // Verificar administrador
-        function verificarAdmin() {
-            const password = document.getElementById('adminPassword').value;
             
-            if (password === passwordAdmin) {
-                esAdmin = true;
-                mostrarMensaje('✅ Acceso de administrador concedido', 'exito');
-                document.getElementById('adminPassword').value = '';
-            } else {
-                mostrarMensaje('❌ Contraseña incorrecta', 'error');
+            const password = prompt('Ingresa la contraseña de administrador:');
+            
+            if (password !== ADMIN_PASSWORD) {
+                alert('❌ Contraseña incorrecta');
+                return;
             }
-        }
-
-        // Compartir por WhatsApp
-        function compartirWhatsApp() {
-            const guardias = cargarGuardias();
-            const guardiasTarde = guardias[`${diaSeleccionado}_tarde`] || [];
-            const guardiasNoche = guardias[`${diaSeleccionado}_noche`] || [];
-
-            const fechaFormateada = new Date(diaSeleccionado + 'T12:00:00').toLocaleDateString('es-UY', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-
-            let mensaje = `🛡️ *Guardias COVISUEL*\n📅 ${fechaFormateada}\n\n`;
-
-            if (guardiasTarde.length > 0) {
-                mensaje += `🌅 *Turno Tarde (18:00 - 23:00)*\n`;
-                guardiasTarde.forEach(g => {
-                    mensaje += `• ${g.nombre} ${g.tipo === 'colaborador' ? `(cubre a ${g.socioCubierto})` : '(Núcleo)'}\n`;
-                });
-                mensaje += '\n';
-            }
-
-            if (guardiasNoche.length > 0) {
-                mensaje += `🌙 *Turno Noche (23:00 - 07:00)*\n`;
-                guardiasNoche.forEach(g => {
-                    mensaje += `• ${g.nombre} ${g.tipo === 'colaborador' ? `(cubre a ${g.socioCubierto})` : '(Núcleo)'}\n`;
-                });
-            }
-
-            if (guardiasTarde.length === 0 && guardiasNoche.length === 0) {
-                mensaje += 'No hay guardias registradas para este día.';
-            }
-
-            const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
+            
+            guardias[selectedDate][turno].splice(index, 1);
+            guardarDatos();
+            actualizarListasGuardias();
+            renderCalendar();
+            
+            alert('✅ Guardia eliminada correctamente');
         }
 
         // Cerrar modal al hacer clic fuera
-        document.getElementById('modalDia').addEventListener('click', function(e) {
+        document.getElementById('modal').addEventListener('click', function(e) {
             if (e.target === this) {
-                cerrarModal();
+                closeModal();
             }
-        });
-
-        // Inicializar aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            inicializarSocios();
-            renderizarCalendario();
         });
     </script>
 </body>
