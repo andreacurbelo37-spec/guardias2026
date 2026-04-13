@@ -3,213 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Guardias - COVISUEL</title>
+    <title>Guardias COVISUEL 2026-2027</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #3b6db5 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
-            padding: 10px;
+            padding: 20px;
         }
 
         .container {
-            max-width: 500px;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .header {
+        header {
             text-align: center;
-            padding: 20px;
             color: white;
-            margin-bottom: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
         }
 
         .logo-container {
             width: 90px;
             height: 90px;
             border-radius: 50%;
-            background: white;
-            padding: 5px;
-            margin: 0 auto 15px auto;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
             overflow: hidden;
+            margin: 0 auto 15px;
+            border: 3px solid white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
-        .logo {
+        .logo-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 50%;
         }
 
-        .header h1 {
-            font-size: 1.6em;
+        h1 {
+            font-size: 2rem;
             margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
-        .header p {
-            font-size: 1em;
-            opacity: 0.95;
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
         }
 
-        .card {
+        .panel {
             background: white;
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
-        .card h2 {
+        .panel h2 {
             color: #1e3c72;
-            margin-bottom: 15px;
-            font-size: 1.2em;
-            border-bottom: 2px solid #3b6db5;
-            padding-bottom: 8px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
+            margin-bottom: 8px;
             color: #333;
+            font-weight: 600;
         }
 
-        .form-group select,
-        .form-group input {
+        select {
             width: 100%;
             padding: 12px;
-            border: 2px solid #ddd;
+            border: 2px solid #e0e0e0;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 1rem;
             transition: border-color 0.3s;
         }
 
-        .form-group select:focus,
-        .form-group input:focus {
+        select:focus {
             outline: none;
             border-color: #2a5298;
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
         }
 
-        .btn-tipo {
+        .btn {
             flex: 1;
-            padding: 12px;
-            border: 2px solid #1e3c72;
-            background: white;
-            color: #1e3c72;
+            min-width: 150px;
+            padding: 15px 25px;
+            border: none;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .btn-tipo.active {
-            background: #1e3c72;
+        .btn-nucleo {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
         }
 
-        .btn-tipo:hover {
-            background: #2a5298;
+        .btn-nucleo:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        .btn-colaborador {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
+        }
+
+        .btn-colaborador:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(245, 87, 108, 0.4);
         }
 
         .colaborador-section {
             display: none;
-            margin-bottom: 15px;
-            padding: 10px;
-            background: #e8f0fe;
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff5f5;
             border-radius: 8px;
+            border: 2px solid #f5576c;
         }
 
-        .colaborador-section.visible {
+        .colaborador-section.active {
             display: block;
+            animation: slideDown 0.3s ease;
         }
 
-        .btn-registrar {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #28a745, #20c997);
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-confirmar-colaborador {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 15px;
         }
 
-        .btn-registrar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-whatsapp {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(135deg, #25d366, #128c7e);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
+        .nav-meses {
             display: flex;
-            align-items: center;
             justify-content: center;
-            gap: 10px;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-meses button {
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-meses button:hover {
+            background: #2a5298;
+        }
+
+        .nav-meses span {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3c72;
+            min-width: 200px;
+            text-align: center;
         }
 
         .calendario {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            margin-top: 10px;
+            gap: 5px;
         }
 
         .dia-header {
+            background: #1e3c72;
+            color: white;
+            padding: 10px;
             text-align: center;
-            font-weight: bold;
-            font-size: 11px;
-            color: #1e3c72;
-            padding: 5px 0;
+            font-weight: 600;
+            border-radius: 5px;
         }
 
         .dia {
-            aspect-ratio: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background: #f5f5f5;
             border-radius: 8px;
+            padding: 10px;
+            min-height: 100px;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: transform 0.2s;
-            position: relative;
+            transition: all 0.3s;
+            border: 2px solid transparent;
         }
 
         .dia:hover {
-            transform: scale(1.1);
-            z-index: 10;
+            border-color: #2a5298;
+            transform: scale(1.02);
         }
 
         .dia.vacio {
@@ -218,172 +235,157 @@
         }
 
         .dia.vacio:hover {
+            border-color: transparent;
             transform: none;
         }
 
-        .dia.verde {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: white;
-        }
-
-        .dia.amarillo {
-            background: linear-gradient(135deg, #ffc107, #ffb300);
+        .dia-numero {
+            font-weight: bold;
+            font-size: 1.2rem;
             color: #333;
-        }
-
-        .dia.rojo {
-            background: linear-gradient(135deg, #dc3545, #c82333);
-            color: white;
-        }
-
-        .dia .numero {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .dia .cantidad {
-            font-size: 9px;
-            opacity: 0.9;
-        }
-
-        .nav-mes {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .nav-mes button {
-            background: #1e3c72;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .nav-mes button:hover {
-            background: #2a5298;
-        }
-
-        .nav-mes span {
-            font-weight: bold;
-            color: #1e3c72;
-            font-size: 1.1em;
-        }
-
-        .detalle-dia {
-            display: none;
-            margin-top: 15px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-        }
-
-        .detalle-dia.visible {
-            display: block;
-        }
-
-        .detalle-dia h3 {
-            color: #1e3c72;
-            margin-bottom: 10px;
-        }
-
-        .turno-detalle {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border-left: 4px solid #2a5298;
-        }
-
-        .turno-detalle h4 {
-            color: #1e3c72;
-            font-size: 14px;
             margin-bottom: 5px;
         }
 
-        .guardia-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: #f0f4f8;
-            border-radius: 5px;
-            margin-bottom: 5px;
-            font-size: 13px;
+        .dia.verde { background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); }
+        .dia.amarillo { background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); }
+        .dia.rojo { background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%); }
+
+        .turno-indicador {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 3px;
+            display: inline-block;
         }
 
-        .guardia-item .nombre {
-            font-weight: 600;
-            color: #333;
+        .turno-tarde {
+            background: #ffeaa7;
+            color: #856404;
         }
 
-        .guardia-item .tipo {
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: #e0e0e0;
-        }
-
-        .guardia-item .tipo.nucleo {
-            background: #1e3c72;
-            color: white;
-        }
-
-        .guardia-item .tipo.colaborador {
-            background: #17a2b8;
-            color: white;
-        }
-
-        .btn-eliminar {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 11px;
+        .turno-noche {
+            background: #74b9ff;
+            color: #0c5460;
         }
 
         .leyenda {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 20px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
         .leyenda-item {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 12px;
+            gap: 8px;
         }
 
         .leyenda-color {
-            width: 20px;
-            height: 20px;
+            width: 25px;
+            height: 25px;
             border-radius: 5px;
         }
 
-        .leyenda-color.verde {
-            background: linear-gradient(135deg, #28a745, #20c997);
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .leyenda-color.amarillo {
-            background: linear-gradient(135deg, #ffc107, #ffb300);
+        .modal.active {
+            display: flex;
         }
 
-        .leyenda-color.rojo {
-            background: linear-gradient(135deg, #dc3545, #c82333);
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .guardia-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .guardia-item.colaborador {
+            background: #fff0f3;
+            border-left: 4px solid #f5576c;
+        }
+
+        .btn-eliminar {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .admin-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px dashed #e0e0e0;
+        }
+
+        .admin-section input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn-admin {
+            background: #6c757d;
+            color: white;
+            width: 100%;
         }
 
         .mensaje {
             padding: 15px;
             border-radius: 8px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             display: none;
         }
 
@@ -399,235 +401,148 @@
             display: block;
         }
 
-        .admin-section {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px dashed #ddd;
-        }
+        @media (max-width: 768px) {
+            .calendario {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 3px;
+            }
 
-        .btn-admin {
-            width: 100%;
-            padding: 10px;
-            background: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+            .dia {
+                padding: 5px;
+                min-height: 70px;
+            }
 
-        .btn-admin:hover {
-            background: #5a6268;
-        }
+            .dia-numero {
+                font-size: 0.9rem;
+            }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
+            .turno-indicador {
+                font-size: 0.6rem;
+                padding: 1px 3px;
+            }
 
-        .modal.visible {
-            display: flex;
-        }
+            .btn-group {
+                flex-direction: column;
+            }
 
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .modal-content h3 {
-            color: #1e3c72;
-            margin-bottom: 15px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .modal-buttons .confirmar {
-            background: #28a745;
-            color: white;
-        }
-
-        .modal-buttons .cancelar {
-            background: #6c757d;
-            color: white;
-        }
-
-        .lugar-libre {
-            color: #28a745;
-            font-style: italic;
-            padding: 8px;
-            text-align: center;
-            background: #e8f5e9;
-            border-radius: 5px;
-            margin-bottom: 5px;
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
+        <header>
             <div class="logo-container">
-                <img src="Covisuel logo para llavero.jpg" alt="COVISUEL" class="logo">
+                <img src="Covisuel logo para llavero.jpg" alt="Logo COVISUEL">
             </div>
-            <h1>Sistema de Guardias</h1>
-            <p>COVISUEL 2026-2027</p>
-        </div>
+            <h1>🛡️ Sistema de Guardias</h1>
+            <p class="subtitle">COVISUEL - Abril 2026 a Diciembre 2027</p>
+        </header>
 
-        <div class="card">
+        <div class="panel">
             <h2>📝 Registrar Guardia</h2>
-            
             <div id="mensaje" class="mensaje"></div>
-
+            
             <div class="form-group">
-                <label>👤 Socio:</label>
-                <select id="socioSelect">
-                    <option value="">Seleccionar socio...</option>
+                <label for="socio">👤 Seleccionar Socio:</label>
+                <select id="socio">
+                    <option value="">-- Seleccione un socio --</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>📅 Fecha:</label>
-                <input type="date" id="fechaInput">
-            </div>
-
-            <div class="form-group">
-                <label>⏰ Turno:</label>
-                <select id="turnoSelect">
-                    <option value="">Seleccionar turno...</option>
+                <label for="turno">⏰ Seleccionar Turno:</label>
+                <select id="turno">
+                    <option value="">-- Seleccione un turno --</option>
                     <option value="tarde">🌅 Tarde (18:00 - 23:00)</option>
                     <option value="noche">🌙 Noche (23:00 - 07:00)</option>
                 </select>
             </div>
 
-            <div class="form-group">
-                <label>Tipo de guardia:</label>
-                <div class="btn-group">
-                    <button type="button" class="btn-tipo active" id="btnNucleo" onclick="seleccionarTipo('nucleo')">
-                        👤 Soy Núcleo
-                    </button>
-                    <button type="button" class="btn-tipo" id="btnColaborador" onclick="seleccionarTipo('colaborador')">
-                        🤝 Soy Colaborador
-                    </button>
-                </div>
+            <div class="btn-group">
+                <button class="btn btn-nucleo" onclick="registrarNucleo()">
+                    🔵 Soy Núcleo
+                </button>
+                <button class="btn btn-colaborador" onclick="mostrarColaborador()">
+                    🤝 Soy Colaborador
+                </button>
             </div>
 
-            <div class="colaborador-section" id="colaboradorSection">
+            <div id="colaboradorSection" class="colaborador-section">
                 <div class="form-group">
-                    <label>¿A quién cubrís?</label>
-                    <select id="cubreSelect">
-                        <option value="">Seleccionar socio que cubrís...</option>
+                    <label for="socioCubierto">¿A qué socio estás cubriendo?</label>
+                    <select id="socioCubierto">
+                        <option value="">-- Seleccione el socio que cubre --</option>
                     </select>
                 </div>
-            </div>
-
-            <button class="btn-registrar" onclick="registrarGuardia()">
-                ✅ Registrar Guardia
-            </button>
-
-            <button class="btn-whatsapp" onclick="compartirWhatsApp()">
-                📱 Compartir por WhatsApp
-            </button>
-        </div>
-
-        <div class="card">
-            <h2>📅 Calendario de Guardias</h2>
-            
-            <div class="nav-mes">
-                <button onclick="mesAnterior()">◀ Anterior</button>
-                <span id="mesActual">Abril 2026</span>
-                <button onclick="mesSiguiente()">Siguiente ▶</button>
-            </div>
-
-            <div class="calendario" id="calendario"></div>
-
-            <div class="leyenda">
-                <div class="leyenda-item">
-                    <div class="leyenda-color verde"></div>
-                    <span>Disponible (0-1)</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color amarillo"></div>
-                    <span>Parcial (2-5)</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color rojo"></div>
-                    <span>Completo (6)</span>
-                </div>
-            </div>
-
-            <div class="detalle-dia" id="detalleDia">
-                <h3 id="detalleTitulo">Detalle del día</h3>
-                <div id="detalleContenido"></div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="admin-section">
-                <button class="btn-admin" onclick="mostrarModalAdmin()">
-                    🔐 Acceso Administrador
+                <button class="btn btn-confirmar-colaborador" onclick="registrarColaborador()">
+                    ✅ Confirmar como Colaborador
                 </button>
             </div>
         </div>
-    </div>
 
-    <div class="modal" id="modalAdmin">
-        <div class="modal-content">
-            <h3>🔐 Acceso Administrador</h3>
-            <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
-                Solo administradores autorizados pueden eliminar guardias.
-            </p>
-            <input type="password" id="adminPassword" placeholder="Contraseña de administrador">
-            <div class="modal-buttons">
-                <button class="cancelar" onclick="cerrarModalAdmin()">Cancelar</button>
-                <button class="confirmar" onclick="verificarAdmin()">Confirmar</button>
+        <div class="panel">
+            <h2>📅 Calendario de Guardias</h2>
+            
+            <div class="nav-meses">
+                <button onclick="cambiarMes(-1)">◀ Anterior</button>
+                <span id="mesActual">Abril 2026</span>
+                <button onclick="cambiarMes(1)">Siguiente ▶</button>
             </div>
+
+            <div class="calendario" id="calendario">
+                <div class="dia-header">Dom</div>
+                <div class="dia-header">Lun</div>
+                <div class="dia-header">Mar</div>
+                <div class="dia-header">Mié</div>
+                <div class="dia-header">Jue</div>
+                <div class="dia-header">Vie</div>
+                <div class="dia-header">Sáb</div>
+            </div>
+
+            <div class="leyenda">
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);"></div>
+                    <span>0-1 guardias</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);"></div>
+                    <span>2-5 guardias</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);"></div>
+                    <span>6 guardias (Completo)</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel admin-section">
+            <h2>🔐 Acceso Administrador</h2>
+            <p style="color: #666; margin-bottom: 15px;">Solo administradores pueden eliminar registros.</p>
+            <input type="password" id="adminPassword" placeholder="Contraseña de administrador">
+            <button class="btn btn-admin" onclick="verificarAdmin()">Acceder como Administrador</button>
         </div>
     </div>
 
-    <div class="modal" id="modalEliminar">
+    <!-- Modal para ver detalles del día -->
+    <div class="modal" id="modalDia">
         <div class="modal-content">
-            <h3>🗑️ Eliminar Guardia</h3>
-            <p id="eliminarInfo" style="margin-bottom: 15px;"></p>
-            <div class="modal-buttons">
-                <button class="cancelar" onclick="cerrarModalEliminar()">Cancelar</button>
-                <button class="confirmar" onclick="confirmarEliminar()">Eliminar</button>
+            <div class="modal-header">
+                <h3 id="modalTitulo">Guardias del día</h3>
+                <button class="modal-close" onclick="cerrarModal()">✕</button>
             </div>
+            <div id="modalContenido"></div>
+            <button class="btn btn-whatsapp" onclick="compartirWhatsApp()">
+                📱 Compartir por WhatsApp
+            </button>
         </div>
     </div>
 
     <script>
-        // Lista de socios CORRECTA
-        const SOCIOS = [
+        // Lista de socios con sus IDs
+        const socios = [
             { id: 215, nombre: "Mary Yacqueline Cunha Gómez" },
             { id: 222, nombre: "Mariana Gissel Arias D'ottone" },
             { id: 223, nombre: "Claudia Erika Peña Mármol" },
@@ -665,67 +580,19 @@
         ];
 
         // Administradores autorizados
-        const ADMINS = [240, 245, 266]; // Andrea Curbelo, Virginia Diaz, María Noel Carbajal
-        const ADMIN_PASSWORD = "Molas2026";
+        const administradores = [240, 245, 266]; // Andrea Curbelo, Virginia Diaz, María Noel Carbajal
+        const passwordAdmin = "Molas2026";
 
         // Estado de la aplicación
-        let mesActual = 3; // Abril (0-indexed = 3)
+        let mesActual = 3; // Abril (0-indexed: 3)
         let anioActual = 2026;
-        let tipoGuardia = 'nucleo';
-        let adminAutenticado = false;
-        let guardiaAEliminar = null;
+        let esAdmin = false;
+        let diaSeleccionado = null;
 
-        // Nombres de meses
-        const MESES = [
-            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-            "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-        ];
-
-        // Inicializar aplicación
-        document.addEventListener('DOMContentLoaded', function() {
-            cargarSocios();
-            establecerFechaMinima();
-            renderizarCalendario();
-        });
-
-        // Cargar socios en los selects
-        function cargarSocios() {
-            const socioSelect = document.getElementById('socioSelect');
-            const cubreSelect = document.getElementById('cubreSelect');
-            
-            SOCIOS.forEach(socio => {
-                const option1 = document.createElement('option');
-                option1.value = socio.id;
-                option1.textContent = `${socio.nombre} (${socio.id})`;
-                socioSelect.appendChild(option1);
-
-                const option2 = document.createElement('option');
-                option2.value = socio.id;
-                option2.textContent = `${socio.nombre} (${socio.id})`;
-                cubreSelect.appendChild(option2);
-            });
-        }
-
-        // Establecer fecha mínima (abril 2026)
-        function establecerFechaMinima() {
-            const fechaInput = document.getElementById('fechaInput');
-            fechaInput.min = "2026-04-01";
-            fechaInput.max = "2027-12-31";
-            fechaInput.value = "2026-04-01";
-        }
-
-        // Seleccionar tipo de guardia
-        function seleccionarTipo(tipo) {
-            tipoGuardia = tipo;
-            document.getElementById('btnNucleo').classList.toggle('active', tipo === 'nucleo');
-            document.getElementById('btnColaborador').classList.toggle('active', tipo === 'colaborador');
-            document.getElementById('colaboradorSection').classList.toggle('visible', tipo === 'colaborador');
-        }
-
-        // Obtener guardias del localStorage
-        function obtenerGuardias() {
-            const guardias = localStorage.getItem('guardias_covisuel_2026_2027');
-            return guardias ? JSON.parse(guardias) : {};
+        // Cargar guardias del localStorage
+        function cargarGuardias() {
+            const data = localStorage.getItem('guardias_covisuel_2026_2027');
+            return data ? JSON.parse(data) : {};
         }
 
         // Guardar guardias en localStorage
@@ -733,319 +600,364 @@
             localStorage.setItem('guardias_covisuel_2026_2027', JSON.stringify(guardias));
         }
 
-        // Registrar guardia
-        function registrarGuardia() {
-            const socioId = document.getElementById('socioSelect').value;
-            const fecha = document.getElementById('fechaInput').value;
-            const turno = document.getElementById('turnoSelect').value;
-            const cubreId = document.getElementById('cubreSelect').value;
-
-            // Validaciones
-            if (!socioId || !fecha || !turno) {
-                mostrarMensaje('Por favor completá todos los campos', 'error');
-                return;
-            }
-
-            if (tipoGuardia === 'colaborador' && !cubreId) {
-                mostrarMensaje('Seleccioná a quién estás cubriendo', 'error');
-                return;
-            }
-
-            const socio = SOCIOS.find(s => s.id == socioId);
-            const guardias = obtenerGuardias();
-            const claveDia = fecha;
-
-            if (!guardias[claveDia]) {
-                guardias[claveDia] = { tarde: [], noche: [] };
-            }
-
-            // Verificar límite de 3 por turno
-            if (guardias[claveDia][turno].length >= 3) {
-                mostrarMensaje('Este turno ya está completo (máximo 3 socios)', 'error');
-                return;
-            }
-
-            // Verificar si ya está registrado
-            const yaRegistrado = guardias[claveDia][turno].some(g => g.socioId == socioId);
-            if (yaRegistrado) {
-                mostrarMensaje('Ya estás registrado en este turno', 'error');
-                return;
-            }
-
-            // Crear registro de guardia
-            const nuevaGuardia = {
-                socioId: socioId,
-                socioNombre: socio.nombre,
-                tipo: tipoGuardia,
-                timestamp: new Date().toISOString()
-            };
-
-            if (tipoGuardia === 'colaborador') {
-                const socioCubierto = SOCIOS.find(s => s.id == cubreId);
-                nuevaGuardia.cubreId = cubreId;
-                nuevaGuardia.cubreNombre = socioCubierto.nombre;
-            }
-
-            guardias[claveDia][turno].push(nuevaGuardia);
-            guardarGuardias(guardias);
-
-            const turnoTexto = turno === 'tarde' ? '🌅 Tarde (18:00-23:00)' : '🌙 Noche (23:00-07:00)';
-            mostrarMensaje(`✅ ¡Guardia registrada!\n${socio.nombre}\n${fecha} - ${turnoTexto}`, 'exito');
+        // Inicializar selectores de socios
+        function inicializarSocios() {
+            const selectSocio = document.getElementById('socio');
+            const selectCubierto = document.getElementById('socioCubierto');
             
-            renderizarCalendario();
-            
-            // Mostrar detalle del día actualizado
-            mostrarDetalleDia(fecha);
+            socios.forEach(socio => {
+                const option1 = new Option(`${socio.nombre} (${socio.id})`, socio.id);
+                const option2 = new Option(`${socio.nombre} (${socio.id})`, socio.id);
+                selectSocio.add(option1);
+                selectCubierto.add(option2);
+            });
         }
 
         // Mostrar mensaje
         function mostrarMensaje(texto, tipo) {
             const mensaje = document.getElementById('mensaje');
             mensaje.textContent = texto;
-            mensaje.className = 'mensaje ' + tipo;
+            mensaje.className = `mensaje ${tipo}`;
             setTimeout(() => {
                 mensaje.className = 'mensaje';
-            }, 5000);
+            }, 4000);
+        }
+
+        // Mostrar sección de colaborador
+        function mostrarColaborador() {
+            const section = document.getElementById('colaboradorSection');
+            section.classList.toggle('active');
+        }
+
+        // Validar selección
+        function validarSeleccion() {
+            const socioId = document.getElementById('socio').value;
+            const turno = document.getElementById('turno').value;
+
+            if (!socioId) {
+                mostrarMensaje('Por favor seleccione un socio', 'error');
+                return null;
+            }
+            if (!turno) {
+                mostrarMensaje('Por favor seleccione un turno', 'error');
+                return null;
+            }
+
+            return { socioId: parseInt(socioId), turno };
+        }
+
+        // Registrar como núcleo
+        function registrarNucleo() {
+            const datos = validarSeleccion();
+            if (!datos) return;
+
+            const hoy = new Date();
+            const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+            
+            registrarGuardia(fecha, datos.socioId, datos.turno, 'nucleo', null);
+        }
+
+        // Registrar como colaborador
+        function registrarColaborador() {
+            const datos = validarSeleccion();
+            if (!datos) return;
+
+            const socioCubierto = document.getElementById('socioCubierto').value;
+            if (!socioCubierto) {
+                mostrarMensaje('Por favor seleccione el socio que está cubriendo', 'error');
+                return;
+            }
+
+            const hoy = new Date();
+            const fecha = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+            
+            registrarGuardia(fecha, datos.socioId, datos.turno, 'colaborador', parseInt(socioCubierto));
+        }
+
+        // Registrar guardia
+        function registrarGuardia(fecha, socioId, turno, tipo, socioCubierto) {
+            const guardias = cargarGuardias();
+            const clave = `${fecha}_${turno}`;
+
+            if (!guardias[clave]) {
+                guardias[clave] = [];
+            }
+
+            // Verificar límite de 3 por turno
+            if (guardias[clave].length >= 3) {
+                mostrarMensaje(`El turno de ${turno} para esta fecha ya está completo (3 socios máximo)`, 'error');
+                return;
+            }
+
+            // Verificar si el socio ya está registrado en este turno
+            if (guardias[clave].some(g => g.socioId === socioId)) {
+                mostrarMensaje('Este socio ya está registrado en este turno', 'error');
+                return;
+            }
+
+            const socio = socios.find(s => s.id === socioId);
+            const registro = {
+                socioId,
+                nombre: socio.nombre,
+                tipo,
+                socioCubierto: socioCubierto ? socios.find(s => s.id === socioCubierto)?.nombre : null,
+                timestamp: new Date().toISOString()
+            };
+
+            guardias[clave].push(registro);
+            guardarGuardias(guardias);
+
+            // Limpiar formulario
+            document.getElementById('socio').value = '';
+            document.getElementById('turno').value = '';
+            document.getElementById('socioCubierto').value = '';
+            document.getElementById('colaboradorSection').classList.remove('active');
+
+            mostrarMensaje(`✅ ${socio.nombre} registrado como ${tipo} en turno ${turno}`, 'exito');
+            renderizarCalendario();
+        }
+
+        // Cambiar mes
+        function cambiarMes(direccion) {
+            mesActual += direccion;
+            
+            if (mesActual > 11) {
+                mesActual = 0;
+                anioActual++;
+            } else if (mesActual < 0) {
+                mesActual = 11;
+                anioActual--;
+            }
+
+            // Limitar al rango abril 2026 - diciembre 2027
+            if (anioActual < 2026 || (anioActual === 2026 && mesActual < 3)) {
+                mesActual = 3;
+                anioActual = 2026;
+            }
+            if (anioActual > 2027 || (anioActual === 2027 && mesActual > 11)) {
+                mesActual = 11;
+                anioActual = 2027;
+            }
+
+            renderizarCalendario();
         }
 
         // Renderizar calendario
         function renderizarCalendario() {
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            document.getElementById('mesActual').textContent = `${meses[mesActual]} ${anioActual}`;
+
             const calendario = document.getElementById('calendario');
-            const mesLabel = document.getElementById('mesActual');
-            
-            mesLabel.textContent = `${MESES[mesActual]} ${anioActual}`;
-            
-            calendario.innerHTML = '';
+            // Mantener los headers
+            calendario.innerHTML = `
+                <div class="dia-header">Dom</div>
+                <div class="dia-header">Lun</div>
+                <div class="dia-header">Mar</div>
+                <div class="dia-header">Mié</div>
+                <div class="dia-header">Jue</div>
+                <div class="dia-header">Vie</div>
+                <div class="dia-header">Sáb</div>
+            `;
 
-            // Headers de días
-            const diasSemana = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-            diasSemana.forEach(dia => {
-                const header = document.createElement('div');
-                header.className = 'dia-header';
-                header.textContent = dia;
-                calendario.appendChild(header);
-            });
-
-            // Primer día del mes
             const primerDia = new Date(anioActual, mesActual, 1);
             const ultimoDia = new Date(anioActual, mesActual + 1, 0);
-            
-            // Espacios vacíos al inicio
-            for (let i = 0; i < primerDia.getDay(); i++) {
-                const vacio = document.createElement('div');
-                vacio.className = 'dia vacio';
-                calendario.appendChild(vacio);
+            const diasEnMes = ultimoDia.getDate();
+            const primerDiaSemana = primerDia.getDay();
+
+            const guardias = cargarGuardias();
+
+            // Días vacíos al inicio
+            for (let i = 0; i < primerDiaSemana; i++) {
+                const diaVacio = document.createElement('div');
+                diaVacio.className = 'dia vacio';
+                calendario.appendChild(diaVacio);
             }
 
             // Días del mes
-            const guardias = obtenerGuardias();
-            
-            for (let dia = 1; dia <= ultimoDia.getDate(); dia++) {
+            for (let dia = 1; dia <= diasEnMes; dia++) {
                 const fecha = `${anioActual}-${String(mesActual + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
-                const guardiaDia = guardias[fecha] || { tarde: [], noche: [] };
-                const totalGuardias = guardiaDia.tarde.length + guardiaDia.noche.length;
+                const claveTarde = `${fecha}_tarde`;
+                const claveNoche = `${fecha}_noche`;
 
-                const diaElement = document.createElement('div');
-                diaElement.className = 'dia';
+                const guardiasTarde = guardias[claveTarde] || [];
+                const guardiasNoche = guardias[claveNoche] || [];
+                const totalGuardias = guardiasTarde.length + guardiasNoche.length;
+
+                const diaDiv = document.createElement('div');
+                diaDiv.className = 'dia';
                 
-                // Asignar color según cantidad
+                // Determinar color según cantidad de guardias
                 if (totalGuardias >= 6) {
-                    diaElement.classList.add('rojo');
+                    diaDiv.classList.add('rojo');
                 } else if (totalGuardias >= 2) {
-                    diaElement.classList.add('amarillo');
+                    diaDiv.classList.add('amarillo');
                 } else {
-                    diaElement.classList.add('verde');
+                    diaDiv.classList.add('verde');
                 }
 
-                diaElement.innerHTML = `
-                    <span class="numero">${dia}</span>
-                    <span class="cantidad">${totalGuardias}/6</span>
+                diaDiv.innerHTML = `
+                    <div class="dia-numero">${dia}</div>
+                    ${guardiasTarde.length > 0 ? `<span class="turno-indicador turno-tarde">T: ${guardiasTarde.length}/3</span>` : ''}
+                    ${guardiasNoche.length > 0 ? `<span class="turno-indicador turno-noche">N: ${guardiasNoche.length}/3</span>` : ''}
                 `;
-                
-                diaElement.onclick = () => mostrarDetalleDia(fecha);
-                calendario.appendChild(diaElement);
+
+                diaDiv.onclick = () => abrirModal(fecha, guardiasTarde, guardiasNoche);
+                calendario.appendChild(diaDiv);
             }
         }
 
-        // Mostrar detalle del día
-        function mostrarDetalleDia(fecha) {
-            const detalle = document.getElementById('detalleDia');
-            const titulo = document.getElementById('detalleTitulo');
-            const contenido = document.getElementById('detalleContenido');
-            
-            const fechaObj = new Date(fecha + 'T12:00:00');
-            titulo.textContent = `📅 ${fechaObj.toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
-            
-            const guardias = obtenerGuardias();
-            const guardiaDia = guardias[fecha] || { tarde: [], noche: [] };
-            
+        // Abrir modal con detalles del día
+        function abrirModal(fecha, guardiasTarde, guardiasNoche) {
+            diaSeleccionado = fecha;
+            const modal = document.getElementById('modalDia');
+            const titulo = document.getElementById('modalTitulo');
+            const contenido = document.getElementById('modalContenido');
+
+            const fechaFormateada = new Date(fecha + 'T12:00:00').toLocaleDateString('es-UY', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            titulo.textContent = `📅 ${fechaFormateada}`;
+
             let html = '';
-            
-            // Turno Tarde
-            html += '<div class="turno-detalle">';
-            html += '<h4>🌅 Tarde (18:00 - 23:00)</h4>';
-            if (guardiaDia.tarde.length === 0) {
-                html += '<div class="lugar-libre">✅ 3 lugares disponibles</div>';
-            } else {
-                guardiaDia.tarde.forEach((g, index) => {
-                    html += crearGuardiaItem(g, fecha, 'tarde', index);
-                });
-                if (guardiaDia.tarde.length < 3) {
-                    html += `<div class="lugar-libre">✅ ${3 - guardiaDia.tarde.length} lugar(es) disponible(s)</div>`;
+
+            if (guardiasTarde.length > 0 || guardiasNoche.length > 0) {
+                if (guardiasTarde.length > 0) {
+                    html += '<h4 style="margin: 15px 0 10px; color: #856404;">🌅 Turno Tarde (18:00 - 23:00)</h4>';
+                    guardiasTarde.forEach((g, idx) => {
+                        html += crearItemGuardia(g, 'tarde', idx);
+                    });
                 }
-            }
-            html += '</div>';
-            
-            // Turno Noche
-            html += '<div class="turno-detalle">';
-            html += '<h4>🌙 Noche (23:00 - 07:00)</h4>';
-            if (guardiaDia.noche.length === 0) {
-                html += '<div class="lugar-libre">✅ 3 lugares disponibles</div>';
-            } else {
-                guardiaDia.noche.forEach((g, index) => {
-                    html += crearGuardiaItem(g, fecha, 'noche', index);
-                });
-                if (guardiaDia.noche.length < 3) {
-                    html += `<div class="lugar-libre">✅ ${3 - guardiaDia.noche.length} lugar(es) disponible(s)</div>`;
+
+                if (guardiasNoche.length > 0) {
+                    html += '<h4 style="margin: 15px 0 10px; color: #0c5460;">🌙 Turno Noche (23:00 - 07:00)</h4>';
+                    guardiasNoche.forEach((g, idx) => {
+                        html += crearItemGuardia(g, 'noche', idx);
+                    });
                 }
+            } else {
+                html = '<p style="text-align: center; color: #666; padding: 30px;">No hay guardias registradas para este día.</p>';
             }
-            html += '</div>';
-            
+
             contenido.innerHTML = html;
-            detalle.classList.add('visible');
+            modal.classList.add('active');
         }
 
         // Crear item de guardia
-        function crearGuardiaItem(guardia, fecha, turno, index) {
-            let info = guardia.socioNombre;
-            if (guardia.tipo === 'colaborador') {
-                info += ` (cubre a ${guardia.cubreNombre})`;
-            }
-            
-            let btnEliminar = '';
-            if (adminAutenticado) {
-                btnEliminar = `<button class="btn-eliminar" onclick="prepararEliminar('${fecha}', '${turno}', ${index})">🗑️</button>`;
-            }
-            
+        function crearItemGuardia(guardia, turno, index) {
+            const esColaborador = guardia.tipo === 'colaborador';
             return `
-                <div class="guardia-item">
-                    <span class="nombre">${info}</span>
-                    <span class="tipo ${guardia.tipo}">${guardia.tipo === 'nucleo' ? '👤 Núcleo' : '🤝 Colaborador'}</span>
-                    ${btnEliminar}
+                <div class="guardia-item ${esColaborador ? 'colaborador' : ''}">
+                    <div>
+                        <strong>${guardia.nombre}</strong>
+                        <br>
+                        <small>${esColaborador ? `🤝 Colaborador (cubre a ${guardia.socioCubierto})` : '🔵 Núcleo'}</small>
+                    </div>
+                    ${esAdmin ? `<button class="btn-eliminar" onclick="eliminarGuardia('${turno}', ${index})">🗑️ Eliminar</button>` : ''}
                 </div>
             `;
         }
 
-        // Navegación de meses
-        function mesAnterior() {
-            if (mesActual === 3 && anioActual === 2026) return; // No antes de abril 2026
-            
-            mesActual--;
-            if (mesActual < 0) {
-                mesActual = 11;
-                anioActual--;
-            }
-            renderizarCalendario();
-            document.getElementById('detalleDia').classList.remove('visible');
+        // Cerrar modal
+        function cerrarModal() {
+            document.getElementById('modalDia').classList.remove('active');
         }
 
-        function mesSiguiente() {
-            if (mesActual === 11 && anioActual === 2027) return; // No después de dic 2027
-            
-            mesActual++;
-            if (mesActual > 11) {
-                mesActual = 0;
-                anioActual++;
+        // Eliminar guardia (solo admin)
+        function eliminarGuardia(turno, index) {
+            if (!esAdmin) {
+                alert('Solo los administradores pueden eliminar guardias.');
+                return;
             }
-            renderizarCalendario();
-            document.getElementById('detalleDia').classList.remove('visible');
+
+            if (!confirm('¿Está seguro de eliminar esta guardia?')) return;
+
+            const guardias = cargarGuardias();
+            const clave = `${diaSeleccionado}_${turno}`;
+
+            if (guardias[clave] && guardias[clave][index]) {
+                guardias[clave].splice(index, 1);
+                if (guardias[clave].length === 0) {
+                    delete guardias[clave];
+                }
+                guardarGuardias(guardias);
+                renderizarCalendario();
+                
+                // Recargar modal
+                const guardiasTarde = guardias[`${diaSeleccionado}_tarde`] || [];
+                const guardiasNoche = guardias[`${diaSeleccionado}_noche`] || [];
+                abrirModal(diaSeleccionado, guardiasTarde, guardiasNoche);
+            }
+        }
+
+        // Verificar administrador
+        function verificarAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === passwordAdmin) {
+                esAdmin = true;
+                mostrarMensaje('✅ Acceso de administrador concedido', 'exito');
+                document.getElementById('adminPassword').value = '';
+            } else {
+                mostrarMensaje('❌ Contraseña incorrecta', 'error');
+            }
         }
 
         // Compartir por WhatsApp
         function compartirWhatsApp() {
-            const socioId = document.getElementById('socioSelect').value;
-            const fecha = document.getElementById('fechaInput').value;
-            const turno = document.getElementById('turnoSelect').value;
+            const guardias = cargarGuardias();
+            const guardiasTarde = guardias[`${diaSeleccionado}_tarde`] || [];
+            const guardiasNoche = guardias[`${diaSeleccionado}_noche`] || [];
 
-            if (!socioId || !fecha || !turno) {
-                mostrarMensaje('Completá los campos para compartir', 'error');
-                return;
+            const fechaFormateada = new Date(diaSeleccionado + 'T12:00:00').toLocaleDateString('es-UY', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+
+            let mensaje = `🛡️ *Guardias COVISUEL*\n📅 ${fechaFormateada}\n\n`;
+
+            if (guardiasTarde.length > 0) {
+                mensaje += `🌅 *Turno Tarde (18:00 - 23:00)*\n`;
+                guardiasTarde.forEach(g => {
+                    mensaje += `• ${g.nombre} ${g.tipo === 'colaborador' ? `(cubre a ${g.socioCubierto})` : '(Núcleo)'}\n`;
+                });
+                mensaje += '\n';
             }
 
-            const socio = SOCIOS.find(s => s.id == socioId);
-            const turnoTexto = turno === 'tarde' ? 'Tarde (18:00-23:00)' : 'Noche (23:00-07:00)';
-            
-            let mensaje = `🛡️ *GUARDIA COVISUEL*\n\n`;
-            mensaje += `👤 ${socio.nombre}\n`;
-            mensaje += `📅 ${fecha}\n`;
-            mensaje += `⏰ ${turnoTexto}\n`;
-            mensaje += `📋 Tipo: ${tipoGuardia === 'nucleo' ? 'Núcleo' : 'Colaborador'}`;
-            
-            if (tipoGuardia === 'colaborador') {
-                const cubreId = document.getElementById('cubreSelect').value;
-                const socioCubierto = SOCIOS.find(s => s.id == cubreId);
-                if (socioCubierto) {
-                    mensaje += `\n🤝 Cubre a: ${socioCubierto.nombre}`;
-                }
+            if (guardiasNoche.length > 0) {
+                mensaje += `🌙 *Turno Noche (23:00 - 07:00)*\n`;
+                guardiasNoche.forEach(g => {
+                    mensaje += `• ${g.nombre} ${g.tipo === 'colaborador' ? `(cubre a ${g.socioCubierto})` : '(Núcleo)'}\n`;
+                });
+            }
+
+            if (guardiasTarde.length === 0 && guardiasNoche.length === 0) {
+                mensaje += 'No hay guardias registradas para este día.';
             }
 
             const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
 
-        // Funciones de administrador
-        function mostrarModalAdmin() {
-            document.getElementById('modalAdmin').classList.add('visible');
-            document.getElementById('adminPassword').value = '';
-        }
-
-        function cerrarModalAdmin() {
-            document.getElementById('modalAdmin').classList.remove('visible');
-        }
-
-        function verificarAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            
-            if (password === ADMIN_PASSWORD) {
-                adminAutenticado = true;
-                cerrarModalAdmin();
-                mostrarMensaje('✅ Acceso de administrador concedido', 'exito');
-                renderizarCalendario();
-            } else {
-                mostrarMensaje('❌ Contraseña incorrecta', 'error');
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('modalDia').addEventListener('click', function(e) {
+            if (e.target === this) {
+                cerrarModal();
             }
-        }
+        });
 
-        function prepararEliminar(fecha, turno, index) {
-            const guardias = obtenerGuardias();
-            const guardia = guardias[fecha][turno][index];
-            
-            guardiaAEliminar = { fecha, turno, index };
-            
-            document.getElementById('eliminarInfo').textContent = 
-                `¿Eliminar guardia de ${guardia.socioNombre} del ${fecha} turno ${turno}?`;
-            document.getElementById('modalEliminar').classList.add('visible');
-        }
-
-        function cerrarModalEliminar() {
-            document.getElementById('modalEliminar').classList.remove('visible');
-            guardiaAEliminar = null;
-        }
-
-        function confirmarEliminar() {
-            if (!guardiaAEliminar) return;
-            
-            const guardias = obtenerGuardias();
-            const { fecha, turno, index } = guardiaAEliminar;
-            
-            guardias[fecha][turno].splice(index, 1);
-            guardarGuardias(guardias);
-            
-            cerrarModalEliminar();
-            mostrarMensaje('✅ Guardia eliminada correctamente', 'exito');
+        // Inicializar aplicación
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarSocios();
             renderizarCalendario();
-            mostrarDetalleDia(fecha);
-        }
+        });
     </script>
 </body>
 </html>
