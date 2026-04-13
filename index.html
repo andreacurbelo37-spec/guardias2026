@@ -341,7 +341,6 @@
             background: #fff3e0;
         }
         
-        /* Colores según cantidad de registros */
         .calendar-day.level-green {
             background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
         }
@@ -493,12 +492,34 @@
             padding: 10px;
         }
         
-        .password-input {
+        .admin-login {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+        
+        .admin-login label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .admin-login select,
+        .admin-login input {
             width: 100%;
             padding: 10px;
-            margin-top: 10px;
+            margin-bottom: 10px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
+            font-size: 1em;
+        }
+        
+        .admin-login select:focus,
+        .admin-login input:focus {
+            outline: none;
+            border-color: #3949ab;
         }
         
         .role-info {
@@ -523,13 +544,30 @@
             padding-top: 15px;
             border-top: 1px solid #e0e0e0;
         }
+        
+        .admin-status {
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .admin-status.logged-in {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        
+        .admin-status.logged-out {
+            background: #ffcdd2;
+            color: #c62828;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <header class="header">
             <div class="logo-container">
-                <img src="https://i.postimg.cc/Kj6BfKVs/IMG-20250521-144498.jpg" alt="COVISUEL Logo">
+                <img src="Covisuel%20logo%20para%20llavero.jpg" alt="COVISUEL Logo" onerror="this.parentElement.innerHTML='🛡️'">
             </div>
             <h1>🛡️ Sistema de Guardias</h1>
             <p>COVISUEL - Abril 2026 a Diciembre 2027</p>
@@ -594,10 +632,26 @@
                 
                 <details class="admin-section">
                     <summary>🔐 Zona Administrador</summary>
-                    <p style="font-size: 0.85em; color: #666; margin: 10px 0;">
-                        Solo Andrea Curbelo, Virginia Diaz y María Noel Carbajal pueden eliminar guardias.
-                    </p>
-                    <input type="password" id="adminPassword" class="password-input" placeholder="Contraseña de administrador">
+                    <div class="admin-login">
+                        <p style="font-size: 0.85em; color: #666; margin-bottom: 15px;">
+                            Solo Andrea Curbelo, Virginia Diaz y María Noel Carbajal pueden eliminar guardias.
+                        </p>
+                        <label>👤 Administrador:</label>
+                        <select id="adminSelect">
+                            <option value="">-- Seleccionar administrador --</option>
+                            <option value="240">Andrea Curbelo (240)</option>
+                            <option value="245">Virginia Diaz (245)</option>
+                            <option value="266">María Noel Carbajal (266)</option>
+                        </select>
+                        <label>🔑 Contraseña:</label>
+                        <input type="password" id="adminPassword" placeholder="Contraseña de administrador">
+                        <button onclick="verificarAdmin()" style="width:100%; padding:10px; background:#3949ab; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold;">
+                            Iniciar Sesión Admin
+                        </button>
+                        <div id="adminStatus" class="admin-status logged-out">
+                            ❌ No has iniciado sesión como administrador
+                        </div>
+                    </div>
                 </details>
             </div>
             
@@ -688,6 +742,7 @@
         let isNucleo = false;
         let isColaborador = false;
         let guardias = {};
+        let adminLoggedIn = false;
         
         // Cargar datos del localStorage
         function loadData() {
@@ -720,6 +775,40 @@
             });
         }
         
+        // Verificar administrador
+        function verificarAdmin() {
+            const adminId = parseInt(document.getElementById('adminSelect').value);
+            const password = document.getElementById('adminPassword').value;
+            const statusDiv = document.getElementById('adminStatus');
+            
+            if (!adminId) {
+                alert('⚠️ Selecciona un administrador');
+                return;
+            }
+            
+            if (password !== adminPassword) {
+                alert('⚠️ Contraseña incorrecta');
+                statusDiv.className = 'admin-status logged-out';
+                statusDiv.innerHTML = '❌ Contraseña incorrecta';
+                adminLoggedIn = false;
+                return;
+            }
+            
+            if (!admins.includes(adminId)) {
+                alert('⚠️ Este usuario no es administrador');
+                statusDiv.className = 'admin-status logged-out';
+                statusDiv.innerHTML = '❌ Usuario no autorizado';
+                adminLoggedIn = false;
+                return;
+            }
+            
+            const adminName = socios.find(s => s.id === adminId).nombre;
+            adminLoggedIn = true;
+            statusDiv.className = 'admin-status logged-in';
+            statusDiv.innerHTML = `✅ Sesión iniciada como: <strong>${adminName}</strong>`;
+            alert(`✅ ¡Bienvenida ${adminName}!\nAhora puedes eliminar guardias.`);
+        }
+        
         // Seleccionar turno
         function selectShift(turno) {
             selectedShift = turno;
@@ -736,7 +825,6 @@
             
             if (isNucleo) {
                 btn.classList.add('active-nucleo');
-                // Desactivar colaborador si estaba activo
                 isColaborador = false;
                 document.getElementById('btnColaborador').classList.remove('active-colaborador');
                 document.getElementById('colaboradorSelect').classList.remove('visible');
@@ -754,7 +842,6 @@
             if (isColaborador) {
                 btn.classList.add('active-colaborador');
                 selectDiv.classList.add('visible');
-                // Desactivar núcleo si estaba activo
                 isNucleo = false;
                 document.getElementById('btnNucleo').classList.remove('active-nucleo');
             } else {
@@ -775,7 +862,6 @@
             
             grid.innerHTML = '';
             
-            // Headers de días
             dayNames.forEach(day => {
                 const header = document.createElement('div');
                 header.className = 'calendar-header';
@@ -783,18 +869,15 @@
                 grid.appendChild(header);
             });
             
-            // Primer día del mes
             const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
             const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
             
-            // Días vacíos al inicio
             for (let i = 0; i < firstDay.getDay(); i++) {
                 const empty = document.createElement('div');
                 empty.className = 'calendar-day empty';
                 grid.appendChild(empty);
             }
             
-            // Días del mes
             for (let day = 1; day <= lastDay.getDate(); day++) {
                 const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const dayEl = document.createElement('div');
@@ -803,7 +886,6 @@
                 const dayGuardias = guardias[dateStr] || { tarde: [], noche: [] };
                 const totalGuardias = dayGuardias.tarde.length + dayGuardias.noche.length;
                 
-                // Aplicar color según cantidad
                 if (totalGuardias >= 6) {
                     dayEl.classList.add('level-red');
                 } else if (totalGuardias >= 2) {
@@ -846,7 +928,6 @@
         function changeMonth(delta) {
             currentDate.setMonth(currentDate.getMonth() + delta);
             
-            // Limitar entre abril 2026 y diciembre 2027
             const minDate = new Date(2026, 3, 1);
             const maxDate = new Date(2027, 11, 1);
             
@@ -883,20 +964,17 @@
                 }
             }
             
-            // Verificar si ya existe el socio en ese turno
             if (!guardias[selectedDate]) {
                 guardias[selectedDate] = { tarde: [], noche: [] };
             }
             
             const turnoArray = guardias[selectedDate][selectedShift];
             
-            // Verificar límite de 3 personas por turno
             if (turnoArray.length >= 3) {
                 alert('⚠️ Este turno ya tiene 3 personas registradas');
                 return;
             }
             
-            // Verificar si el socio ya está registrado en este turno
             if (turnoArray.some(g => g.socioId === socioId)) {
                 alert('⚠️ Este socio ya está registrado en este turno');
                 return;
@@ -904,7 +982,6 @@
             
             const socio = socios.find(s => s.id === socioId);
             
-            // Construir etiqueta
             let etiqueta = '';
             if (isNucleo) {
                 etiqueta = ' [NÚCLEO]';
@@ -923,7 +1000,6 @@
             saveData();
             renderCalendar();
             
-            // Reset role buttons
             isNucleo = false;
             isColaborador = false;
             document.getElementById('btnNucleo').classList.remove('active-nucleo');
@@ -986,16 +1062,8 @@
         
         // Eliminar guardia (solo admins)
         function eliminarGuardia(dateStr, turno, index) {
-            const password = document.getElementById('adminPassword').value;
-            const socioId = parseInt(document.getElementById('socioSelect').value);
-            
-            if (password !== adminPassword) {
-                alert('⚠️ Contraseña de administrador incorrecta');
-                return;
-            }
-            
-            if (!admins.includes(socioId)) {
-                alert('⚠️ Solo Andrea Curbelo, Virginia Diaz o María Noel Carbajal pueden eliminar guardias');
+            if (!adminLoggedIn) {
+                alert('⚠️ Debes iniciar sesión como administrador en la "Zona Administrador" para poder eliminar guardias.');
                 return;
             }
             
@@ -1004,6 +1072,7 @@
                 saveData();
                 renderCalendar();
                 showDayModal(dateStr);
+                alert('✅ Guardia eliminada correctamente');
             }
         }
         
@@ -1062,8 +1131,7 @@
                 return;
             }
             
-            // Crear contenido CSV
-            let csv = '\ufeff'; // BOM para Excel reconozca UTF-8
+            let csv = '\ufeff';
             csv += 'Fecha,Turno,Socio ID,Nombre Socio,Etiqueta\n';
             
             fechasOrdenadas.forEach(fecha => {
@@ -1081,7 +1149,6 @@
                 });
             });
             
-            // Crear y descargar archivo
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
