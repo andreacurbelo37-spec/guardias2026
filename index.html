@@ -775,7 +775,7 @@
         async function cargarGuardias() {
             showLoading(true);
             try {
-                const response = await fetch(`${API_URL}?action=get`);
+               const response = await fetch(`${API_URL}?action=getGuardias`);
                 const data = await response.json();
                 guardias = data || [];
                 renderCalendar();
