@@ -990,7 +990,7 @@
                     <div class="registro-item">
                         <div class="registro-info">
                             <span class="registro-turno ${r.turno}">${r.turno === 'tarde' ? '☀️' : '🌙'} ${r.turno.toUpperCase()}</span>
-                            <span>${r.nombreSocio} (${r.tipoRegistro})</span>
+                            <span>${r.socioNombre} (${r.timestamp})</span>
                             ${r.detalle ? `<small style="opacity:0.7">${r.detalle}</small>` : ''}
                         </div>
                         ${puedeEliminar ? `<button class="btn-eliminar" onclick="eliminarGuardia('${r.fecha}', '${r.turno}', '${r.socioId}')">🗑️</button>` : ''}
