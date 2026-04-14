@@ -867,7 +867,7 @@
                 
                 const fechaStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
                 
-                const guardiasDelDia = guardias.filter(g => g.fecha === fechaStr);
+                const guardiasDelDia = guardias.filter(g => g.fecha.substring(0,10) === fechaStr);
                 const tardeCant = guardiasDelDia.filter(g => g.turno === 'tarde').length;
                 const nocheCant = guardiasDelDia.filter(g => g.turno === 'noche').length;
                 
