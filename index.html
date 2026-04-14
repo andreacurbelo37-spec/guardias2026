@@ -3,325 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COVISUEL - Sistema de Guardias 2026-2027</title>
+    <title>COVISUEL - Sistema de Guardias</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        
-        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
-            color: #ffffff;
+            color: white;
         }
-        
+
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Panel Izquierdo */
+        .left-panel {
+            width: 320px;
+            background: rgba(255,255,255,0.05);
             padding: 20px;
-        }
-        
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 20px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .logo-container {
-            margin-bottom: 15px;
-        }
-        
-        .logo-container img {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #4facfe;
-            box-shadow: 0 0 20px rgba(79, 172, 254, 0.5);
-        }
-        
-        .header h1 {
-            font-size: 2rem;
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .header p {
-            color: #a0a0a0;
-            margin-top: 5px;
-        }
-        
-        /* Layout principal */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 300px 1fr;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
-        
-        @media (max-width: 900px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
+
+        .logo-container {
+            text-align: center;
+            padding: 10px;
         }
-        
-        /* Panel izquierdo */
-        .left-panel {
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-            height: fit-content;
+
+        .logo-container img {
+            max-width: 120px;
+            border-radius: 50%;
+            border: 3px solid #4facfe;
+            box-shadow: 0 0 20px rgba(79, 172, 254, 0.3);
         }
-        
-        .left-panel h3 {
+
+        .app-title {
+            text-align: center;
+            font-size: 1.5em;
             color: #4facfe;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 10px;
         }
-        
-        /* Select de socio */
-        .socio-select {
+
+        .socio-selector {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .socio-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .socio-selector select {
             width: 100%;
             padding: 12px;
             border-radius: 8px;
-            border: 2px solid #4facfe;
-            background: rgba(0,0,0,0.3);
-            color: #fff;
+            border: none;
             font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        .socio-select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-        
-        /* Status mensual */
-        .monthly-status {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .monthly-status h4 {
-            color: #00f2fe;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .status-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .status-item:last-child {
-            border-bottom: none;
-        }
-        
-        .status-label {
-            color: #a0a0a0;
-        }
-        
-        .status-value {
-            font-weight: bold;
-        }
-        
-        .status-ok { color: #4ade80; }
-        .status-warning { color: #fbbf24; }
-        .status-full { color: #f87171; }
-        
-        /* Tipo de registro */
-        .registro-tipo {
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .registro-tipo h4 {
-            color: #00f2fe;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .radio-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
+            background: white;
             cursor: pointer;
-            transition: all 0.3s;
         }
-        
-        .radio-option:hover {
-            background: rgba(79, 172, 254, 0.2);
-        }
-        
-        .radio-option input[type="radio"] {
-            accent-color: #4facfe;
-        }
-        
-        .radio-option label {
-            cursor: pointer;
-            font-size: 14px;
-        }
-        
-        /* Campo colaborador */
-        .colaborador-field {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(79, 172, 254, 0.1);
-            border-radius: 10px;
-            border: 1px solid #4facfe;
+
+        .contador-guardias {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
             display: none;
         }
-        
-        .colaborador-field.active {
+
+        .contador-guardias.visible {
             display: block;
         }
-        
-        .colaborador-field label {
-            display: block;
-            color: #4facfe;
-            margin-bottom: 8px;
-            font-size: 13px;
+
+        .contador-guardias h3 {
+            margin-bottom: 15px;
+            font-size: 1.1em;
         }
-        
-        .colaborador-field select,
-        .colaborador-field input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background: rgba(0,0,0,0.3);
-            color: #fff;
-            font-size: 14px;
+
+        .contador-items {
+            display: flex;
+            justify-content: space-around;
         }
-        
-        /* Panel derecho - Calendario */
-        .right-panel {
+
+        .contador-item {
+            text-align: center;
+        }
+
+        .contador-item .numero {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .contador-item .label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        /* Panel Principal */
+        .main-panel {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+        }
+
+        .btn-excel {
+            background: #217346;
+            color: white;
+        }
+
+        .btn-compliance {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-admin {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .nav-buttons button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        /* Navegación del Calendario */
+        .calendar-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-nav button {
+            background: #4facfe;
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .calendar-nav button:hover {
+            background: #3d8bd9;
+        }
+
+        .calendar-nav span {
+            font-size: 1.3em;
+            font-weight: bold;
+            min-width: 200px;
+            text-align: center;
+        }
+
+        /* Calendario */
+        .calendar {
             background: rgba(255,255,255,0.1);
             border-radius: 15px;
             padding: 20px;
-            backdrop-filter: blur(10px);
+            max-width: 900px;
+            margin: 0 auto;
         }
-        
-        /* Navegación del mes */
-        .month-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
         }
-        
-        .month-nav button {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            border: none;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
+
+        .calendar-header div {
+            text-align: center;
             font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .month-nav button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(79, 172, 254, 0.4);
-        }
-        
-        .month-nav h2 {
+            padding: 10px;
             color: #4facfe;
         }
-        
-        /* Calendario */
-        .calendar {
+
+        .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
         }
-        
-        .calendar-header {
-            background: rgba(79, 172, 254, 0.3);
-            padding: 10px;
-            text-align: center;
-            font-weight: bold;
-            border-radius: 5px;
-            font-size: 12px;
-        }
-        
+
         .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            padding: 8px;
-            min-height: 100px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            padding: 5px;
+            min-height: 70px;
         }
-        
+
         .calendar-day:hover {
-            border-color: #4facfe;
-            transform: scale(1.02);
+            background: rgba(255,255,255,0.15);
+            transform: scale(1.05);
         }
-        
+
         .calendar-day.empty {
             background: transparent;
             cursor: default;
         }
-        
+
         .calendar-day.empty:hover {
-            border-color: transparent;
             transform: none;
         }
-        
-        .day-number {
+
+        .calendar-day .day-number {
+            font-size: 1.2em;
             font-weight: bold;
-            font-size: 16px;
-            margin-bottom: 5px;
         }
-        
-        .shift-indicator {
-            font-size: 10px;
-            padding: 3px 6px;
-            border-radius: 4px;
-            margin: 2px 0;
-            text-align: center;
+
+        .calendar-day .turnos {
+            display: flex;
+            gap: 3px;
+            margin-top: 5px;
         }
-        
-        .shift-tarde {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
+
+        .turno-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
         }
-        
-        .shift-noche {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-        }
-        
-        .shift-green { opacity: 1; }
-        .shift-yellow { opacity: 0.7; }
-        .shift-red { opacity: 0.5; }
-        
+
+        .turno-tarde { background: #f39c12; }
+        .turno-noche { background: #3498db; }
+
+        .turno-verde { background: #27ae60; }
+        .turno-amarillo { background: #f1c40f; }
+        .turno-rojo { background: #e74c3c; }
+
         /* Modal */
         .modal {
             display: none;
@@ -335,986 +303,905 @@
             align-items: center;
             z-index: 1000;
         }
-        
+
         .modal.active {
             display: flex;
         }
-        
+
         .modal-content {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 15px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             padding: 30px;
+            border-radius: 20px;
             max-width: 500px;
             width: 90%;
             max-height: 80vh;
             overflow-y: auto;
-            border: 1px solid #4facfe;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+
+        .modal-content h2 {
             margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        .modal-header h3 {
             color: #4facfe;
+            text-align: center;
         }
-        
-        .close-btn {
-            background: #f87171;
-            border: none;
-            color: #fff;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-        }
-        
-        .shift-section {
+
+        .form-group {
             margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 10px;
         }
-        
-        .shift-section h4 {
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
         }
-        
-        .shift-section h4 .badge {
-            font-size: 12px;
-            padding: 3px 8px;
-            border-radius: 10px;
-        }
-        
-        .registered-list {
-            margin: 10px 0;
-            padding: 10px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            min-height: 40px;
-        }
-        
-        .registered-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .registered-item:last-child {
-            border-bottom: none;
-        }
-        
-        .registered-name {
-            color: #4ade80;
-        }
-        
-        .registered-type {
-            font-size: 11px;
-            color: #a0a0a0;
-            font-style: italic;
-        }
-        
-        .register-btn {
+
+        .form-group select,
+        .form-group input {
             width: 100%;
             padding: 12px;
-            border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s;
-            margin-top: 10px;
+            border: none;
+            font-size: 14px;
         }
-        
-        .register-btn.tarde {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
-            color: #fff;
-        }
-        
-        .register-btn.noche {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
-            color: #fff;
-        }
-        
-        .register-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .register-btn:hover:not(:disabled) {
-            transform: scale(1.02);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-        }
-        
-        /* Botones de acción */
-        .action-buttons {
+
+        .turno-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
-        
-        .action-btn {
+
+        .turno-btn {
             flex: 1;
-            min-width: 120px;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
+            padding: 15px;
+            border: 2px solid transparent;
+            border-radius: 10px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 1em;
             transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
         }
-        
-        .whatsapp-btn {
-            background: #25D366;
-            color: #fff;
+
+        .turno-btn.tarde {
+            background: rgba(243, 156, 18, 0.2);
+            color: #f39c12;
+            border-color: #f39c12;
         }
-        
-        .excel-btn {
-            background: #217346;
-            color: #fff;
+
+        .turno-btn.noche {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border-color: #3498db;
         }
-        
-        .admin-btn {
-            background: linear-gradient(45deg, #f093fb, #f5576c);
-            color: #fff;
-        }
-        
-        .compliance-btn {
-            background: linear-gradient(45deg, #fbbf24, #f59e0b);
-            color: #000;
-        }
-        
-        .action-btn:hover {
+
+        .turno-btn.selected {
             transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
-        
-        /* Leyenda */
-        .legend {
+
+        .turno-btn.tarde.selected {
+            background: #f39c12;
+            color: white;
+        }
+
+        .turno-btn.noche.selected {
+            background: #3498db;
+            color: white;
+        }
+
+        .tipo-registro {
             display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
         }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
+
+        .tipo-btn {
+            padding: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+
+        .tipo-btn:hover {
+            border-color: #4facfe;
         }
-        
-        .legend-green { background: #4ade80; }
-        .legend-yellow { background: #fbbf24; }
-        .legend-red { background: #f87171; }
-        
-        /* Admin Panel */
-        .admin-panel {
+
+        .tipo-btn.selected {
+            background: #4facfe;
+            border-color: #4facfe;
+        }
+
+        .campo-adicional {
             display: none;
-            margin-top: 20px;
-            padding: 20px;
-            background: rgba(248, 113, 113, 0.1);
-            border: 1px solid #f87171;
-            border-radius: 15px;
+            margin-top: 15px;
         }
-        
-        .admin-panel.active {
+
+        .campo-adicional.visible {
             display: block;
         }
-        
-        .admin-panel h3 {
-            color: #f87171;
-            margin-bottom: 15px;
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
-        
-        .admin-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 14px;
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
         }
-        
-        .admin-table th,
-        .admin-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+
+        .btn-confirmar {
+            background: #27ae60;
+            color: white;
         }
-        
-        .admin-table th {
-            background: rgba(0,0,0,0.3);
+
+        .btn-cancelar {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-confirmar:hover, .btn-cancelar:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        /* Registros del día */
+        .registros-dia {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .registros-dia h4 {
+            margin-bottom: 10px;
             color: #4facfe;
         }
-        
-        .delete-btn {
-            background: #f87171;
+
+        .registro-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .registro-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .registro-turno {
+            font-weight: bold;
+        }
+
+        .registro-turno.tarde { color: #f39c12; }
+        .registro-turno.noche { color: #3498db; }
+
+        .btn-eliminar {
+            background: #e74c3c;
             border: none;
-            color: #fff;
+            color: white;
             padding: 5px 10px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 12px;
         }
-        
-        .delete-btn:hover {
-            background: #ef4444;
-        }
-        
+
         /* Loading */
         .loading {
-            text-align: center;
-            padding: 40px;
-            color: #4facfe;
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            flex-direction: column;
+            gap: 20px;
         }
-        
-        .loading::after {
-            content: '';
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid #4facfe;
-            border-top-color: transparent;
+
+        .loading.active {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255,255,255,0.3);
+            border-top-color: #4facfe;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-left: 10px;
         }
-        
+
+        .loading-text {
+            color: white;
+            font-size: 1.1em;
+        }
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
-        /* Toast notifications */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            color: #fff;
-            font-weight: bold;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-        }
-        
-        .toast.success { background: #4ade80; }
-        .toast.error { background: #f87171; }
-        .toast.warning { background: #fbbf24; color: #000; }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            .calendar-header div {
+                font-size: 0.8em;
+                padding: 5px;
+            }
+
+            .calendar-day {
+                min-height: 50px;
+            }
+
+            .calendar-day .day-number {
+                font-size: 1em;
+            }
+
+            .nav-buttons button {
+                padding: 8px 15px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Cargando datos...</div>
+    </div>
+
     <div class="container">
-        <!-- Header -->
-        <div class="header">
+        <!-- Panel Izquierdo -->
+        <div class="left-panel">
             <div class="logo-container">
-                <img src="logo.jpg" alt="COVISUEL Logo" onerror="this.style.display='none'">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+CiAgPGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNTUiIGZpbGw9IiMxYTFhMmUiIHN0cm9rZT0iIzRmYWNmZSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CiAgPHRleHQgeD0iNjAiIHk9IjQ1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNGZhY2ZlIiBmb250LXNpemU9IjE0IiBmb250LXdlaWdodD0iYm9sZCI+Q09WSVNVRUw8L3RleHQ+CiAgPHRleHQgeD0iNjAiIHk9IjcwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1zaXplPSIzMCI+8J+biTwvdGV4dD4KICA8dGV4dCB4PSI2MCIgeT0iOTUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiM0ZmFjZmUiIGZvbnQtc2l6ZT0iMTAiPkd1YXJkaWFzPC90ZXh0Pgo8L3N2Zz4=" alt="COVISUEL Logo" id="logoImg">
             </div>
-            <h1>🛡️ COVISUEL - Sistema de Guardias</h1>
-            <p>Abril 2026 - Diciembre 2027</p>
-        </div>
-        
-        <!-- Layout principal -->
-        <div class="main-layout">
-            <!-- Panel izquierdo -->
-            <div class="left-panel">
-                <h3>👤 Seleccionar Socio</h3>
-                <select class="socio-select" id="socioSelect">
-                    <option value="">-- Seleccionar Socio --</option>
+            
+            <h2 class="app-title">🛡️ COVISUEL</h2>
+            
+            <div class="socio-selector">
+                <label>👤 Seleccionar Socio:</label>
+                <select id="socioSelect" onchange="seleccionarSocio()">
+                    <option value="">-- Elegir socio --</option>
                 </select>
-                
-                <!-- Status mensual -->
-                <div class="monthly-status" id="monthlyStatus">
-                    <h4>📊 Estado del Mes Actual</h4>
-                    <div class="status-item">
-                        <span class="status-label">Turnos Tarde:</span>
-                        <span class="status-value status-ok" id="tardeStatus">0/2</span>
-                    </div>
-                    <div class="status-item">
-                        <span class="status-label">Turnos Noche:</span>
-                        <span class="status-value status-ok" id="nocheStatus">0/3</span>
-                    </div>
-                </div>
-                
-                <!-- Tipo de registro -->
-                <div class="registro-tipo">
-                    <h4>📝 Tipo de Registro</h4>
-                    <div class="radio-group">
-                        <div class="radio-option">
-                            <input type="radio" id="tipoTitular" name="tipoRegistro" value="titular" checked>
-                            <label for="tipoTitular">👤 Titular</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="tipoColaborador" name="tipoRegistro" value="colaborador">
-                            <label for="tipoColaborador">🤝 Colaborador</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="tipoNucleo" name="tipoRegistro" value="nucleo">
-                            <label for="tipoNucleo">👨‍👩‍👧 Núcleo Familiar</label>
-                        </div>
-                    </div>
-                    
-                    <!-- Campo Colaborador -->
-                    <div class="colaborador-field" id="colaboradorField">
-                        <label>🤝 ¿Quién te colabora?</label>
-                        <select id="colaboradorSelect">
-                            <option value="">-- Seleccionar Colaborador --</option>
-                        </select>
-                    </div>
-                    
-                    <!-- Campo Núcleo Familiar -->
-                    <div class="colaborador-field" id="nucleoField">
-                        <label>👨‍👩‍👧 Nombre del Familiar</label>
-                        <input type="text" id="nucleoNombre" placeholder="Ej: María García (esposa)">
-                    </div>
-                </div>
-                
-                <!-- Botones de acción -->
-                <div class="action-buttons" style="flex-direction: column;">
-                    <button class="action-btn whatsapp-btn" onclick="exportWhatsApp()">
-                        📱 WhatsApp
-                    </button>
-                    <button class="action-btn excel-btn" onclick="exportExcel()">
-                        📊 Excel/CSV
-                    </button>
-                    <button class="action-btn compliance-btn" onclick="showCompliance()">
-                        ✅ Cumplimiento
-                    </button>
-                    <button class="action-btn admin-btn" onclick="showAdminLogin()">
-                        🔐 Admin
-                    </button>
-                </div>
             </div>
-            
-            <!-- Panel derecho - Calendario -->
-            <div class="right-panel">
-                <div class="month-nav">
-                    <button onclick="changeMonth(-1)">◀ Anterior</button>
-                    <h2 id="currentMonth">Abril 2026</h2>
-                    <button onclick="changeMonth(1)">Siguiente ▶</button>
-                </div>
-                
-                <div class="calendar" id="calendar">
-                    <div class="loading">Cargando calendario...</div>
-                </div>
-                
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color legend-green"></div>
-                        <span>Disponible (0-1)</span>
+
+            <div class="contador-guardias" id="contadorGuardias">
+                <h3>📊 Guardias del Mes</h3>
+                <div class="contador-items">
+                    <div class="contador-item">
+                        <div class="numero" id="contadorTarde">0/2</div>
+                        <div class="label">☀️ Tarde</div>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color legend-yellow"></div>
-                        <span>Casi lleno (2)</span>
+                    <div class="contador-item">
+                        <div class="numero" id="contadorNoche">0/3</div>
+                        <div class="label">🌙 Noche</div>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-color legend-red"></div>
-                        <span>Completo (3)</span>
-                    </div>
-                </div>
-                
-                <!-- Panel Admin -->
-                <div class="admin-panel" id="adminPanel">
-                    <h3>🔐 Panel de Administración</h3>
-                    <p>Gestión de registros y monitoreo del sistema</p>
-                    <div id="adminContent"></div>
                 </div>
             </div>
         </div>
+
+        <!-- Panel Principal -->
+        <div class="main-panel">
+            <div class="header">
+                <h1>📅 Sistema de Guardias</h1>
+                <p>Abril 2026 - Diciembre 2027</p>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn-whatsapp" onclick="exportarWhatsApp()">📱 WhatsApp</button>
+                <button class="btn-excel" onclick="exportarExcel()">📊 Excel</button>
+                <button class="btn-compliance" onclick="verCompliance()">✅ Cumplimiento</button>
+                <button class="btn-admin" onclick="abrirAdmin()">🔐 Admin</button>
+            </div>
+
+            <div class="calendar-nav">
+                <button onclick="mesAnterior()">◀</button>
+                <span id="mesActual">Abril 2026</span>
+                <button onclick="mesSiguiente()">▶</button>
+            </div>
+
+            <div class="calendar">
+                <div class="calendar-header">
+                    <div>Dom</div>
+                    <div>Lun</div>
+                    <div>Mar</div>
+                    <div>Mié</div>
+                    <div>Jue</div>
+                    <div>Vie</div>
+                    <div>Sáb</div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid"></div>
+            </div>
+        </div>
     </div>
-    
-    <!-- Modal de registro -->
-    <div class="modal" id="shiftModal">
+
+    <!-- Modal de Registro -->
+    <div class="modal" id="modalRegistro">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">Turnos del Día</h3>
-                <button class="close-btn" onclick="closeModal()">×</button>
+            <h2 id="modalTitulo">Registrar Guardia</h2>
+            
+            <div class="turno-buttons">
+                <button class="turno-btn tarde" onclick="seleccionarTurno('tarde')">☀️ TARDE</button>
+                <button class="turno-btn noche" onclick="seleccionarTurno('noche')">🌙 NOCHE</button>
             </div>
-            <div id="modalBody"></div>
+
+            <div class="form-group">
+                <label>Tipo de Registro:</label>
+                <div class="tipo-registro">
+                    <button class="tipo-btn selected" onclick="seleccionarTipo('titular')">👤 Titular</button>
+                    <button class="tipo-btn" onclick="seleccionarTipo('colaborador')">🤝 Colaborador</button>
+                    <button class="tipo-btn" onclick="seleccionarTipo('nucleo')">👨‍👩‍👧 Núcleo Familiar</button>
+                </div>
+            </div>
+
+            <div class="campo-adicional" id="campoColaborador">
+                <div class="form-group">
+                    <label>Seleccionar socio al que ayuda:</label>
+                    <select id="selectColaborador"></select>
+                </div>
+            </div>
+
+            <div class="campo-adicional" id="campoNucleo">
+                <div class="form-group">
+                    <label>Nombre del familiar:</label>
+                    <input type="text" id="inputNucleo" placeholder="Nombre completo del familiar">
+                </div>
+            </div>
+
+            <div class="registros-dia" id="registrosDia"></div>
+
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="cerrarModal()">Cancelar</button>
+                <button class="btn-confirmar" onclick="confirmarRegistro()">✅ Confirmar</button>
+            </div>
         </div>
     </div>
-    
+
+    <!-- Modal Admin -->
+    <div class="modal" id="modalAdmin">
+        <div class="modal-content">
+            <h2>🔐 Acceso Administrador</h2>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" id="adminPassword" placeholder="Ingrese contraseña">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn-cancelar" onclick="cerrarModalAdmin()">Cancelar</button>
+                <button class="btn-confirmar" onclick="verificarAdmin()">Ingresar</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // ============================================
-        // CONFIGURACIÓN Y DATOS
-        // ============================================
+        // ==================== CONFIGURACIÓN ====================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbwf5Dvn1o-f4cgRrYO0OijTm7U46nmLdyg5SxQXChiB_zOSQjqWB6tBgZt0vugptzQ/exec';
         
-        const CONFIG = {
-            API_URL: 'https://script.google.com/macros/s/AKfycbxjJWuJkPeCuO6897CljuhCpX-JKApHTbKjzjrHDDrnvNaUgMdB5DATR1f1b6d_j1CK/exec',
-            SOCIOS: [
-                { numero: 215, nombre: "Mary Yacqueline Cunha Gómez" },
-                { numero: 222, nombre: "Mariana Gissel Arias D'ottone" },
-                { numero: 223, nombre: "Claudia Erika Peña Mármol" },
-                { numero: 225, nombre: "Stephanie Arias" },
-                { numero: 228, nombre: "Eduardo Sequeira" },
-                { numero: 230, nombre: "Alejandra Cabrera" },
-                { numero: 236, nombre: "Jorge Almada" },
-                { numero: 237, nombre: "Gonzalo Correa" },
-                { numero: 238, nombre: "Pablo Mercadal" },
-                { numero: 239, nombre: "Verónica Echevarría" },
-                { numero: 240, nombre: "Andrea Curbelo" },
-                { numero: 241, nombre: "Washington Villar" },
-                { numero: 242, nombre: "Sabrina Aguilar" },
-                { numero: 243, nombre: "Soraya Buelmo" },
-                { numero: 244, nombre: "Marlon Goes" },
-                { numero: 245, nombre: "Virginia Diaz" },
-                { numero: 246, nombre: "Oscar Ibarra" },
-                { numero: 247, nombre: "Claudia Sequeira" },
-                { numero: 248, nombre: "Claudia Buelmo" },
-                { numero: 249, nombre: "Mayra Buelmo" },
-                { numero: 251, nombre: "Adriana Menéndez" },
-                { numero: 253, nombre: "Juan Pablo Gallulo" },
-                { numero: 254, nombre: "Belén González" },
-                { numero: 256, nombre: "Francesca Delgado" },
-                { numero: 257, nombre: "Juan Rosa" },
-                { numero: 258, nombre: "Florencia Muñoz" },
-                { numero: 259, nombre: "Jorge Coímbra" },
-                { numero: 261, nombre: "Roberto Martínez" },
-                { numero: 262, nombre: "Katherine Cheda" },
-                { numero: 265, nombre: "Kevin Guaraglia" },
-                { numero: 266, nombre: "María Noel Carbajal" },
-                { numero: 267, nombre: "Martin Salfibia" },
-                { numero: 268, nombre: "Maximiliano Cisnero" },
-                { numero: 269, nombre: "Claudia Rios" }
-            ],
-            ADMINS: [240, 245, 253, 266],
-            ADMIN_PASSWORD: 'Molas2026',
-            LIMITS: { tarde: 2, noche: 3 },
-            CAPACITY: 3
-        };
-        
-        // Estado de la aplicación
-        let currentDate = new Date(2026, 3, 1); // Abril 2026
-        let registros = [];
+        // SOCIOS CORRECTOS DE COVISUEL
+        const SOCIOS = [
+            {id: 215, nombre: "Mary Yacqueline Cunha Gómez"},
+            {id: 222, nombre: "Mariana Gissel Arias D'ottone"},
+            {id: 223, nombre: "Claudia Erika Peña Mármol"},
+            {id: 225, nombre: "Stephanie Arias"},
+            {id: 228, nombre: "Eduardo Sequeira"},
+            {id: 230, nombre: "Alejandra Cabrera"},
+            {id: 236, nombre: "Jorge Almada"},
+            {id: 237, nombre: "Gonzalo Correa"},
+            {id: 238, nombre: "Pablo Mercadal"},
+            {id: 239, nombre: "Verónica Echevarría"},
+            {id: 240, nombre: "Andrea Curbelo"},
+            {id: 241, nombre: "Washington Villar"},
+            {id: 242, nombre: "Sabrina Aguilar"},
+            {id: 243, nombre: "Soraya Buelmo"},
+            {id: 244, nombre: "Marlon Goes"},
+            {id: 245, nombre: "Virginia Diaz"},
+            {id: 246, nombre: "Oscar Ibarra"},
+            {id: 247, nombre: "Claudia Sequeira"},
+            {id: 248, nombre: "Claudia Buelmo"},
+            {id: 249, nombre: "Mayra Buelmo"},
+            {id: 251, nombre: "Adriana Menéndez"},
+            {id: 253, nombre: "Juan Pablo Gallulo"},
+            {id: 254, nombre: "Belén González"},
+            {id: 256, nombre: "Francesca Delgado"},
+            {id: 257, nombre: "Juan Rosa"},
+            {id: 258, nombre: "Florencia Muñoz"},
+            {id: 259, nombre: "Jorge Coímbra"},
+            {id: 261, nombre: "Roberto Martínez"},
+            {id: 262, nombre: "Katherine Cheda"},
+            {id: 265, nombre: "Kevin Guaraglia"},
+            {id: 266, nombre: "María Noel Carbajal"},
+            {id: 267, nombre: "Martin Salfibia"},
+            {id: 268, nombre: "Maximiliano Cisnero"},
+            {id: 269, nombre: "Claudia Rios"}
+        ];
+
+        const ADMINS = [240, 245, 253, 266]; // Andrea, Virginia, Juan Pablo, María Noel
+        const ADMIN_PASSWORD = "Molas2026";
+
+        // ==================== ESTADO ====================
+        let currentMonth = 3; // Abril (0-indexed)
+        let currentYear = 2026;
         let selectedSocio = null;
+        let selectedDate = null;
+        let selectedTurno = null;
+        let selectedTipo = 'titular';
+        let guardias = [];
         let isAdmin = false;
-        
-        // ============================================
-        // INICIALIZACIÓN
-        // ============================================
-        
+
+        // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
-            initSocioSelects();
-            setupEventListeners();
-            loadRegistros();
+            cargarSocios();
+            cargarGuardias();
         });
-        
-        function initSocioSelects() {
-            const socioSelect = document.getElementById('socioSelect');
-            const colaboradorSelect = document.getElementById('colaboradorSelect');
+
+        function cargarSocios() {
+            const select = document.getElementById('socioSelect');
+            const selectColaborador = document.getElementById('selectColaborador');
             
-            CONFIG.SOCIOS.forEach(socio => {
-                // Select principal
-                const option1 = document.createElement('option');
-                option1.value = socio.numero;
-                option1.textContent = `${socio.numero} - ${socio.nombre}`;
-                socioSelect.appendChild(option1);
+            SOCIOS.forEach(socio => {
+                const option = document.createElement('option');
+                option.value = socio.id;
+                option.textContent = `${socio.id} - ${socio.nombre}`;
+                select.appendChild(option);
+                selectColaborador.appendChild(option.cloneNode(true));
+            });
+        }
+
+        // ==================== API GOOGLE SHEETS ====================
+        async function cargarGuardias() {
+            showLoading(true);
+            try {
+                const response = await fetch(`${API_URL}?action=get`);
+                const data = await response.json();
+                guardias = data || [];
+                renderCalendar();
+                actualizarContador();
+            } catch (error) {
+                console.error('Error cargando guardias:', error);
+                guardias = [];
+                renderCalendar();
+            }
+            showLoading(false);
+        }
+
+        async function guardarGuardia(guardia) {
+            showLoading(true);
+            try {
+                const params = new URLSearchParams({
+                    action: 'add',
+                    fecha: guardia.fecha,
+                    turno: guardia.turno,
+                    socioId: guardia.socioId,
+                    nombreSocio: guardia.nombreSocio,
+                    tipoRegistro: guardia.tipoRegistro,
+                    detalle: guardia.detalle || ''
+                });
                 
-                // Select colaborador
-                const option2 = document.createElement('option');
-                option2.value = socio.numero;
-                option2.textContent = `${socio.numero} - ${socio.nombre}`;
-                colaboradorSelect.appendChild(option2);
-            });
+                await fetch(`${API_URL}?${params.toString()}`);
+                await cargarGuardias();
+            } catch (error) {
+                console.error('Error guardando guardia:', error);
+                alert('Error al guardar. Intente nuevamente.');
+            }
+            showLoading(false);
         }
-        
-        function setupEventListeners() {
-            // Cambio de socio
-            document.getElementById('socioSelect').addEventListener('change', function() {
-                selectedSocio = this.value ? parseInt(this.value) : null;
-                updateMonthlyStatus();
-            });
+
+        async function eliminarGuardia(fecha, turno, socioId) {
+            if (!confirm('¿Eliminar este registro?')) return;
             
-            // Cambio de tipo de registro
-            document.querySelectorAll('input[name="tipoRegistro"]').forEach(radio => {
-                radio.addEventListener('change', function() {
-                    const colaboradorField = document.getElementById('colaboradorField');
-                    const nucleoField = document.getElementById('nucleoField');
-                    
-                    colaboradorField.classList.remove('active');
-                    nucleoField.classList.remove('active');
-                    
-                    if (this.value === 'colaborador') {
-                        colaboradorField.classList.add('active');
-                    } else if (this.value === 'nucleo') {
-                        nucleoField.classList.add('active');
-                    }
-                });
-            });
-        }
-        
-        // ============================================
-        // API Y DATOS
-        // ============================================
-        
-        async function loadRegistros() {
+            showLoading(true);
             try {
-                const response = await fetch(`${CONFIG.API_URL}?action=getRegistros`);
-                const data = await response.json();
-                if (data.success) {
-                    registros = data.registros || [];
-                }
-            } catch (error) {
-                console.log('Usando datos locales');
-                registros = JSON.parse(localStorage.getItem('guardias_registros') || '[]');
-            }
-            renderCalendar();
-        }
-        
-        async function saveRegistro(registro) {
-            try {
-                const response = await fetch(CONFIG.API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'addRegistro', ...registro })
+                const params = new URLSearchParams({
+                    action: 'delete',
+                    fecha: fecha,
+                    turno: turno,
+                    socioId: socioId
                 });
-                const data = await response.json();
-                return data.success;
+                
+                await fetch(`${API_URL}?${params.toString()}`);
+                await cargarGuardias();
+                mostrarRegistrosDelDia(fecha);
             } catch (error) {
-                // Guardar localmente si falla
-                registros.push(registro);
-                localStorage.setItem('guardias_registros', JSON.stringify(registros));
-                return true;
+                console.error('Error eliminando guardia:', error);
+                alert('Error al eliminar. Intente nuevamente.');
             }
+            showLoading(false);
         }
-        
-        // ============================================
-        // CALENDARIO
-        // ============================================
-        
+
+        function showLoading(show) {
+            document.getElementById('loading').classList.toggle('active', show);
+        }
+
+        // ==================== CALENDARIO ====================
         function renderCalendar() {
-            const calendar = document.getElementById('calendar');
-            const year = currentDate.getFullYear();
-            const month = currentDate.getMonth();
+            const grid = document.getElementById('calendarGrid');
+            const mesActual = document.getElementById('mesActual');
             
-            // Actualizar título
-            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             
-            // Headers
-            const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-            let html = days.map(d => `<div class="calendar-header">${d}</div>`).join('');
+            mesActual.textContent = `${meses[currentMonth]} ${currentYear}`;
             
-            // Primer día del mes
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const primerDia = new Date(currentYear, currentMonth, 1);
+            const ultimoDia = new Date(currentYear, currentMonth + 1, 0);
+            const diasEnMes = ultimoDia.getDate();
+            const diaInicio = primerDia.getDay();
             
-            // Días vacíos
-            for (let i = 0; i < firstDay; i++) {
-                html += '<div class="calendar-day empty"></div>';
+            grid.innerHTML = '';
+            
+            // Días vacíos al inicio
+            for (let i = 0; i < diaInicio; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                grid.appendChild(emptyDay);
             }
             
             // Días del mes
-            for (let day = 1; day <= daysInMonth; day++) {
-                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayRegistros = registros.filter(r => r.fecha === dateStr);
-                const tardeCount = dayRegistros.filter(r => r.turno === 'tarde').length;
-                const nocheCount = dayRegistros.filter(r => r.turno === 'noche').length;
+            for (let dia = 1; dia <= diasEnMes; dia++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
                 
-                const tardeClass = tardeCount === 0 ? 'shift-green' : tardeCount < 3 ? 'shift-yellow' : 'shift-red';
-                const nocheClass = nocheCount === 0 ? 'shift-green' : nocheCount < 3 ? 'shift-yellow' : 'shift-red';
+                const fechaStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
                 
-                html += `
-                    <div class="calendar-day" onclick="openDayModal('${dateStr}')">
-                        <div class="day-number">${day}</div>
-                        <div class="shift-indicator shift-tarde ${tardeClass}">T: ${tardeCount}/3</div>
-                        <div class="shift-indicator shift-noche ${nocheClass}">N: ${nocheCount}/3</div>
+                const guardiasDelDia = guardias.filter(g => g.fecha === fechaStr);
+                const tardeCant = guardiasDelDia.filter(g => g.turno === 'tarde').length;
+                const nocheCant = guardiasDelDia.filter(g => g.turno === 'noche').length;
+                
+                dayElement.innerHTML = `
+                    <span class="day-number">${dia}</span>
+                    <div class="turnos">
+                        ${tardeCant > 0 ? `<span class="turno-indicator ${getColorClass(tardeCant)}" title="Tarde: ${tardeCant}/3">T${tardeCant}</span>` : ''}
+                        ${nocheCant > 0 ? `<span class="turno-indicator ${getColorClass(nocheCant)}" style="background:#3498db" title="Noche: ${nocheCant}/3">N${nocheCant}</span>` : ''}
                     </div>
                 `;
-            }
-            
-            calendar.innerHTML = html;
-            updateMonthlyStatus();
-        }
-        
-        function changeMonth(delta) {
-            currentDate.setMonth(currentDate.getMonth() + delta);
-            
-            // Limitar entre Abril 2026 y Diciembre 2027
-            const minDate = new Date(2026, 3, 1);
-            const maxDate = new Date(2027, 11, 31);
-            
-            if (currentDate < minDate) currentDate = new Date(2026, 3, 1);
-            if (currentDate > maxDate) currentDate = new Date(2027, 11, 1);
-            
-            renderCalendar();
-        }
-        
-        // ============================================
-        // MODAL DE REGISTRO
-        // ============================================
-        
-        function openDayModal(dateStr) {
-            if (!selectedSocio) {
-                showToast('Seleccioná un socio primero', 'warning');
-                return;
-            }
-            
-            const modal = document.getElementById('shiftModal');
-            const dayRegistros = registros.filter(r => r.fecha === dateStr);
-            const tardeRegs = dayRegistros.filter(r => r.turno === 'tarde');
-            const nocheRegs = dayRegistros.filter(r => r.turno === 'noche');
-            
-            const socioData = CONFIG.SOCIOS.find(s => s.numero === selectedSocio);
-            const dateParts = dateStr.split('-');
-            const displayDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-            
-            document.getElementById('modalTitle').textContent = `Turnos - ${displayDate}`;
-            
-            let html = `
-                <!-- Turno Tarde -->
-                <div class="shift-section">
-                    <h4>🌅 Turno Tarde (14:00 - 20:00) 
-                        <span class="badge shift-tarde">${tardeRegs.length}/3</span>
-                    </h4>
-                    <div class="registered-list">
-                        ${tardeRegs.length > 0 ? 
-                            tardeRegs.map(r => `
-                                <div class="registered-item">
-                                    <span class="registered-name">${r.socioNumero} - ${r.socioNombre}</span>
-                                    <span class="registered-type">${getRegistroTypeLabel(r)}</span>
-                                </div>
-                            `).join('') : 
-                            '<div style="color:#a0a0a0;font-size:13px;">Sin registros aún</div>'
-                        }
-                    </div>
-                    <button class="register-btn tarde" 
-                            onclick="registrarTurno('${dateStr}', 'tarde')"
-                            ${tardeRegs.length >= 3 ? 'disabled' : ''}>
-                        ${tardeRegs.length >= 3 ? '🔒 Turno Completo' : '✅ Registrarme en Tarde'}
-                    </button>
-                </div>
                 
-                <!-- Turno Noche -->
-                <div class="shift-section">
-                    <h4>🌙 Turno Noche (20:00 - 08:00)
-                        <span class="badge shift-noche">${nocheRegs.length}/3</span>
-                    </h4>
-                    <div class="registered-list">
-                        ${nocheRegs.length > 0 ? 
-                            nocheRegs.map(r => `
-                                <div class="registered-item">
-                                    <span class="registered-name">${r.socioNumero} - ${r.socioNombre}</span>
-                                    <span class="registered-type">${getRegistroTypeLabel(r)}</span>
-                                </div>
-                            `).join('') : 
-                            '<div style="color:#a0a0a0;font-size:13px;">Sin registros aún</div>'
-                        }
-                    </div>
-                    <button class="register-btn noche" 
-                            onclick="registrarTurno('${dateStr}', 'noche')"
-                            ${nocheRegs.length >= 3 ? 'disabled' : ''}>
-                        ${nocheRegs.length >= 3 ? '🔒 Turno Completo' : '✅ Registrarme en Noche'}
-                    </button>
-                </div>
-            `;
-            
-            document.getElementById('modalBody').innerHTML = html;
-            modal.classList.add('active');
-        }
-        
-        function getRegistroTypeLabel(registro) {
-            if (registro.tipo === 'colaborador') {
-                return `🤝 Colabora: ${registro.colaborador}`;
-            } else if (registro.tipo === 'nucleo') {
-                return `👨‍👩‍👧 Familiar: ${registro.familiar}`;
+                dayElement.onclick = () => abrirModal(dia, fechaStr);
+                grid.appendChild(dayElement);
             }
-            return '👤 Titular';
         }
-        
-        function closeModal() {
-            document.getElementById('shiftModal').classList.remove('active');
+
+        function getColorClass(cantidad) {
+            if (cantidad >= 3) return 'turno-rojo';
+            if (cantidad === 2) return 'turno-amarillo';
+            return 'turno-verde';
         }
-        
-        // ============================================
-        // REGISTRO DE TURNOS
-        // ============================================
-        
-        async function registrarTurno(fecha, turno) {
-            const socioData = CONFIG.SOCIOS.find(s => s.numero === selectedSocio);
-            const tipo = document.querySelector('input[name="tipoRegistro"]:checked').value;
-            
-            // Verificar límites mensuales
-            const month = fecha.substring(0, 7);
-            const socioMonthRegs = registros.filter(r => 
-                r.socioNumero === selectedSocio && 
-                r.fecha.startsWith(month) && 
-                r.turno === turno
-            );
-            
-            const limit = CONFIG.LIMITS[turno];
-            if (socioMonthRegs.length >= limit) {
-                showToast(`Ya alcanzaste el límite de ${limit} turnos ${turno} este mes`, 'error');
-                return;
+
+        function mesAnterior() {
+            if (currentMonth === 3 && currentYear === 2026) return;
+            currentMonth--;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
             }
-            
-            // Construir registro
-            const registro = {
-                fecha: fecha,
-                turno: turno,
-                socioNumero: selectedSocio,
-                socioNombre: socioData.nombre,
-                tipo: tipo,
-                timestamp: new Date().toISOString()
-            };
-            
-            // Agregar info adicional según tipo
-            if (tipo === 'colaborador') {
-                const colaboradorNum = parseInt(document.getElementById('colaboradorSelect').value);
-                if (!colaboradorNum) {
-                    showToast('Seleccioná quién te colabora', 'warning');
-                    return;
-                }
-                const colaboradorData = CONFIG.SOCIOS.find(s => s.numero === colaboradorNum);
-                registro.colaborador = `${colaboradorData.numero} - ${colaboradorData.nombre}`;
-            } else if (tipo === 'nucleo') {
-                const familiarNombre = document.getElementById('nucleoNombre').value.trim();
-                if (!familiarNombre) {
-                    showToast('Ingresá el nombre del familiar', 'warning');
-                    return;
-                }
-                registro.familiar = familiarNombre;
+            renderCalendar();
+            actualizarContador();
+        }
+
+        function mesSiguiente() {
+            if (currentMonth === 11 && currentYear === 2027) return;
+            currentMonth++;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
             }
+            renderCalendar();
+            actualizarContador();
+        }
+
+        // ==================== SELECCIÓN DE SOCIO ====================
+        function seleccionarSocio() {
+            const select = document.getElementById('socioSelect');
+            const socioId = parseInt(select.value);
             
-            // Guardar
-            const success = await saveRegistro(registro);
-            if (success) {
-                registros.push(registro);
-                showToast('✅ Registro exitoso!', 'success');
-                closeModal();
-                renderCalendar();
+            if (socioId) {
+                selectedSocio = SOCIOS.find(s => s.id === socioId);
+                document.getElementById('contadorGuardias').classList.add('visible');
+                actualizarContador();
             } else {
-                showToast('Error al guardar', 'error');
+                selectedSocio = null;
+                document.getElementById('contadorGuardias').classList.remove('visible');
             }
         }
-        
-        // ============================================
-        // STATUS MENSUAL
-        // ============================================
-        
-        function updateMonthlyStatus() {
+
+        function actualizarContador() {
             if (!selectedSocio) return;
             
-            const month = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-            const socioRegs = registros.filter(r => 
-                r.socioNumero === selectedSocio && 
-                r.fecha.startsWith(month)
+            const guardiasSocioMes = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return g.socioId == selectedSocio.id && 
+                       fecha.getMonth() === currentMonth && 
+                       fecha.getFullYear() === currentYear;
+            });
+            
+            const tarde = guardiasSocioMes.filter(g => g.turno === 'tarde').length;
+            const noche = guardiasSocioMes.filter(g => g.turno === 'noche').length;
+            
+            document.getElementById('contadorTarde').textContent = `${tarde}/2`;
+            document.getElementById('contadorNoche').textContent = `${noche}/3`;
+            
+            document.getElementById('contadorTarde').style.color = tarde >= 2 ? '#e74c3c' : 'white';
+            document.getElementById('contadorNoche').style.color = noche >= 3 ? '#e74c3c' : 'white';
+        }
+
+        // ==================== MODAL ====================
+        function abrirModal(dia, fechaStr) {
+            if (!selectedSocio) {
+                alert('⚠️ Primero seleccioná un socio');
+                return;
+            }
+            
+            selectedDate = fechaStr;
+            selectedTurno = null;
+            selectedTipo = 'titular';
+            
+            document.getElementById('modalTitulo').textContent = `📅 ${dia}/${currentMonth + 1}/${currentYear}`;
+            
+            document.querySelectorAll('.turno-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector('.tipo-btn').classList.add('selected');
+            document.getElementById('campoColaborador').classList.remove('visible');
+            document.getElementById('campoNucleo').classList.remove('visible');
+            document.getElementById('inputNucleo').value = '';
+            
+            mostrarRegistrosDelDia(fechaStr);
+            
+            document.getElementById('modalRegistro').classList.add('active');
+        }
+
+        function mostrarRegistrosDelDia(fecha) {
+            const container = document.getElementById('registrosDia');
+            const registros = guardias.filter(g => g.fecha === fecha);
+            
+            if (registros.length === 0) {
+                container.innerHTML = '<p style="opacity: 0.7; text-align: center;">No hay registros para este día</p>';
+                return;
+            }
+            
+            let html = '<h4>Registros del día:</h4>';
+            registros.forEach(r => {
+                const esPropio = r.socioId == selectedSocio.id;
+                const puedeEliminar = esPropio || isAdmin;
+                
+                html += `
+                    <div class="registro-item">
+                        <div class="registro-info">
+                            <span class="registro-turno ${r.turno}">${r.turno === 'tarde' ? '☀️' : '🌙'} ${r.turno.toUpperCase()}</span>
+                            <span>${r.nombreSocio} (${r.tipoRegistro})</span>
+                            ${r.detalle ? `<small style="opacity:0.7">${r.detalle}</small>` : ''}
+                        </div>
+                        ${puedeEliminar ? `<button class="btn-eliminar" onclick="eliminarGuardia('${r.fecha}', '${r.turno}', '${r.socioId}')">🗑️</button>` : ''}
+                    </div>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalRegistro').classList.remove('active');
+        }
+
+        function seleccionarTurno(turno) {
+            selectedTurno = turno;
+            document.querySelectorAll('.turno-btn').forEach(btn => btn.classList.remove('selected'));
+            document.querySelector(`.turno-btn.${turno}`).classList.add('selected');
+        }
+
+        function seleccionarTipo(tipo) {
+            selectedTipo = tipo;
+            document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            document.getElementById('campoColaborador').classList.toggle('visible', tipo === 'colaborador');
+            document.getElementById('campoNucleo').classList.toggle('visible', tipo === 'nucleo');
+        }
+
+        async function confirmarRegistro() {
+            if (!selectedTurno) {
+                alert('⚠️ Seleccioná un turno (Tarde o Noche)');
+                return;
+            }
+            
+            // Verificar si ya está registrado
+            const yaRegistrado = guardias.find(g => 
+                g.fecha === selectedDate && 
+                g.turno === selectedTurno && 
+                g.socioId == selectedSocio.id
             );
             
-            const tardeCount = socioRegs.filter(r => r.turno === 'tarde').length;
-            const nocheCount = socioRegs.filter(r => r.turno === 'noche').length;
-            
-            const tardeStatus = document.getElementById('tardeStatus');
-            const nocheStatus = document.getElementById('nocheStatus');
-            
-            tardeStatus.textContent = `${tardeCount}/2`;
-            tardeStatus.className = `status-value ${tardeCount >= 2 ? 'status-full' : tardeCount >= 1 ? 'status-warning' : 'status-ok'}`;
-            
-            nocheStatus.textContent = `${nocheCount}/3`;
-            nocheStatus.className = `status-value ${nocheCount >= 3 ? 'status-full' : nocheCount >= 2 ? 'status-warning' : 'status-ok'}`;
-        }
-        
-        // ============================================
-        // EXPORTACIONES
-        // ============================================
-        
-        function exportWhatsApp() {
-            const month = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
-            const monthRegs = registros.filter(r => r.fecha.startsWith(month));
-            
-            if (monthRegs.length === 0) {
-                showToast('No hay registros este mes', 'warning');
+            if (yaRegistrado) {
+                alert('⚠️ Ya estás registrado en este turno');
                 return;
             }
             
-            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            
-            let text = `🛡️ *COVISUEL - Guardias ${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}*\n\n`;
-            
-            // Agrupar por fecha
-            const byDate = {};
-            monthRegs.forEach(r => {
-                if (!byDate[r.fecha]) byDate[r.fecha] = [];
-                byDate[r.fecha].push(r);
+            // Verificar límites mensuales
+            const guardiasSocioMes = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return g.socioId == selectedSocio.id && 
+                       fecha.getMonth() === currentMonth && 
+                       fecha.getFullYear() === currentYear &&
+                       g.turno === selectedTurno;
             });
             
-            Object.keys(byDate).sort().forEach(fecha => {
-                const parts = fecha.split('-');
-                text += `📅 *${parts[2]}/${parts[1]}*\n`;
-                byDate[fecha].forEach(r => {
-                    const icon = r.turno === 'tarde' ? '🌅' : '🌙';
-                    text += `${icon} ${r.turno.toUpperCase()}: ${r.socioNombre}`;
-                    if (r.tipo === 'colaborador') text += ` (🤝 ${r.colaborador})`;
-                    if (r.tipo === 'nucleo') text += ` (👨‍👩‍👧 ${r.familiar})`;
-                    text += '\n';
+            const limite = selectedTurno === 'tarde' ? 2 : 3;
+            if (guardiasSocioMes.length >= limite) {
+                alert(`⚠️ Ya alcanzaste el límite de ${limite} guardias de ${selectedTurno} este mes`);
+                return;
+            }
+            
+            // Verificar capacidad del día
+            const guardiasDelDia = guardias.filter(g => g.fecha === selectedDate && g.turno === selectedTurno);
+            if (guardiasDelDia.length >= 3) {
+                alert('⚠️ Este turno ya tiene 3 personas registradas');
+                return;
+            }
+            
+            let detalle = '';
+            if (selectedTipo === 'colaborador') {
+                const colaboradorId = document.getElementById('selectColaborador').value;
+                const colaborador = SOCIOS.find(s => s.id == colaboradorId);
+                if (!colaborador) {
+                    alert('⚠️ Seleccioná al socio que ayudás');
+                    return;
+                }
+                detalle = `Ayuda a: ${colaborador.nombre}`;
+            } else if (selectedTipo === 'nucleo') {
+                detalle = document.getElementById('inputNucleo').value.trim();
+                if (!detalle) {
+                    alert('⚠️ Ingresá el nombre del familiar');
+                    return;
+                }
+            }
+            
+            const guardia = {
+                fecha: selectedDate,
+                turno: selectedTurno,
+                socioId: selectedSocio.id,
+                nombreSocio: selectedSocio.nombre,
+                tipoRegistro: selectedTipo,
+                detalle: detalle
+            };
+            
+            await guardarGuardia(guardia);
+            cerrarModal();
+            alert('✅ Guardia registrada correctamente');
+        }
+
+        // ==================== ADMIN ====================
+        function abrirAdmin() {
+            document.getElementById('modalAdmin').classList.add('active');
+        }
+
+        function cerrarModalAdmin() {
+            document.getElementById('modalAdmin').classList.remove('active');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        function verificarAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                isAdmin = true;
+                alert('✅ Acceso de administrador activado\n\nAhora podés eliminar cualquier registro.');
+                cerrarModalAdmin();
+            } else {
+                alert('❌ Contraseña incorrecta');
+            }
+        }
+
+        // ==================== EXPORTAR ====================
+        function exportarWhatsApp() {
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            let mensaje = `🛡️ *GUARDIAS COVISUEL*\n📅 ${meses[currentMonth]} ${currentYear}\n\n`;
+            
+            const guardiasMes = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear;
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            if (guardiasMes.length === 0) {
+                mensaje += 'No hay guardias registradas este mes.';
+            } else {
+                let fechaAnterior = '';
+                guardiasMes.forEach(g => {
+                    const fecha = new Date(g.fecha);
+                    const fechaStr = `${fecha.getDate()}/${currentMonth + 1}`;
+                    
+                    if (fechaStr !== fechaAnterior) {
+                        mensaje += `\n📆 *${fechaStr}*\n`;
+                        fechaAnterior = fechaStr;
+                    }
+                    
+                    const emoji = g.turno === 'tarde' ? '☀️' : '🌙';
+                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.nombreSocio}\n`;
                 });
-                text += '\n';
-            });
-            
-            const encoded = encodeURIComponent(text);
-            window.open(`https://wa.me/?text=${encoded}`, '_blank');
-        }
-        
-        function exportExcel() {
-            if (registros.length === 0) {
-                showToast('No hay registros para exportar', 'warning');
-                return;
             }
             
-            let csv = 'Fecha,Turno,Número Socio,Nombre Socio,Tipo,Colaborador/Familiar\n';
-            registros.forEach(r => {
-                const extra = r.tipo === 'colaborador' ? r.colaborador : r.tipo === 'nucleo' ? r.familiar : '';
-                csv += `${r.fecha},${r.turno},${r.socioNumero},"${r.socioNombre}",${r.tipo},"${extra}"\n`;
+            const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+
+        function exportarExcel() {
+            let csv = 'Fecha,Turno,ID Socio,Nombre,Tipo,Detalle\n';
+            
+            const guardiasMes = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear;
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            guardiasMes.forEach(g => {
+                csv += `${g.fecha},${g.turno},${g.socioId},"${g.nombreSocio}",${g.tipoRegistro},"${g.detalle || ''}"\n`;
             });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `guardias_covisuel_${new Date().toISOString().split('T')[0]}.csv`;
-            a.click();
-            
-            showToast('Archivo CSV descargado', 'success');
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `guardias_covisuel_${currentMonth + 1}_${currentYear}.csv`;
+            link.click();
         }
-        
-        // ============================================
-        // CUMPLIMIENTO
-        // ============================================
-        
-        function showCompliance() {
-            const month = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}`;
+
+        function verCompliance() {
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             
-            let html = '<h4 style="color:#fbbf24;margin-bottom:15px;">📊 Estado de Cumplimiento</h4>';
-            html += '<div style="max-height:400px;overflow-y:auto;">';
+            let reporte = `📊 CUMPLIMIENTO ${meses[currentMonth]} ${currentYear}\n\n`;
             
-            CONFIG.SOCIOS.forEach(socio => {
-                const socioRegs = registros.filter(r => 
-                    r.socioNumero === socio.numero && 
-                    r.fecha.startsWith(month)
-                );
-                const tarde = socioRegs.filter(r => r.turno === 'tarde').length;
-                const noche = socioRegs.filter(r => r.turno === 'noche').length;
+            let cumplidos = 0;
+            let pendientes = 0;
+            
+            SOCIOS.forEach(socio => {
+                const guardiasSocio = guardias.filter(g => {
+                    const fecha = new Date(g.fecha);
+                    return g.socioId == socio.id && 
+                           fecha.getMonth() === currentMonth && 
+                           fecha.getFullYear() === currentYear;
+                });
                 
-                const tardeOk = tarde >= 2;
-                const nocheOk = noche >= 3;
-                const status = tardeOk && nocheOk ? '✅' : '⚠️';
+                const tarde = guardiasSocio.filter(g => g.turno === 'tarde').length;
+                const noche = guardiasSocio.filter(g => g.turno === 'noche').length;
                 
-                html += `
-                    <div style="display:flex;justify-content:space-between;padding:8px;border-bottom:1px solid rgba(255,255,255,0.1);">
-                        <span>${socio.numero} - ${socio.nombre}</span>
-                        <span>${status} T:${tarde}/2 | N:${noche}/3</span>
-                    </div>
-                `;
+                const cumpleTarde = tarde >= 2;
+                const cumpleNoche = noche >= 3;
+                
+                if (cumpleTarde && cumpleNoche) {
+                    cumplidos++;
+                } else {
+                    pendientes++;
+                }
+                
+                const estadoTarde = cumpleTarde ? '✅' : '⏳';
+                const estadoNoche = cumpleNoche ? '✅' : '⏳';
+                
+                reporte += `${socio.nombre}\n  T:${estadoTarde}${tarde}/2  N:${estadoNoche}${noche}/3\n\n`;
             });
             
-            html += '</div>';
+            reporte = `✅ Cumplidos: ${cumplidos}/${SOCIOS.length}\n⏳ Pendientes: ${pendientes}\n\n` + reporte;
             
-            document.getElementById('adminPanel').innerHTML = `<div>${html}</div>`;
-            document.getElementById('adminPanel').classList.add('active');
-        }
-        
-        // ============================================
-        // ADMIN
-        // ============================================
-        
-        function showAdminLogin() {
-            const password = prompt('🔐 Contraseña de Administrador:');
-            if (password === CONFIG.ADMIN_PASSWORD) {
-                isAdmin = true;
-                showAdminPanel();
-                showToast('Acceso de administrador concedido', 'success');
-            } else if (password !== null) {
-                showToast('Contraseña incorrecta', 'error');
-            }
-        }
-        
-        function showAdminPanel() {
-            let html = `
-                <h3>🔐 Panel de Administración</h3>
-                <p style="margin-bottom:15px;">Gestionar registros del sistema</p>
-                
-                <table class="admin-table">
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Turno</th>
-                            <th>Socio</th>
-                            <th>Tipo</th>
-                            <th>Acción</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-            `;
-            
-            registros.slice(-20).reverse().forEach((r, idx) => {
-                html += `
-                    <tr>
-                        <td>${r.fecha}</td>
-                        <td>${r.turno}</td>
-                        <td>${r.socioNumero} - ${r.socioNombre}</td>
-                        <td>${r.tipo}</td>
-                        <td><button class="delete-btn" onclick="deleteRegistro(${registros.length - 1 - idx})">🗑️</button></td>
-                    </tr>
-                `;
-            });
-            
-            html += '</tbody></table>';
-            
-            document.getElementById('adminPanel').innerHTML = html;
-            document.getElementById('adminPanel').classList.add('active');
-        }
-        
-        async function deleteRegistro(index) {
-            if (!confirm('¿Eliminar este registro?')) return;
-            
-            const registro = registros[index];
-            registros.splice(index, 1);
-            localStorage.setItem('guardias_registros', JSON.stringify(registros));
-            
-            showToast('Registro eliminado', 'success');
-            showAdminPanel();
-            renderCalendar();
-        }
-        
-        // ============================================
-        // UTILIDADES
-        // ============================================
-        
-        function showToast(message, type) {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 3000);
+            alert(reporte);
         }
     </script>
 </body>
