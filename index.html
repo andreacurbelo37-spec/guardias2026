@@ -796,8 +796,8 @@
                     fecha: guardia.fecha,
                     turno: guardia.turno,
                     socioId: guardia.socioId,
-                    nombreSocio: guardia.nombreSocio,
-                    tipoRegistro: guardia.tipoRegistro,
+                    socioNombre: guardia.socioNombre,
+                    timestamp: guardia.timestamp,
                     detalle: guardia.detalle || ''
                 });
                 
@@ -1080,8 +1080,8 @@
                 fecha: selectedDate,
                 turno: selectedTurno,
                 socioId: selectedSocio.id,
-                nombreSocio: selectedSocio.nombre,
-                tipoRegistro: selectedTipo,
+                socioNombre: selectedSocio.nombre,
+                timestamp: selectedTipo,
                 detalle: detalle
             };
             
@@ -1137,7 +1137,7 @@
                     }
                     
                     const emoji = g.turno === 'tarde' ? '☀️' : '🌙';
-                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.nombreSocio}\n`;
+                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.socioNombre}\n`;
                 });
             }
             
