@@ -974,7 +974,7 @@
 
         function mostrarRegistrosDelDia(fecha) {
             const container = document.getElementById('registrosDia');
-            const registros = guardias.filter(g => g.fecha === fecha);
+            const registros = guardias.filter(g => g.fecha.substring(0,10) === fecha);
             
             if (registros.length === 0) {
                 container.innerHTML = '<p style="opacity: 0.7; text-align: center;">No hay registros para este día</p>';
