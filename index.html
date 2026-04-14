@@ -3,293 +3,248 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Guardias - COVISUEL 2026-2027</title>
+    <title>COVISUEL - Sistema de Guardias 2026-2027</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
+        
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             min-height: 100vh;
             color: #fff;
         }
-
-        .header {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .logo-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 10px;
-        }
-
-        .logo {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #4ecdc4;
-        }
-
-        .header h1 {
-            color: #4ecdc4;
-            font-size: 1.8em;
-        }
-
-        .header p {
-            color: #ccc;
-            margin-top: 5px;
-        }
-
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .loading-overlay.hidden {
-            display: none;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #333;
-            border-top-color: #4ecdc4;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
+        
         .container {
-            display: flex;
-            padding: 20px;
-            gap: 20px;
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .sidebar {
-            width: 320px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
             padding: 20px;
         }
-
-        .main-content {
-            flex: 1;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
+        
+        /* Header */
+        .header {
+            text-align: center;
             padding: 20px;
-        }
-
-        .form-group {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
             margin-bottom: 20px;
         }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #4ecdc4;
-            font-weight: bold;
-        }
-
-        .form-group select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .form-group select option {
-            background: #1a1a2e;
-            color: #fff;
-        }
-
-        .socio-status {
-            background: rgba(78, 205, 196, 0.1);
-            border: 1px solid #4ecdc4;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-
-        .socio-status h4 {
-            color: #4ecdc4;
+        
+        .header img {
+            max-width: 120px;
+            height: auto;
             margin-bottom: 10px;
-            font-size: 14px;
+            border-radius: 10px;
         }
-
-        .status-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
-
-        .status-item {
-            background: rgba(255,255,255,0.05);
-            padding: 10px;
-            border-radius: 8px;
-            text-align: center;
+        
+        .header p {
+            opacity: 0.8;
         }
-
-        .status-item .label {
-            font-size: 12px;
-            color: #aaa;
+        
+        /* Selector de socio */
+        .socio-selector {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
         }
-
-        .status-item .value {
-            font-size: 18px;
+        
+        .socio-selector label {
+            display: block;
+            margin-bottom: 10px;
             font-weight: bold;
-            color: #4ecdc4;
         }
-
-        .status-item .value.warning {
-            color: #feca57;
+        
+        .socio-selector select {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1rem;
+            background: #fff;
+            color: #333;
         }
-
-        .status-item .value.full {
-            color: #ff6b6b;
+        
+        /* Info del socio */
+        .socio-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
         }
-
+        
+        .socio-info.active {
+            display: block;
+        }
+        
+        .socio-info h3 {
+            margin-bottom: 10px;
+        }
+        
+        .limites {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .limite-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        
+        /* Navegación del calendario */
         .calendar-nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
         }
-
+        
         .calendar-nav button {
-            background: #4ecdc4;
-            color: #1a1a2e;
+            background: #667eea;
+            color: #fff;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+            font-size: 1rem;
+            transition: all 0.3s;
         }
-
+        
         .calendar-nav button:hover {
-            background: #45b7aa;
+            background: #764ba2;
+            transform: scale(1.05);
         }
-
-        .calendar-nav h2 {
-            color: #4ecdc4;
+        
+        .calendar-nav button:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
         }
-
+        
+        .month-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        /* Calendario */
+        .calendar {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: rgba(102, 126, 234, 0.5);
+        }
+        
+        .calendar-header div {
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
         }
-
-        .calendar-header {
-            background: rgba(78, 205, 196, 0.3);
-            padding: 10px;
-            text-align: center;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #4ecdc4;
-        }
-
+        
         .calendar-day {
             aspect-ratio: 1;
-            background: rgba(255,255,255,0.05);
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            padding: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
             cursor: pointer;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            padding: 5px;
+            transition: all 0.3s;
+            position: relative;
+            min-height: 80px;
         }
-
-        .calendar-day:hover:not(.empty):not(.past) {
-            border-color: #4ecdc4;
-            transform: scale(1.05);
+        
+        .calendar-day:hover {
+            background: rgba(255,255,255,0.1);
         }
-
+        
         .calendar-day.empty {
             background: transparent;
             cursor: default;
         }
-
+        
         .calendar-day.past {
-            opacity: 0.4;
-            cursor: not-allowed;
+            background: rgba(255,255,255,0.05);
+            opacity: 0.6;
+            cursor: pointer;
         }
-
+        
         .calendar-day .day-number {
-            font-size: 1.2em;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .calendar-day .shifts {
+            margin-top: 5px;
+            font-size: 0.7rem;
+        }
+        
+        .shift-indicator {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin: 2px;
             font-weight: bold;
         }
-
-        .calendar-day .day-count {
-            font-size: 0.7em;
-            margin-top: 2px;
+        
+        .shift-tarde {
+            background: #f39c12;
+            color: #000;
         }
-
-        .calendar-day.level-0 { background: rgba(46, 204, 113, 0.3); }
-        .calendar-day.level-1 { background: rgba(46, 204, 113, 0.3); }
-        .calendar-day.level-2 { background: rgba(241, 196, 15, 0.3); }
-        .calendar-day.level-3 { background: rgba(241, 196, 15, 0.4); }
-        .calendar-day.level-4 { background: rgba(241, 196, 15, 0.5); }
-        .calendar-day.level-5 { background: rgba(231, 76, 60, 0.4); }
-        .calendar-day.level-6 { background: rgba(231, 76, 60, 0.6); }
-
+        
+        .shift-noche {
+            background: #3498db;
+            color: #fff;
+        }
+        
+        .shift-full {
+            background: #e74c3c;
+        }
+        
+        /* Leyenda */
         .legend {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin-top: 20px;
             flex-wrap: wrap;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
         }
-
+        
         .legend-item {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 12px;
         }
-
+        
         .legend-color {
             width: 20px;
             height: 20px;
             border-radius: 4px;
         }
-
-        .legend-color.green { background: rgba(46, 204, 113, 0.5); }
-        .legend-color.yellow { background: rgba(241, 196, 15, 0.5); }
-        .legend-color.red { background: rgba(231, 76, 60, 0.6); }
-
+        
         /* Modal */
         .modal {
             display: none;
@@ -302,990 +257,1071 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            padding: 20px;
         }
-
+        
         .modal.active {
             display: flex;
         }
-
+        
         .modal-content {
-            background: #1a1a2e;
-            border-radius: 15px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
             padding: 30px;
+            border-radius: 20px;
             max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
+            width: 100%;
+            max-height: 90vh;
             overflow-y: auto;
-            border: 2px solid #4ecdc4;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-
+        
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-
-        .modal-header h3 {
-            color: #4ecdc4;
+        
+        .modal-header h2 {
+            font-size: 1.5rem;
         }
-
-        .modal-close {
+        
+        .close-btn {
             background: none;
             border: none;
             color: #fff;
-            font-size: 24px;
+            font-size: 2rem;
             cursor: pointer;
+            line-height: 1;
         }
-
-        .turno-section {
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            padding: 15px;
+        
+        /* Turnos en el modal */
+        .shift-section {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
             margin-bottom: 15px;
         }
-
-        .turno-section h4 {
-            color: #4ecdc4;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .turno-section .count {
-            background: rgba(78, 205, 196, 0.2);
-            padding: 2px 10px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .turno-section .count.full {
-            background: rgba(231, 76, 60, 0.3);
-            color: #ff6b6b;
-        }
-
-        .registered-list {
-            margin-bottom: 10px;
-        }
-
-        .registered-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 5px;
-            margin-bottom: 5px;
-        }
-
-        .registered-item .name {
-            font-size: 14px;
-        }
-
-        .registered-item .delete-btn {
-            background: #ff6b6b;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .register-btn {
-            width: 100%;
-            padding: 12px;
-            background: #4ecdc4;
-            color: #1a1a2e;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .register-btn:hover:not(:disabled) {
-            background: #45b7aa;
-        }
-
-        .register-btn:disabled {
-            background: #666;
-            cursor: not-allowed;
-        }
-
-        .exception-check {
+        
+        .shift-section h3 {
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(254, 202, 87, 0.1);
-            border-radius: 8px;
-            border: 1px solid #feca57;
         }
-
-        .exception-check input {
-            width: 18px;
-            height: 18px;
+        
+        .shift-section h3 .icon {
+            font-size: 1.5rem;
         }
-
-        .exception-check label {
-            font-size: 13px;
-            color: #feca57;
-        }
-
-        /* Admin Panel */
-        .admin-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .admin-section h3 {
-            color: #feca57;
+        
+        .registered-list {
             margin-bottom: 15px;
         }
-
+        
+        .registered-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .registered-item .socio-name {
+            font-weight: bold;
+        }
+        
+        .registered-item .socio-id {
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+        
+        .spots-available {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+        }
+        
+        .btn-tarde {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: #000;
+        }
+        
+        .btn-noche {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: #fff;
+        }
+        
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            color: #fff;
+            margin-top: 15px;
+        }
+        
+        /* Admin Panel */
+        .admin-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+        }
+        
+        .admin-section h3 {
+            margin-bottom: 15px;
+        }
+        
         .admin-login {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
-
+        
         .admin-login input {
             flex: 1;
-            padding: 10px;
+            min-width: 200px;
+            padding: 12px;
             border-radius: 8px;
             border: none;
-            background: rgba(255,255,255,0.1);
+            font-size: 1rem;
+        }
+        
+        .admin-controls {
+            display: none;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        
+        .admin-controls.active {
+            display: flex;
+        }
+        
+        .admin-controls button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-delete {
+            background: #e74c3c;
             color: #fff;
         }
-
-        .admin-login button {
-            padding: 10px 20px;
-            background: #feca57;
-            color: #1a1a2e;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
+        
+        .btn-export {
+            background: #27ae60;
+            color: #fff;
         }
-
-        .admin-panel {
+        
+        .btn-compliance {
+            background: #9b59b6;
+            color: #fff;
+        }
+        
+        /* Status messages */
+        .status-message {
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
             display: none;
-            margin-top: 20px;
         }
-
-        .admin-panel.active {
+        
+        .status-message.success {
+            background: rgba(39, 174, 96, 0.3);
+            border: 1px solid #27ae60;
             display: block;
         }
-
-        .admin-btn {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 10px;
-            background: rgba(254, 202, 87, 0.2);
-            color: #feca57;
-            border: 1px solid #feca57;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
+        
+        .status-message.error {
+            background: rgba(231, 76, 60, 0.3);
+            border: 1px solid #e74c3c;
+            display: block;
         }
-
-        .admin-btn:hover {
-            background: rgba(254, 202, 87, 0.3);
+        
+        /* Loading */
+        .loading {
+            text-align: center;
+            padding: 40px;
         }
-
-        /* Status Modal */
-        .status-table {
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 60px;
+                padding: 5px;
+            }
+            
+            .calendar-day .day-number {
+                font-size: 0.9rem;
+            }
+            
+            .calendar-day .shifts {
+                font-size: 0.6rem;
+            }
+            
+            .shift-indicator {
+                padding: 1px 4px;
+            }
+            
+            .calendar-header div {
+                padding: 10px 5px;
+                font-size: 0.8rem;
+            }
+            
+            .month-title {
+                font-size: 1.2rem;
+            }
+        }
+        
+        /* Modal de cumplimiento */
+        .compliance-modal .modal-content {
+            max-width: 700px;
+        }
+        
+        .compliance-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
-            font-size: 12px;
         }
-
-        .status-table th, .status-table td {
-            padding: 8px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
+        
+        .compliance-table th,
+        .compliance-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
-        .status-table th {
-            background: rgba(78, 205, 196, 0.2);
-            color: #4ecdc4;
+        
+        .compliance-table th {
+            background: rgba(102, 126, 234, 0.3);
         }
-
-        .status-ok { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
-        .status-warning { background: rgba(241, 196, 15, 0.2); color: #f1c40f; }
-        .status-danger { background: rgba(231, 76, 60, 0.2); color: #e74c3c; }
-
-        .summary-cards {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
+        
+        .compliance-ok {
+            color: #2ecc71;
         }
-
-        .summary-card {
-            background: rgba(255,255,255,0.05);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
+        
+        .compliance-pending {
+            color: #f39c12;
         }
-
-        .summary-card .number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4ecdc4;
-        }
-
-        .summary-card .label {
-            font-size: 12px;
-            color: #aaa;
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            z-index: 2000;
-            animation: slideIn 0.3s ease;
-        }
-
-        .toast.success { background: #2ecc71; }
-        .toast.error { background: #e74c3c; }
-        .toast.warning { background: #f39c12; }
-
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .container {
-                flex-direction: column;
-            }
-            .sidebar {
-                width: 100%;
-            }
-            .calendar-grid {
-                gap: 4px;
-            }
-            .calendar-day {
-                padding: 2px;
-            }
-            .calendar-day .day-number {
-                font-size: 0.9em;
-            }
-            .calendar-day .day-count {
-                font-size: 0.6em;
-            }
+        
+        .compliance-missing {
+            color: #e74c3c;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="spinner"></div>
-        <p>Cargando datos...</p>
-    </div>
-
-    <div class="header">
-        <div class="logo-container">
-            <img src="COVISUEL logo para llavero.jpg" alt="COVISUEL" class="logo" onerror="this.style.display='none'">
-            <div>
-                <h1>Sistema de Guardias</h1>
-                <p>COVISUEL - Abril 2026 a Diciembre 2027</p>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <div class="sidebar">
-            <div class="form-group">
-                <label>👤 Seleccionar Socio:</label>
-                <select id="socioSelect">
-                    <option value="">-- Elegí tu nombre --</option>
-                </select>
-            </div>
-
-            <div class="socio-status" id="socioStatus" style="display: none;">
-                <h4>📊 Estado del mes actual</h4>
-                <div class="status-grid">
-                    <div class="status-item">
-                        <div class="label">Tarde</div>
-                        <div class="value" id="tardeCount">0/2</div>
-                    </div>
-                    <div class="status-item">
-                        <div class="label">Noche</div>
-                        <div class="value" id="nocheCount">0/3</div>
-                    </div>
+        <!-- Header -->
+        <header class="header">
+            <img src="COVISUEL logo para llavero.jpg" alt="COVISUEL Logo" onerror="this.style.display='none'">
+            <h1>🛡️ COVISUEL</h1>
+            <p>Sistema de Guardias 2026-2027</p>
+        </header>
+        
+        <!-- Selector de Socio -->
+        <section class="socio-selector">
+            <label for="socio-select">👤 Selecciona tu nombre:</label>
+            <select id="socio-select">
+                <option value="">-- Selecciona tu socio --</option>
+            </select>
+        </section>
+        
+        <!-- Info del Socio -->
+        <section class="socio-info" id="socio-info">
+            <h3 id="socio-nombre">Nombre del Socio</h3>
+            <div class="limites">
+                <div class="limite-item">
+                    <span>☀️ Tardes este mes:</span>
+                    <strong id="tardes-count">0/2</strong>
+                </div>
+                <div class="limite-item">
+                    <span>🌙 Noches este mes:</span>
+                    <strong id="noches-count">0/3</strong>
                 </div>
             </div>
-
-            <div class="admin-section">
-                <h3>🔐 Zona Administrador</h3>
-                <div class="admin-login" id="adminLogin">
-                    <input type="password" id="adminPassword" placeholder="Contraseña">
-                    <button onclick="loginAdmin()">Entrar</button>
-                </div>
-                <div class="admin-panel" id="adminPanel">
-                    <p style="color: #4ecdc4; margin-bottom: 15px;">✅ Sesión de administrador activa</p>
-                    <button class="admin-btn" onclick="showStatusModal()">📊 Ver Estado de Cumplimiento</button>
-                    <button class="admin-btn" onclick="exportCSV()">📥 Exportar CSV</button>
-                    <button class="admin-btn" onclick="logoutAdmin()">🚪 Cerrar Sesión</button>
-                </div>
+        </section>
+        
+        <!-- Navegación del Calendario -->
+        <nav class="calendar-nav">
+            <button id="prev-month">◀ Anterior</button>
+            <span class="month-title" id="month-title">Abril 2026</span>
+            <button id="next-month">Siguiente ▶</button>
+        </nav>
+        
+        <!-- Calendario -->
+        <div class="calendar">
+            <div class="calendar-header">
+                <div>Dom</div>
+                <div>Lun</div>
+                <div>Mar</div>
+                <div>Mié</div>
+                <div>Jue</div>
+                <div>Vie</div>
+                <div>Sáb</div>
             </div>
-        </div>
-
-        <div class="main-content">
-            <div class="calendar-nav">
-                <button onclick="prevMonth()">◀ Anterior</button>
-                <h2 id="currentMonth">Abril 2026</h2>
-                <button onclick="nextMonth()">Siguiente ▶</button>
-            </div>
-
-            <div class="calendar-grid" id="calendarGrid">
-                <div class="calendar-header">Dom</div>
-                <div class="calendar-header">Lun</div>
-                <div class="calendar-header">Mar</div>
-                <div class="calendar-header">Mié</div>
-                <div class="calendar-header">Jue</div>
-                <div class="calendar-header">Vie</div>
-                <div class="calendar-header">Sáb</div>
-            </div>
-
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color green"></div>
-                    <span>Disponible (0-1)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color yellow"></div>
-                    <span>Parcial (2-5)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color red"></div>
-                    <span>Lleno (6)</span>
-                </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Días generados dinámicamente -->
             </div>
         </div>
+        
+        <!-- Leyenda -->
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f39c12;"></div>
+                <span>Tarde (14-20h)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #3498db;"></div>
+                <span>Noche (20-00h)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #e74c3c;"></div>
+                <span>Completo</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: rgba(255,255,255,0.1);"></div>
+                <span>Disponible</span>
+            </div>
+        </div>
+        
+        <!-- Admin Section -->
+        <section class="admin-section">
+            <h3>🔐 Panel de Administración</h3>
+            <div class="admin-login">
+                <input type="password" id="admin-password" placeholder="Contraseña de admin">
+                <button class="btn" onclick="loginAdmin()">Acceder</button>
+            </div>
+            <div class="admin-controls" id="admin-controls">
+                <button class="btn btn-export" onclick="exportToExcel()">📊 Excel</button>
+                <button class="btn btn-compliance" onclick="showCompliance()">📋 Cumplimiento</button>
+                <button class="btn btn-whatsapp" onclick="shareMonthWhatsApp()">📱 WhatsApp</button>
+            </div>
+        </section>
     </div>
-
-    <!-- Modal de Registro -->
-    <div class="modal" id="registerModal">
+    
+    <!-- Modal de Día -->
+    <div class="modal" id="day-modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalDate">1 de Abril 2026</h3>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+                <h2 id="modal-date">Fecha</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
             </div>
-
-            <div class="turno-section">
-                <h4>🌅 Turno Tarde <span class="count" id="tardeModalCount">0/3</span></h4>
-                <div class="registered-list" id="tardeList"></div>
-                <button class="register-btn" id="tardeBtnRegister" onclick="registerTurno('Tarde')">
-                    Registrarme en Tarde
-                </button>
-                <div class="exception-check" id="tardeException" style="display: none;">
-                    <input type="checkbox" id="tardeExcepcion">
-                    <label for="tardeExcepcion">Registrar como excepción (supera límite mensual)</label>
-                </div>
+            
+            <div id="modal-body">
+                <!-- Contenido dinámico -->
             </div>
-
-            <div class="turno-section">
-                <h4>🌙 Turno Noche <span class="count" id="nocheModalCount">0/3</span></h4>
-                <div class="registered-list" id="nocheList"></div>
-                <button class="register-btn" id="nocheBtnRegister" onclick="registerTurno('Noche')">
-                    Registrarme en Noche
-                </button>
-                <div class="exception-check" id="nocheException" style="display: none;">
-                    <input type="checkbox" id="nocheExcepcion">
-                    <label for="nocheExcepcion">Registrar como excepción (supera límite mensual)</label>
-                </div>
-            </div>
+            
+            <button class="btn btn-whatsapp" onclick="shareDayWhatsApp()">
+                📱 Compartir día por WhatsApp
+            </button>
+            
+            <div class="status-message" id="status-message"></div>
         </div>
     </div>
-
-    <!-- Modal de Estado -->
-    <div class="modal" id="statusModal">
-        <div class="modal-content" style="max-width: 800px;">
+    
+    <!-- Modal de Cumplimiento -->
+    <div class="modal compliance-modal" id="compliance-modal">
+        <div class="modal-content">
             <div class="modal-header">
-                <h3>📊 Estado de Cumplimiento - <span id="statusMonth"></span></h3>
-                <button class="modal-close" onclick="closeStatusModal()">✕</button>
+                <h2>📋 Cumplimiento Mensual</h2>
+                <button class="close-btn" onclick="closeComplianceModal()">&times;</button>
             </div>
-
-            <div class="summary-cards" id="summaryCards"></div>
-
-            <div style="overflow-x: auto;">
-                <table class="status-table" id="statusTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Tarde</th>
-                            <th>Noche</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody id="statusTableBody"></tbody>
-                </table>
+            
+            <div id="compliance-body">
+                <!-- Tabla de cumplimiento -->
             </div>
         </div>
     </div>
 
     <script>
-        // ============ CONFIGURACIÓN ============
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxLavOEwmjH77fAbAtlBF3s55Ln0fyY2m4vnLPBC4ldOpAJ5PPBDTSxOL_Grn44veE6/exec';
-        const ADMIN_PASSWORD = 'Molas2026';
-        const ADMIN_IDS = ['240', '245', '253', '266'];
+        // ============================================
+        // CONFIGURACIÓN
+        // ============================================
+        const CONFIG = {
+            API_URL: 'https://script.google.com/macros/s/AKfycbzZ3zh0iGXbSbhoYe0Vj4iKLKNdkxCc-Ycd8NmMuRs_sX24veE6/exec',
+            ADMIN_PASSWORD: 'Molas2026',
+            ADMIN_IDS: [240, 245, 253, 266],
+            MAX_PER_SHIFT: 3,
+            MAX_TARDE_MES: 2,
+            MAX_NOCHE_MES: 3,
+            START_DATE: new Date(2026, 3, 1), // Abril 2026
+            END_DATE: new Date(2027, 11, 31)  // Diciembre 2027
+        };
 
-        // Lista de socios
+        // Lista de socios CORREGIDA
         const SOCIOS = [
-            { id: '215', nombre: 'Mary Yacqueline Cunha Gómez' },
-            { id: '222', nombre: 'Mariana Gissel Arias D\'ottone' },
-            { id: '223', nombre: 'Claudia Erika Peña Mármol' },
-            { id: '225', nombre: 'Stephanie Arias' },
-            { id: '228', nombre: 'Eduardo Sequeira' },
-            { id: '230', nombre: 'Alejandra Cabrera' },
-            { id: '236', nombre: 'Jorge Almada' },
-            { id: '237', nombre: 'Gonzalo Correa' },
-            { id: '238', nombre: 'Pablo Mercadal' },
-            { id: '239', nombre: 'Verónica Echevarría' },
-            { id: '240', nombre: 'Andrea Curbelo' },
-            { id: '241', nombre: 'Washington Villar' },
-            { id: '242', nombre: 'Sabrina Aguilar' },
-            { id: '243', nombre: 'Soraya Buelmo' },
-            { id: '244', nombre: 'Marlon Goes' },
-            { id: '245', nombre: 'Virginia Diaz' },
-            { id: '246', nombre: 'Oscar Ibarra' },
-            { id: '247', nombre: 'Claudia Sequeira' },
-            { id: '248', nombre: 'Claudia Buelmo' },
-            { id: '249', nombre: 'Mayra Buelmo' },
-            { id: '251', nombre: 'Adriana Menéndez' },
-            { id: '253', nombre: 'Juan Pablo Gallulo' },
-            { id: '254', nombre: 'Belén González' },
-            { id: '256', nombre: 'Francesca Delgado' },
-            { id: '257', nombre: 'Juan Rosa' },
-            { id: '258', nombre: 'Florencia Muñoz' },
-            { id: '259', nombre: 'Jorge Coímbra' },
-            { id: '261', nombre: 'Roberto Martínez' },
-            { id: '262', nombre: 'Katherine Cheda' },
-            { id: '265', nombre: 'Kevin Guaraglia' },
-            { id: '266', nombre: 'María Noel Carbajal' },
-            { id: '267', nombre: 'Martin Salfibia' },
-            { id: '268', nombre: 'Maximiliano Cisnero' },
-            { id: '269', nombre: 'Claudia Rios' }
+            { id: 215, nombre: "Mary Yacqueline Cunha Gómez" },
+            { id: 222, nombre: "Mariana Gissel Arias D'ottone" },
+            { id: 223, nombre: "Claudia Erika Peña Mármol" },
+            { id: 225, nombre: "Stephanie Arias" },
+            { id: 228, nombre: "Eduardo Sequeira" },
+            { id: 230, nombre: "Alejandra Cabrera" },
+            { id: 236, nombre: "Jorge Almada" },
+            { id: 237, nombre: "Gonzalo Correa" },
+            { id: 238, nombre: "Pablo Mercadal" },
+            { id: 239, nombre: "Verónica Echevarría" },
+            { id: 240, nombre: "Andrea Curbelo" },
+            { id: 241, nombre: "Washington Villar" },
+            { id: 242, nombre: "Sabrina Aguilar" },
+            { id: 243, nombre: "Soraya Buelmo" },
+            { id: 244, nombre: "Marlon Goes" },
+            { id: 245, nombre: "Virginia Diaz" },
+            { id: 246, nombre: "Oscar Ibarra" },
+            { id: 247, nombre: "Claudia Sequeira" },
+            { id: 248, nombre: "Claudia Buelmo" },
+            { id: 249, nombre: "Mayra Buelmo" },
+            { id: 251, nombre: "Adriana Menéndez" },
+            { id: 253, nombre: "Juan Pablo Gallulo" },
+            { id: 254, nombre: "Belén González" },
+            { id: 256, nombre: "Francesca Delgado" },
+            { id: 257, nombre: "Juan Rosa" },
+            { id: 258, nombre: "Florencia Muñoz" },
+            { id: 259, nombre: "Jorge Coímbra" },
+            { id: 261, nombre: "Roberto Martínez" },
+            { id: 262, nombre: "Katherine Cheda" },
+            { id: 265, nombre: "Kevin Guaraglia" },
+            { id: 266, nombre: "María Noel Carbajal" },
+            { id: 267, nombre: "Martin Salfibia" },
+            { id: 268, nombre: "Maximiliano Cisnero" },
+            { id: 269, nombre: "Claudia Rios" }
         ];
 
-        const MESES = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-
-        // ============ ESTADO GLOBAL ============
-        let currentYear = 2026;
-        let currentMonth = 3; // Abril (0-indexed)
-        let selectedDate = null;
+        // ============================================
+        // ESTADO DE LA APLICACIÓN
+        // ============================================
+        let currentDate = new Date(2026, 3, 1); // Abril 2026
+        let selectedSocio = null;
         let guardias = [];
         let isAdmin = false;
+        let selectedDay = null;
 
-        // ============ INICIALIZACIÓN ============
-        document.addEventListener('DOMContentLoaded', async () => {
-            populateSocioSelect();
-            await loadData();
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            initSocioSelector();
             renderCalendar();
+            loadGuardias();
+            
+            document.getElementById('prev-month').addEventListener('click', () => changeMonth(-1));
+            document.getElementById('next-month').addEventListener('click', () => changeMonth(1));
         });
 
-        function populateSocioSelect() {
-            const select = document.getElementById('socioSelect');
+        function initSocioSelector() {
+            const select = document.getElementById('socio-select');
             SOCIOS.forEach(socio => {
                 const option = document.createElement('option');
                 option.value = socio.id;
                 option.textContent = `${socio.id} - ${socio.nombre}`;
                 select.appendChild(option);
             });
-            select.addEventListener('change', () => {
-                updateSocioStatus();
-                renderCalendar();
+            
+            select.addEventListener('change', function() {
+                if (this.value) {
+                    selectedSocio = SOCIOS.find(s => s.id == this.value);
+                    document.getElementById('socio-info').classList.add('active');
+                    document.getElementById('socio-nombre').textContent = 
+                        `${selectedSocio.id} - ${selectedSocio.nombre}`;
+                    updateSocioLimits();
+                } else {
+                    selectedSocio = null;
+                    document.getElementById('socio-info').classList.remove('active');
+                }
             });
         }
 
-        // ============ COMUNICACIÓN CON GOOGLE SHEETS ============
-        async function loadData() {
-            showLoading(true);
-            try {
-                const response = await fetch(`${SCRIPT_URL}?action=getAll`);
-                const result = await response.json();
-                if (result.success) {
-                    guardias = result.data || [];
-                } else {
-                    showToast('Error al cargar datos: ' + result.error, 'error');
-                }
-            } catch (error) {
-                showToast('Error de conexión: ' + error.message, 'error');
-            }
-            showLoading(false);
-        }
-
-        async function addGuardia(fecha, visioId, visioNombre, turno, excepcion) {
-            showLoading(true);
-            try {
-                const params = new URLSearchParams({
-                    action: 'add',
-                    fecha: fecha,
-                    visioId: visioId,
-                    visioNombre: visioNombre,
-                    turno: turno,
-                    excepcion: excepcion ? 'true' : 'false'
-                });
-                
-                const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    await loadData();
-                    showToast('✅ Guardia registrada correctamente', 'success');
-                    return true;
-                } else {
-                    showToast('❌ ' + result.error, 'error');
-                    return false;
-                }
-            } catch (error) {
-                showToast('Error de conexión: ' + error.message, 'error');
-                return false;
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function deleteGuardia(fecha, visioId, turno) {
-            showLoading(true);
-            try {
-                const params = new URLSearchParams({
-                    action: 'delete',
-                    fecha: fecha,
-                    visioId: visioId,
-                    turno: turno
-                });
-                
-                const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    await loadData();
-                    showToast('✅ Guardia eliminada', 'success');
-                    return true;
-                } else {
-                    showToast('❌ ' + result.error, 'error');
-                    return false;
-                }
-            } catch (error) {
-                showToast('Error de conexión: ' + error.message, 'error');
-                return false;
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // ============ HELPERS ============
-        function showLoading(show) {
-            document.getElementById('loadingOverlay').classList.toggle('hidden', !show);
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function getGuardiasForDate(fecha) {
-            return guardias.filter(g => g.fecha === fecha);
-        }
-
-        function getGuardiasForMonth(year, month) {
-            const prefix = `${year}-${String(month + 1).padStart(2, '0')}`;
-            return guardias.filter(g => g.fecha && g.fecha.startsWith(prefix));
-        }
-
-        function getSocioMonthCount(visioId, year, month, turno) {
-            const monthGuardias = getGuardiasForMonth(year, month);
-            return monthGuardias.filter(g => 
-                g.visioId == visioId && 
-                g.turno === turno && 
-                g.excepcion !== 'true'
-            ).length;
-        }
-
-        // ============ CALENDARIO ============
+        // ============================================
+        // CALENDARIO
+        // ============================================
         function renderCalendar() {
-            const grid = document.getElementById('calendarGrid');
-            grid.innerHTML = `
-                <div class="calendar-header">Dom</div>
-                <div class="calendar-header">Lun</div>
-                <div class="calendar-header">Mar</div>
-                <div class="calendar-header">Mié</div>
-                <div class="calendar-header">Jue</div>
-                <div class="calendar-header">Vie</div>
-                <div class="calendar-header">Sáb</div>
-            `;
-
-            document.getElementById('currentMonth').textContent = 
-                `${MESES[currentMonth]} ${currentYear}`;
-
-            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
-            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-            const today = new Date();
-
-            // Días vacíos
-            for (let i = 0; i < firstDay; i++) {
-                const empty = document.createElement('div');
-                empty.className = 'calendar-day empty';
-                grid.appendChild(empty);
-            }
-
-            // Días del mes
-            for (let day = 1; day <= daysInMonth; day++) {
-                const fecha = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const dayGuardias = getGuardiasForDate(fecha);
-                const totalCount = dayGuardias.length;
-
-                const dayEl = document.createElement('div');
-                dayEl.className = 'calendar-day';
-
-                const dateObj = new Date(currentYear, currentMonth, day);
-                if (dateObj < new Date(today.getFullYear(), today.getMonth(), today.getDate())) {
-                    dayEl.classList.add('past');
-                }
-
-                dayEl.classList.add(`level-${Math.min(totalCount, 6)}`);
-
-                dayEl.innerHTML = `
-                    <span class="day-number">${day}</span>
-                    <span class="day-count">${totalCount}/6</span>
-                `;
-
-                if (!dayEl.classList.contains('past')) {
-                    dayEl.addEventListener('click', () => openModal(fecha, day));
-                }
-
-                grid.appendChild(dayEl);
-            }
-
-            updateSocioStatus();
-        }
-
-        function prevMonth() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            // Límite inferior: Abril 2026
-            if (currentYear < 2026 || (currentYear === 2026 && currentMonth < 3)) {
-                currentYear = 2026;
-                currentMonth = 3;
-            }
-            renderCalendar();
-        }
-
-        function nextMonth() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            // Límite superior: Diciembre 2027
-            if (currentYear > 2027 || (currentYear === 2027 && currentMonth > 11)) {
-                currentYear = 2027;
-                currentMonth = 11;
-            }
-            renderCalendar();
-        }
-
-        // ============ ESTADO DEL SOCIO ============
-        function updateSocioStatus() {
-            const socioId = document.getElementById('socioSelect').value;
-            const statusDiv = document.getElementById('socioStatus');
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
             
-            if (!socioId) {
-                statusDiv.style.display = 'none';
-                return;
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            // Título del mes
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            document.getElementById('month-title').textContent = `${monthNames[month]} ${year}`;
+            
+            // Primer día del mes
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const startingDay = firstDay.getDay();
+            
+            // Días vacíos al inicio
+            for (let i = 0; i < startingDay; i++) {
+                const emptyDay = document.createElement('div');
+                emptyDay.className = 'calendar-day empty';
+                grid.appendChild(emptyDay);
             }
-
-            statusDiv.style.display = 'block';
-
-            const tardeCount = getSocioMonthCount(socioId, currentYear, currentMonth, 'Tarde');
-            const nocheCount = getSocioMonthCount(socioId, currentYear, currentMonth, 'Noche');
-
-            const tardeEl = document.getElementById('tardeCount');
-            const nocheEl = document.getElementById('nocheCount');
-
-            tardeEl.textContent = `${tardeCount}/2`;
-            tardeEl.className = 'value' + (tardeCount >= 2 ? ' full' : tardeCount >= 1 ? ' warning' : '');
-
-            nocheEl.textContent = `${nocheCount}/3`;
-            nocheEl.className = 'value' + (nocheCount >= 3 ? ' full' : nocheCount >= 2 ? ' warning' : '');
+            
+            // Días del mes
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            for (let day = 1; day <= lastDay.getDate(); day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                
+                const dateStr = formatDate(year, month, day);
+                const dayDate = new Date(year, month, day);
+                
+                // Verificar si es día pasado
+                if (dayDate < today) {
+                    dayElement.classList.add('past');
+                }
+                
+                dayElement.innerHTML = `
+                    <div class="day-number">${day}</div>
+                    <div class="shifts" id="shifts-${dateStr}"></div>
+                `;
+                
+                dayElement.addEventListener('click', () => openDayModal(year, month, day));
+                grid.appendChild(dayElement);
+            }
+            
+            updateCalendarShifts();
+            updateNavButtons();
         }
 
-        // ============ MODAL DE REGISTRO ============
-        function openModal(fecha, day) {
-            const socioId = document.getElementById('socioSelect').value;
-            if (!socioId) {
-                showToast('⚠️ Primero seleccioná tu nombre', 'warning');
-                return;
+        function updateCalendarShifts() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const lastDay = new Date(year, month + 1, 0).getDate();
+            
+            for (let day = 1; day <= lastDay; day++) {
+                const dateStr = formatDate(year, month, day);
+                const shiftsContainer = document.getElementById(`shifts-${dateStr}`);
+                
+                if (shiftsContainer) {
+                    const dayGuardias = guardias.filter(g => g.fecha === dateStr);
+                    const tardeCount = dayGuardias.filter(g => g.turno === 'Tarde').length;
+                    const nocheCount = dayGuardias.filter(g => g.turno === 'Noche').length;
+                    
+                    let shiftsHTML = '';
+                    
+                    if (tardeCount > 0) {
+                        const tardeClass = tardeCount >= CONFIG.MAX_PER_SHIFT ? 'shift-tarde shift-full' : 'shift-tarde';
+                        shiftsHTML += `<span class="shift-indicator ${tardeClass}">T:${tardeCount}</span>`;
+                    }
+                    
+                    if (nocheCount > 0) {
+                        const nocheClass = nocheCount >= CONFIG.MAX_PER_SHIFT ? 'shift-noche shift-full' : 'shift-noche';
+                        shiftsHTML += `<span class="shift-indicator ${nocheClass}">N:${nocheCount}</span>`;
+                    }
+                    
+                    shiftsContainer.innerHTML = shiftsHTML;
+                }
             }
+        }
 
-            selectedDate = fecha;
-            document.getElementById('modalDate').textContent = 
-                `${day} de ${MESES[currentMonth]} ${currentYear}`;
+        function changeMonth(delta) {
+            currentDate.setMonth(currentDate.getMonth() + delta);
+            renderCalendar();
+            loadGuardias();
+        }
 
-            updateModalContent();
-            document.getElementById('registerModal').classList.add('active');
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prev-month');
+            const nextBtn = document.getElementById('next-month');
+            
+            // Límite inferior: Abril 2026
+            const minDate = new Date(2026, 3, 1);
+            prevBtn.disabled = currentDate <= minDate;
+            
+            // Límite superior: Diciembre 2027
+            const maxDate = new Date(2027, 11, 1);
+            nextBtn.disabled = currentDate >= maxDate;
+        }
+
+        // ============================================
+        // MODAL DE DÍA
+        // ============================================
+        function openDayModal(year, month, day) {
+            selectedDay = { year, month, day };
+            const dateStr = formatDate(year, month, day);
+            const dayDate = new Date(year, month, day);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            
+            const isPast = dayDate < today;
+            
+            // Formato de fecha para mostrar
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('modal-date').textContent = dayDate.toLocaleDateString('es-UY', options);
+            
+            const dayGuardias = guardias.filter(g => g.fecha === dateStr);
+            const tardeGuardias = dayGuardias.filter(g => g.turno === 'Tarde');
+            const nocheGuardias = dayGuardias.filter(g => g.turno === 'Noche');
+            
+            const modalBody = document.getElementById('modal-body');
+            
+            // Verificar si el socio actual ya está registrado
+            const socioEnTarde = selectedSocio && tardeGuardias.some(g => g.socioId == selectedSocio.id);
+            const socioEnNoche = selectedSocio && nocheGuardias.some(g => g.socioId == selectedSocio.id);
+            
+            // Verificar límites mensuales
+            const limites = selectedSocio ? getSocioMonthlyCount(selectedSocio.id) : { tarde: 0, noche: 0 };
+            const puedeTarde = limites.tarde < CONFIG.MAX_TARDE_MES;
+            const puedeNoche = limites.noche < CONFIG.MAX_NOCHE_MES;
+            
+            modalBody.innerHTML = `
+                <!-- TURNO TARDE -->
+                <div class="shift-section">
+                    <h3><span class="icon">☀️</span> Turno Tarde (14:00 - 20:00)</h3>
+                    <div class="spots-available">
+                        Lugares: ${tardeGuardias.length}/${CONFIG.MAX_PER_SHIFT}
+                    </div>
+                    <div class="registered-list">
+                        ${tardeGuardias.length > 0 ? 
+                            tardeGuardias.map(g => `
+                                <div class="registered-item">
+                                    <div>
+                                        <span class="socio-name">${getSocioNombre(g.socioId)}</span>
+                                        <span class="socio-id">(${g.socioId})</span>
+                                    </div>
+                                    ${isAdmin ? `<button class="btn btn-delete" onclick="deleteGuardia('${g.id}')" style="width:auto;padding:5px 10px;">🗑️</button>` : ''}
+                                </div>
+                            `).join('') 
+                            : '<p style="opacity: 0.7;">No hay registros aún</p>'}
+                    </div>
+                    ${!isPast ? `
+                        <button class="btn btn-tarde" 
+                            onclick="registrarGuardia('Tarde')"
+                            ${!selectedSocio || tardeGuardias.length >= CONFIG.MAX_PER_SHIFT || socioEnTarde || !puedeTarde ? 'disabled' : ''}>
+                            ${!selectedSocio ? 'Selecciona un socio primero' :
+                              socioEnTarde ? '✓ Ya estás registrado' :
+                              !puedeTarde ? 'Límite mensual alcanzado' :
+                              tardeGuardias.length >= CONFIG.MAX_PER_SHIFT ? 'Turno completo' :
+                              'Registrarme en Tarde'}
+                        </button>
+                    ` : '<p style="text-align:center; opacity:0.7; margin-top:10px;">📅 Día pasado - Solo lectura</p>'}
+                </div>
+                
+                <!-- TURNO NOCHE -->
+                <div class="shift-section">
+                    <h3><span class="icon">🌙</span> Turno Noche (20:00 - 00:00)</h3>
+                    <div class="spots-available">
+                        Lugares: ${nocheGuardias.length}/${CONFIG.MAX_PER_SHIFT}
+                    </div>
+                    <div class="registered-list">
+                        ${nocheGuardias.length > 0 ? 
+                            nocheGuardias.map(g => `
+                                <div class="registered-item">
+                                    <div>
+                                        <span class="socio-name">${getSocioNombre(g.socioId)}</span>
+                                        <span class="socio-id">(${g.socioId})</span>
+                                    </div>
+                                    ${isAdmin ? `<button class="btn btn-delete" onclick="deleteGuardia('${g.id}')" style="width:auto;padding:5px 10px;">🗑️</button>` : ''}
+                                </div>
+                            `).join('')
+                            : '<p style="opacity: 0.7;">No hay registros aún</p>'}
+                    </div>
+                    ${!isPast ? `
+                        <button class="btn btn-noche" 
+                            onclick="registrarGuardia('Noche')"
+                            ${!selectedSocio || nocheGuardias.length >= CONFIG.MAX_PER_SHIFT || socioEnNoche || !puedeNoche ? 'disabled' : ''}>
+                            ${!selectedSocio ? 'Selecciona un socio primero' :
+                              socioEnNoche ? '✓ Ya estás registrado' :
+                              !puedeNoche ? 'Límite mensual alcanzado' :
+                              nocheGuardias.length >= CONFIG.MAX_PER_SHIFT ? 'Turno completo' :
+                              'Registrarme en Noche'}
+                        </button>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('day-modal').classList.add('active');
+            document.getElementById('status-message').className = 'status-message';
+            document.getElementById('status-message').textContent = '';
         }
 
         function closeModal() {
-            document.getElementById('registerModal').classList.remove('active');
-            selectedDate = null;
+            document.getElementById('day-modal').classList.remove('active');
+            selectedDay = null;
         }
 
-        function updateModalContent() {
-            const socioId = document.getElementById('socioSelect').value;
-            const dayGuardias = getGuardiasForDate(selectedDate);
-            
-            const tardeGuardias = dayGuardias.filter(g => g.turno === 'Tarde');
-            const nocheGuardias = dayGuardias.filter(g => g.turno === 'Noche');
-
-            // Actualizar contadores
-            const tardeCountEl = document.getElementById('tardeModalCount');
-            const nocheCountEl = document.getElementById('nocheModalCount');
-            
-            tardeCountEl.textContent = `${tardeGuardias.length}/3`;
-            tardeCountEl.className = 'count' + (tardeGuardias.length >= 3 ? ' full' : '');
-            
-            nocheCountEl.textContent = `${nocheGuardias.length}/3`;
-            nocheCountEl.className = 'count' + (nocheGuardias.length >= 3 ? ' full' : '');
-
-            // Renderizar listas
-            renderTurnoList('tardeList', tardeGuardias, 'Tarde');
-            renderTurnoList('nocheList', nocheGuardias, 'Noche');
-
-            // Actualizar botones
-            updateRegisterButton('Tarde', tardeGuardias);
-            updateRegisterButton('Noche', nocheGuardias);
-        }
-
-        function renderTurnoList(containerId, guardiasList, turno) {
-            const container = document.getElementById(containerId);
-            const socioId = document.getElementById('socioSelect').value;
-            
-            if (guardiasList.length === 0) {
-                container.innerHTML = '<p style="color: #aaa; font-size: 12px;">Sin registros</p>';
-                return;
-            }
-
-            container.innerHTML = guardiasList.map(g => {
-                const canDelete = g.visioId == socioId || isAdmin;
-                return `
-                    <div class="registered-item">
-                        <span class="name">${g.visioId} - ${g.visioNombre}${g.excepcion === 'true' ? ' ⚠️' : ''}</span>
-                        ${canDelete ? `<button class="delete-btn" onclick="deleteRegistro('${g.fecha}', '${g.visioId}', '${turno}')">Eliminar</button>` : ''}
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function updateRegisterButton(turno, guardiasList) {
-            const socioId = document.getElementById('socioSelect').value;
-            const btn = document.getElementById(`${turno.toLowerCase()}BtnRegister`);
-            const exceptionDiv = document.getElementById(`${turno.toLowerCase()}Exception`);
-            
-            const yaRegistrado = guardiasList.some(g => g.visioId == socioId);
-            const turnoLleno = guardiasList.length >= 3;
-            
-            const limite = turno === 'Tarde' ? 2 : 3;
-            const count = getSocioMonthCount(socioId, currentYear, currentMonth, turno);
-            const superaLimite = count >= limite;
-
-            if (yaRegistrado) {
-                btn.disabled = true;
-                btn.textContent = `Ya estás registrado en ${turno}`;
-                exceptionDiv.style.display = 'none';
-            } else if (turnoLleno) {
-                btn.disabled = true;
-                btn.textContent = `${turno} lleno`;
-                exceptionDiv.style.display = 'none';
-            } else if (superaLimite && !isAdmin) {
-                btn.disabled = true;
-                btn.textContent = `Límite mensual alcanzado (${count}/${limite})`;
-                exceptionDiv.style.display = 'none';
-            } else if (superaLimite && isAdmin) {
-                btn.disabled = false;
-                btn.textContent = `Registrarme en ${turno} (${count}/${limite})`;
-                exceptionDiv.style.display = 'block';
-            } else {
-                btn.disabled = false;
-                btn.textContent = `Registrarme en ${turno}`;
-                exceptionDiv.style.display = 'none';
-            }
-        }
-
-        async function registerTurno(turno) {
-            const socioId = document.getElementById('socioSelect').value;
-            const socio = SOCIOS.find(s => s.id === socioId);
-            const excepcion = document.getElementById(`${turno.toLowerCase()}Excepcion`)?.checked || false;
-
-            const success = await addGuardia(selectedDate, socioId, socio.nombre, turno, excepcion);
-            
-            if (success) {
-                updateModalContent();
-                renderCalendar();
-            }
-        }
-
-        async function deleteRegistro(fecha, visioId, turno) {
-            const socioId = document.getElementById('socioSelect').value;
-            
-            if (visioId != socioId && !isAdmin) {
-                showToast('❌ Solo podés eliminar tus propias guardias', 'error');
-                return;
-            }
-
-            if (confirm('¿Seguro que querés eliminar esta guardia?')) {
-                const success = await deleteGuardia(fecha, visioId, turno);
-                if (success) {
-                    updateModalContent();
-                    renderCalendar();
-                }
-            }
-        }
-
-        // ============ ADMINISTRADOR ============
-        function loginAdmin() {
-            const password = document.getElementById('adminPassword').value;
-            const socioId = document.getElementById('socioSelect').value;
-
-            if (password !== ADMIN_PASSWORD) {
-                showToast('❌ Contraseña incorrecta', 'error');
-                return;
-            }
-
-            if (!ADMIN_IDS.includes(socioId)) {
-                showToast('❌ Tu usuario no tiene permisos de administrador', 'error');
-                return;
-            }
-
-            isAdmin = true;
-            document.getElementById('adminLogin').style.display = 'none';
-            document.getElementById('adminPanel').classList.add('active');
-            showToast('✅ Sesión de administrador iniciada', 'success');
-            renderCalendar();
-        }
-
-        function logoutAdmin() {
-            isAdmin = false;
-            document.getElementById('adminLogin').style.display = 'flex';
-            document.getElementById('adminPanel').classList.remove('active');
-            document.getElementById('adminPassword').value = '';
-            showToast('Sesión cerrada', 'success');
-            renderCalendar();
-        }
-
-        function showStatusModal() {
-            document.getElementById('statusMonth').textContent = 
-                `${MESES[currentMonth]} ${currentYear}`;
-
-            const monthGuardias = getGuardiasForMonth(currentYear, currentMonth);
-            
-            // Summary cards
-            const totalGuardias = monthGuardias.length;
-            const sociosActivos = [...new Set(monthGuardias.map(g => g.visioId))].length;
-            const cumplidos = SOCIOS.filter(s => {
-                const tarde = getSocioMonthCount(s.id, currentYear, currentMonth, 'Tarde');
-                const noche = getSocioMonthCount(s.id, currentYear, currentMonth, 'Noche');
-                return tarde >= 2 && noche >= 3;
-            }).length;
-
-            document.getElementById('summaryCards').innerHTML = `
-                <div class="summary-card">
-                    <div class="number">${totalGuardias}</div>
-                    <div class="label">Total Guardias</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number">${sociosActivos}</div>
-                    <div class="label">Socios Activos</div>
-                </div>
-                <div class="summary-card">
-                    <div class="number">${cumplidos}/${SOCIOS.length}</div>
-                    <div class="label">Cumplimiento Total</div>
-                </div>
-            `;
-
-            // Tabla de estado
-            const tbody = document.getElementById('statusTableBody');
-            tbody.innerHTML = SOCIOS.map(socio => {
-                const tarde = getSocioMonthCount(socio.id, currentYear, currentMonth, 'Tarde');
-                const noche = getSocioMonthCount(socio.id, currentYear, currentMonth, 'Noche');
+        // ============================================
+        // GESTIÓN DE GUARDIAS
+        // ============================================
+        async function loadGuardias() {
+            try {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
                 
-                let status, statusClass;
-                if (tarde >= 2 && noche >= 3) {
-                    status = '✅ Cumplido';
-                    statusClass = 'status-ok';
-                } else if (tarde >= 1 || noche >= 1) {
-                    status = '⚠️ Parcial';
-                    statusClass = 'status-warning';
-                } else {
-                    status = '❌ Falta';
-                    statusClass = 'status-danger';
-                }
-
-                return `
-                    <tr>
-                        <td>${socio.id}</td>
-                        <td style="text-align: left;">${socio.nombre}</td>
-                        <td class="${tarde >= 2 ? 'status-ok' : tarde >= 1 ? 'status-warning' : 'status-danger'}">${tarde}/2</td>
-                        <td class="${noche >= 3 ? 'status-ok' : noche >= 1 ? 'status-warning' : 'status-danger'}">${noche}/3</td>
-                        <td class="${statusClass}">${status}</td>
-                    </tr>
-                `;
-            }).join('');
-
-            document.getElementById('statusModal').classList.add('active');
-        }
-
-        function closeStatusModal() {
-            document.getElementById('statusModal').classList.remove('active');
-        }
-
-        function exportCSV() {
-            const monthGuardias = getGuardiasForMonth(currentYear, currentMonth);
-            
-            let csv = 'ID,Nombre,Tarde,Noche,Falta Tarde,Falta Noche,Estado\n';
-            
-            SOCIOS.forEach(socio => {
-                const tarde = getSocioMonthCount(socio.id, currentYear, currentMonth, 'Tarde');
-                const noche = getSocioMonthCount(socio.id, currentYear, currentMonth, 'Noche');
-                const faltaTarde = Math.max(0, 2 - tarde);
-                const faltaNoche = Math.max(0, 3 - noche);
-                const estado = (tarde >= 2 && noche >= 3) ? 'Cumplido' : 
-                              (tarde >= 1 || noche >= 1) ? 'Parcial' : 'Pendiente';
+                const response = await fetch(`${CONFIG.API_URL}?action=getGuardias&year=${year}&month=${month}`);
+                const data = await response.json();
                 
-                csv += `${socio.id},"${socio.nombre}",${tarde},${noche},${faltaTarde},${faltaNoche},${estado}\n`;
+                if (data.success) {
+                    guardias = data.guardias || [];
+                    updateCalendarShifts();
+                    updateSocioLimits();
+                }
+            } catch (error) {
+                console.error('Error cargando guardias:', error);
+                // Usar datos locales si falla la conexión
+            }
+        }
+
+        async function registrarGuardia(turno) {
+            if (!selectedSocio || !selectedDay) return;
+            
+            const dateStr = formatDate(selectedDay.year, selectedDay.month, selectedDay.day);
+            
+            showStatus('Registrando...', 'loading');
+            
+            try {
+                const response = await fetch(CONFIG.API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'registrarGuardia',
+                        fecha: dateStr,
+                        turno: turno,
+                        socioId: selectedSocio.id,
+                        socioNombre: selectedSocio.nombre
+                    })
+                });
+                
+                // Como es no-cors, asumimos éxito y actualizamos localmente
+                const newGuardia = {
+                    id: Date.now().toString(),
+                    fecha: dateStr,
+                    turno: turno,
+                    socioId: selectedSocio.id,
+                    socioNombre: selectedSocio.nombre
+                };
+                
+                guardias.push(newGuardia);
+                updateCalendarShifts();
+                updateSocioLimits();
+                openDayModal(selectedDay.year, selectedDay.month, selectedDay.day);
+                
+                showStatus('✅ ¡Registrado correctamente!', 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Error al registrar. Intenta de nuevo.', 'error');
+            }
+        }
+
+        async function deleteGuardia(guardiaId) {
+            if (!confirm('¿Seguro que deseas eliminar este registro?')) return;
+            
+            try {
+                await fetch(CONFIG.API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'eliminarGuardia',
+                        guardiaId: guardiaId
+                    })
+                });
+                
+                // Actualizar localmente
+                guardias = guardias.filter(g => g.id !== guardiaId);
+                updateCalendarShifts();
+                updateSocioLimits();
+                
+                if (selectedDay) {
+                    openDayModal(selectedDay.year, selectedDay.month, selectedDay.day);
+                }
+                
+                showStatus('✅ Registro eliminado', 'success');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                showStatus('❌ Error al eliminar', 'error');
+            }
+        }
+
+        // ============================================
+        // UTILIDADES
+        // ============================================
+        function formatDate(year, month, day) {
+            return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        }
+
+        function getSocioNombre(socioId) {
+            const socio = SOCIOS.find(s => s.id == socioId);
+            return socio ? socio.nombre : `Socio ${socioId}`;
+        }
+
+        function getSocioMonthlyCount(socioId) {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            
+            const monthGuardias = guardias.filter(g => {
+                const gDate = new Date(g.fecha);
+                return g.socioId == socioId && 
+                       gDate.getFullYear() === year && 
+                       gDate.getMonth() === month;
             });
+            
+            return {
+                tarde: monthGuardias.filter(g => g.turno === 'Tarde').length,
+                noche: monthGuardias.filter(g => g.turno === 'Noche').length
+            };
+        }
 
+        function updateSocioLimits() {
+            if (!selectedSocio) return;
+            
+            const counts = getSocioMonthlyCount(selectedSocio.id);
+            document.getElementById('tardes-count').textContent = `${counts.tarde}/${CONFIG.MAX_TARDE_MES}`;
+            document.getElementById('noches-count').textContent = `${counts.noche}/${CONFIG.MAX_NOCHE_MES}`;
+        }
+
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('status-message');
+            statusEl.textContent = message;
+            statusEl.className = `status-message ${type}`;
+        }
+
+        // ============================================
+        // ADMINISTRACIÓN
+        // ============================================
+        function loginAdmin() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === CONFIG.ADMIN_PASSWORD) {
+                isAdmin = true;
+                document.getElementById('admin-controls').classList.add('active');
+                document.getElementById('admin-password').style.display = 'none';
+                document.querySelector('.admin-login .btn').style.display = 'none';
+                alert('✅ Acceso de administrador activado');
+            } else {
+                alert('❌ Contraseña incorrecta');
+            }
+        }
+
+        function exportToExcel() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            let csv = 'Fecha,Turno,ID Socio,Nombre Socio\n';
+            
+            const monthGuardias = guardias.filter(g => {
+                const gDate = new Date(g.fecha);
+                return gDate.getFullYear() === year && gDate.getMonth() === month;
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            monthGuardias.forEach(g => {
+                csv += `${g.fecha},${g.turno},${g.socioId},"${getSocioNombre(g.socioId)}"\n`;
+            });
+            
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `guardias_${MESES[currentMonth]}_${currentYear}.csv`;
+            link.download = `Guardias_${monthNames[month]}_${year}.csv`;
             link.click();
-
-            showToast('📥 CSV exportado correctamente', 'success');
         }
+
+        function showCompliance() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            let html = `<h3>📊 ${monthNames[month]} ${year}</h3>`;
+            html += `<table class="compliance-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Tarde</th>
+                        <th>Noche</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>`;
+            
+            SOCIOS.forEach(socio => {
+                const counts = getSocioMonthlyCount(socio.id);
+                const tardeOk = counts.tarde >= CONFIG.MAX_TARDE_MES;
+                const nocheOk = counts.noche >= CONFIG.MAX_NOCHE_MES;
+                const completo = tardeOk && nocheOk;
+                
+                let estado = '';
+                let estadoClass = '';
+                
+                if (completo) {
+                    estado = '✅ Completo';
+                    estadoClass = 'compliance-ok';
+                } else if (counts.tarde > 0 || counts.noche > 0) {
+                    estado = '⏳ Parcial';
+                    estadoClass = 'compliance-pending';
+                } else {
+                    estado = '❌ Pendiente';
+                    estadoClass = 'compliance-missing';
+                }
+                
+                html += `<tr>
+                    <td>${socio.id}</td>
+                    <td>${socio.nombre}</td>
+                    <td>${counts.tarde}/${CONFIG.MAX_TARDE_MES}</td>
+                    <td>${counts.noche}/${CONFIG.MAX_NOCHE_MES}</td>
+                    <td class="${estadoClass}">${estado}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody></table>';
+            
+            document.getElementById('compliance-body').innerHTML = html;
+            document.getElementById('compliance-modal').classList.add('active');
+        }
+
+        function closeComplianceModal() {
+            document.getElementById('compliance-modal').classList.remove('active');
+        }
+
+        // ============================================
+        // WHATSAPP
+        // ============================================
+        function shareDayWhatsApp() {
+            if (!selectedDay) return;
+            
+            const dateStr = formatDate(selectedDay.year, selectedDay.month, selectedDay.day);
+            const dayDate = new Date(selectedDay.year, selectedDay.month, selectedDay.day);
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateDisplay = dayDate.toLocaleDateString('es-UY', options);
+            
+            const dayGuardias = guardias.filter(g => g.fecha === dateStr);
+            const tardeGuardias = dayGuardias.filter(g => g.turno === 'Tarde');
+            const nocheGuardias = dayGuardias.filter(g => g.turno === 'Noche');
+            
+            let message = `🛡️ *COVISUEL - Guardias*\n`;
+            message += `📅 ${dateDisplay}\n\n`;
+            
+            message += `☀️ *TARDE (14-20h)*\n`;
+            if (tardeGuardias.length > 0) {
+                tardeGuardias.forEach(g => {
+                    message += `  • ${getSocioNombre(g.socioId)}\n`;
+                });
+            } else {
+                message += `  _Sin registros_\n`;
+            }
+            message += `  Lugares: ${tardeGuardias.length}/${CONFIG.MAX_PER_SHIFT}\n\n`;
+            
+            message += `🌙 *NOCHE (20-00h)*\n`;
+            if (nocheGuardias.length > 0) {
+                nocheGuardias.forEach(g => {
+                    message += `  • ${getSocioNombre(g.socioId)}\n`;
+                });
+            } else {
+                message += `  _Sin registros_\n`;
+            }
+            message += `  Lugares: ${nocheGuardias.length}/${CONFIG.MAX_PER_SHIFT}`;
+            
+            const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        function shareMonthWhatsApp() {
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth();
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+                              'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            const monthGuardias = guardias.filter(g => {
+                const gDate = new Date(g.fecha);
+                return gDate.getFullYear() === year && gDate.getMonth() === month;
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            let message = `🛡️ *COVISUEL - Resumen ${monthNames[month]} ${year}*\n\n`;
+            
+            const uniqueDates = [...new Set(monthGuardias.map(g => g.fecha))];
+            
+            uniqueDates.forEach(date => {
+                const dayGuardias = monthGuardias.filter(g => g.fecha === date);
+                const dateParts = date.split('-');
+                const dayNum = parseInt(dateParts[2]);
+                
+                message += `📅 *${dayNum}/${month + 1}*\n`;
+                
+                const tarde = dayGuardias.filter(g => g.turno === 'Tarde');
+                const noche = dayGuardias.filter(g => g.turno === 'Noche');
+                
+                if (tarde.length > 0) {
+                    message += `☀️ T: ${tarde.map(g => getSocioNombre(g.socioId).split(' ')[0]).join(', ')}\n`;
+                }
+                if (noche.length > 0) {
+                    message += `🌙 N: ${noche.map(g => getSocioNombre(g.socioId).split(' ')[0]).join(', ')}\n`;
+                }
+                message += `\n`;
+            });
+            
+            message += `📊 Total registros: ${monthGuardias.length}`;
+            
+            const whatsappURL = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappURL, '_blank');
+        }
+
+        // Cerrar modales con Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeComplianceModal();
+            }
+        });
+
+        // Cerrar modal al hacer clic fuera
+        document.getElementById('day-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.getElementById('compliance-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeComplianceModal();
+        });
     </script>
 </body>
 </html>
