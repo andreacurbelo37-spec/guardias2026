@@ -1196,7 +1196,7 @@
                 const estadoTarde = cumpleTarde ? '✅' : '⏳';
                 const estadoNoche = cumpleNoche ? '✅' : '⏳';
                 
-                reporte += `${socio.nombre}\n  T:${estadoTarde}${tarde}/2  N:${estadoNoche}${noche}/3\n\n`;
+                reporte += socio.nombre + '\n  T:' + estadoTarde + tarde + '/2  N:' + estadoNoche + noche + '/3\n\n';
             });
             
             reporte = `✅ Cumplidos: ${cumplidos}/${SOCIOS.length}\n⏳ Pendientes: ${pendientes}\n\n` + reporte;
