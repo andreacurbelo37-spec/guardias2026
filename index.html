@@ -1201,16 +1201,13 @@
             
             reporte = `✅ Cumplidos: ${cumplidos}/${SOCIOS.length}\n⏳ Pendientes: ${pendientes}\n\n` + reporte;
             
-           // Crear modal para mostrar cumplimiento
-const modalHTML = `
-<div id="modalCumplimiento" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;">
-  <div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;">
-    <h3 style="margin-top:0;">📊 Cumplimiento Mensual</h3>
-    <pre style="font-size:14px;white-space:pre-wrap;">${reporte}</pre>
-    <button onclick="document.getElementById('modalCumplimiento').remove()" style="width:100%;padding:10px;background:#e74c3c;color:white;border:none;border-radius:5px;font-size:16px;cursor:pointer;">Cerrar</button>
-  </div>
-</div>`;
-document.body.insertAdjacentHTML('beforeend', modalHTML);
+// Crear modal para mostrar cumplimiento
+let modalDiv = document.createElement('div');
+modalDiv.id = 'modalCumplimiento';
+modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
+modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;"><h3>Cumplimiento Mensual</h3><pre style="font-size:12px;">' + reporte + '</pre><button id="btnCerrarModal" style="width:100%;padding:10px;background:#e74c3c;color:white;border:none;border-radius:5px;cursor:pointer;">Cerrar</button></div>';
+document.body.appendChild(modalDiv);
+document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
         }
     </script>
 </body>
