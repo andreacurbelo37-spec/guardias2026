@@ -1168,7 +1168,7 @@
             const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             
-            let reporte = `📊 CUMPLIMIENTO ${meses[currentMonth]} ${currentYear}\n\n`;
+            let reporte = '📊 CUMPLIMIENTO ' + meses[currentMonth] + ' ' + currentYear + '\n\n';
             
             let cumplidos = 0;
             let pendientes = 0;
@@ -1196,7 +1196,7 @@
                 const estadoTarde = cumpleTarde ? '✅' : '⏳';
                 const estadoNoche = cumpleNoche ? '✅' : '⏳';
                 
-                reporte += socio.nombre + '\n  T:' + estadoTarde + tarde + '/2  N:' + estadoNoche + noche + '/3\n\n';
+                reporte += '• ' + socio.nombre + '\n  T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
             });
             
             reporte = `✅ Cumplidos: ${cumplidos}/${SOCIOS.length}\n⏳ Pendientes: ${pendientes}\n\n` + reporte;
