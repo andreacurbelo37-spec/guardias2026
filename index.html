@@ -1152,22 +1152,20 @@
                 const fecha = new Date(g.fecha);
                 return fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear;
             }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-            
-            guardiasMes.forEach(g => {
-                csv += `${g.fecha};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
-Resumen: Cambiá to
-            });
-            
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = `guardias_covisuel_${currentMonth + 1}_${currentYear}.csv`;
-            link.click();
-        }
+                      
+guardiasMes.forEach(g => {
+    csv += `${g.fecha};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
+});
 
-        function verCompliance() {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+const link = document.createElement('a');
+link.href = URL.createObjectURL(blob);
+link.download = `guardias_covisuel_${currentMonth + 1}_${currentYear}.csv`;
+link.click();
+}
+
+function verCompliance() {
+    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',       
             
             let reporte = '📊 CUMPLIMIENTO ' + meses[currentMonth] + ' ' + currentYear + '\n\n';
             
