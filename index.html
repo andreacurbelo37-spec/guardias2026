@@ -1146,7 +1146,7 @@
         }
 
         function exportarExcel() {
-            let csv = 'Fecha,Turno,ID Socio,Nombre,Tipo,Detalle\n';
+            let csv = 'Fecha;Turno;ID Socio;Nombre;Tipo;Detalle\n';
             
             const guardiasMes = guardias.filter(g => {
                 const fecha = new Date(g.fecha);
@@ -1154,7 +1154,8 @@
             }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
             
             guardiasMes.forEach(g => {
-                csv += `${g.fecha},${g.turno},${g.socioId},"${g.socioNombre}",${g.turno},"${g.detalle || ''}"\n`;
+                csv += `${g.fecha};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
+Resumen: Cambiá to
             });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
