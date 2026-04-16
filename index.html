@@ -821,10 +821,17 @@
                     turno: turno,
                     socioId: socioId
                 });
-                
-                await fetch(`${API_URL}?${params.toString()}`);
-                await cargarGuardias();
-                mostrarRegistrosDelDia(fecha);
+
+                try {
+                const response = await fetch(`${API_URL}?${params.toString()}`);
+                const result = await response.json();
+
+                if (result.success) {
+                        await cargarGuardias();
+                        mostrarRegistrosDelDia(fecha.substring(0,10));
+                } else {
+                        alert('Error al eliminar: ' + result.message);
+                    }
             } catch (error) {
                 console.error('Error eliminando guardia:', error);
                 alert('Error al eliminar. Intente nuevamente.');
