@@ -1154,7 +1154,8 @@
             }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
                       
 guardiasMes.forEach(g => {
-    csv += `${g.fecha.split('T')[0]};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
+    let fechaFormato = new Date(g.fecha).toISOString().split('T')[0];
+csv += `${fechaFormato};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
 });
 
 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
