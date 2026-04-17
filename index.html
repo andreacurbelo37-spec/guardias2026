@@ -829,7 +829,7 @@
                         await cargarGuardias();
                         mostrarRegistrosDelDia(fecha.substring(0,10));
                 } else {
-                        alert('Error al eliminar: ' + result.message);
+                        alert('Error al eliminar: ' + JSON.stringify(result));
                     }
             } catch (error) {
                 console.error('Error eliminando guardia:', error);
