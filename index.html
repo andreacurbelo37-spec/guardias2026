@@ -1070,15 +1070,40 @@
                 return;
             }
             
-            let detalle = '';
-            if (selectedTipo === 'colaborador') {
-                const colaboradorId = document.getElementById('selectColaborador').value;
-                const colaborador = SOCIOS.find(s => s.id == colaboradorId);
-                if (!colaborador) {
-                    alert('⚠️ Seleccioná al socio que ayudás');
-                    return;
-                }
-                detalle = `Ayuda a: ${colaborador.nombre}`;
+            let tipo = 'Titular';
+        let cubre = '';
+        
+        if (selectedTipo === 'colaborador') {
+            const nombreColaborador = document.getElementById('inputColaborador').value.trim();
+            if (!nombreColaborador) {
+                alert('⚠️ Ingresá el nombre del colaborador');
+                return;
+            }
+            tipo = 'Colaborador';
+            cubre = nombreColaborador;
+        } else if (selectedTipo === 'nucleo') {
+            const nombreFamiliar = document.getElementById('inputNucleo').value.trim();
+            if (!nombreFamiliar) {
+                alert('⚠️ Ingresá el nombre del familiar');
+                return;
+            }
+            tipo = 'Núcleo';
+            cubre = nombreFamiliar;
+        }
+        
+        const guardia = {
+            fecha: selectedDate,
+            turno: selectedTurno,
+            socioId: selectedSocio.id,
+            socioNombre: selectedSocio.nombre,
+            tipo: tipo,
+            cubre: cubre
+        };
+        
+        await guardarGuardia(guardia);
+        cerrarModal();
+        alert('✅ Guardia registrada correctamente');
+    }
             } else if (selectedTipo === 'nucleo') {
                 detalle = document.getElementById('inputNucleo').value.trim();
                 if (!detalle) {
