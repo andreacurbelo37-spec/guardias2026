@@ -814,6 +814,7 @@
             if (!confirm('¿Eliminar este registro?')) return;
             
             showLoading(true);
+            console.log('Enviando:', fecha, turno, socioId);
             try {
                 const params = new URLSearchParams({
                     action: 'cancelar',
