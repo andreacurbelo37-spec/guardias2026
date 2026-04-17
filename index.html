@@ -810,27 +810,21 @@
             showLoading(false);
         }
 
-        async function eliminarGuardia(fecha, turno, socioId) {
+       async function eliminarGuardia(fecha, turno, socioId) {
     if (!confirm('¿Eliminar este registro?')) return;
     
     showLoading(true);
     console.log('Enviando:', fecha, turno, socioId);
     
     try {
-        const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                action: 'cancelar',
-                fecha: fecha,
-                turno: turno,
-                socioId: String(socioId)
-            })
+        const params = new URLSearchParams({
+            action: 'cancelar',
+            fecha: fecha,
+            turno: turno,
+            socioId: String(socioId)
         });
         
-        console.log('Response status:', response.status);
+        const response = await fetch(`${API_URL}?${params.toString()}`);
         const result = await response.json();
         console.log('Result:', result);
         
@@ -838,7 +832,7 @@
             await cargarGuardias();
             mostrarRegistrosDelDia(fecha.substring(0,10));
         } else {
-            alert('Error al eliminar: ' + JSON.stringify(result));
+            alert('Error al eliminar: ' + (result.error || 'Error desconocido'));
         }
     } catch (error) {
         console.error('Error eliminando guardia:', error);
