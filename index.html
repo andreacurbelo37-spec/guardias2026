@@ -759,17 +759,15 @@
         });
 
         function cargarSocios() {
-            const select = document.getElementById('socioSelect');
-            const selectColaborador = document.getElementById('selectColaborador');
-            
-            SOCIOS.forEach(socio => {
-                const option = document.createElement('option');
-                option.value = socio.id;
-                option.textContent = `${socio.id} - ${socio.nombre}`;
-                select.appendChild(option);
-                selectColaborador.appendChild(option.cloneNode(true));
-            });
-        }
+    const select = document.getElementById('socioSelect');
+
+    SOCIOS.forEach(socio => {
+        const option = document.createElement('option');
+        option.value = socio.id;
+        option.textContent = `${socio.id} - ${socio.nombre}`;
+        select.appendChild(option);
+    });
+}
 
         // ==================== API GOOGLE SHEETS ====================
         async function cargarGuardias() {
