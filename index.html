@@ -811,34 +811,42 @@
         }
 
         async function eliminarGuardia(fecha, turno, socioId) {
-            if (!confirm('¿Eliminar este registro?')) return;
-            
-            showLoading(true);
-            console.log('Enviando:', fecha, turno, socioId);
-            try {
-                const params = new URLSearchParams({
-                    action: 'cancelar',
-                    fecha: fecha,
-                    turno: turno,
-                    socioId: socioId
-                });
-
-                const response = await fetch(`${API_URL}?${params.toString()}`);
-                console.log('Response status:', response.status, response.ok);
-                const result = await response.json();
-
-                if (result.success) {
-                        await cargarGuardias();
-                        mostrarRegistrosDelDia(fecha.substring(0,10));
-                } else {
-                        alert('Error al eliminar: ' + JSON.stringify(result));
-                    }
-            } catch (error) {
-                console.error('Error eliminando guardia:', error);
-                alert('Error al eliminar. Intente nuevamente.');
-            }
-            showLoading(false);
+    if (!confirm('¿Eliminar este registro?')) return;
+    
+    showLoading(true);
+    console.log('Enviando:', fecha, turno, socioId);
+    
+    try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'cancelar',
+                fecha: fecha,
+                turno: turno,
+                socioId: String(socioId)
+            })
+        });
+        
+        console.log('Response status:', response.status);
+        const result = await response.json();
+        console.log('Result:', result);
+        
+        if (result.success) {
+            await cargarGuardias();
+            mostrarRegistrosDelDia(fecha.substring(0,10));
+        } else {
+            alert('Error al eliminar: ' + JSON.stringify(result));
         }
+    } catch (error) {
+        console.error('Error eliminando guardia:', error);
+        alert('Error al eliminar. Intente nuevamente.');
+    }
+    showLoading(false);
+}
+
 
         function showLoading(show) {
             document.getElementById('loading').classList.toggle('active', show);
