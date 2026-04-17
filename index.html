@@ -1104,23 +1104,7 @@
         cerrarModal();
         alert('✅ Guardia registrada correctamente');
     }
-            } else if (selectedTipo === 'nucleo') {
-                detalle = document.getElementById('inputNucleo').value.trim();
-                if (!detalle) {
-                    alert('⚠️ Ingresá el nombre del familiar');
-                    return;
-                }
-            }
-            
-            const guardia = {
-                fecha: selectedDate,
-                turno: selectedTurno,
-                socioId: selectedSocio.id,
-                socioNombre: selectedSocio.nombre,
-                timestamp: selectedTipo,
-                detalle: detalle
-            };
-            
+                       
             await guardarGuardia(guardia);
             cerrarModal();
             alert('✅ Guardia registrada correctamente');
