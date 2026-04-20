@@ -1151,7 +1151,7 @@
                     }
                     
                     const emoji = g.turno === 'tarde' ? '☀️' : '🌙';
-                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.socioNombre}\n`;
+                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
             
