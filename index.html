@@ -1146,11 +1146,11 @@
                     const fechaStr = `${fecha.getDate()}/${currentMonth + 1}`;
                     
                     if (fechaStr !== fechaAnterior) {
-                        mensaje += `\n *${fechaStr}*\n`;
+                        mensaje += `\n*${fechaStr}*\n`;
                         fechaAnterior = fechaStr;
                     }
                     
-                    const emoji = g.turno === 'tarde' ? '[SOL]' : '[LUNA]';
+                    mensaje += `- ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;;
                     mensaje += `${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
