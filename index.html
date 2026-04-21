@@ -799,7 +799,7 @@
                 cubre: guardia.cubre || ''
             });
             
-            await fetch(`${API_URL}?${params.toString()}`);
+            await fetch(`${SCRIPT_URL}?${params.toString()}`);
             await cargarGuardias();
         } catch (error) {
             console.error('Error guardando guardia:', error);
