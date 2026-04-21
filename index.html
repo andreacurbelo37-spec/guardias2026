@@ -822,7 +822,7 @@
             socioId: String(socioId)
         });
         
-        const response = await fetch(`${API_URL}?${params.toString()}`);
+        const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
         const result = await response.json();
         console.log('Result:', result);
         
