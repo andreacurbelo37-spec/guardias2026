@@ -1150,7 +1150,7 @@
                         fechaAnterior = fechaStr;
                     }
                     
-                    mensaje += `- ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;;
+                    mensaje += `- ${g.turno === 'tarde' ? '☼' : '☽'} ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                     mensaje += `${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
