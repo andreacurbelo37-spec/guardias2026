@@ -1169,7 +1169,7 @@
                       
 guardiasMes.forEach(g => {
     let fechaFormato = new Date(g.fecha).toISOString().split('T')[0];
-csv += `${fechaFormato};${g.turno};${g.socioId};${g.socioNombre};${g.turno};${g.detalle || ''}\n`;
+csv += `${fechaFormato};${g.turno};${g.socioId};${g.socioNombre};${g.tipo || 'Titular'};${g.cubre || ''}\n`;
 });
 
 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
