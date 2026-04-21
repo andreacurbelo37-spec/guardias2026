@@ -1130,7 +1130,7 @@
             const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
             
-            let mensaje = `*GUARDIAS COVISUEL*\n📅 ${meses[currentMonth]} ${currentYear}\n\n`;
+            let mensaje = `*GUARDIAS COVISUEL*\n ${meses[currentMonth]} ${currentYear}\n\n`;
             
             const guardiasMes = guardias.filter(g => {
                 const fecha = new Date(g.fecha);
@@ -1146,12 +1146,12 @@
                     const fechaStr = `${fecha.getDate()}/${currentMonth + 1}`;
                     
                     if (fechaStr !== fechaAnterior) {
-                        mensaje += `\n📆 *${fechaStr}*\n`;
+                        mensaje += `\n *${fechaStr}*\n`;
                         fechaAnterior = fechaStr;
                     }
                     
                     const emoji = g.turno === 'tarde' ? '[SOL]' : '[LUNA]';
-                    mensaje += `${emoji} ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
+                    mensaje += `${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
             
