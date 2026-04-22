@@ -1150,11 +1150,12 @@
                         fechaAnterior = fechaStr;
                     }
                     
-                    const icono = g.turno.toUpperCase() === 'TARDE' ? String.fromCodePoint(0x2600) : String.fromCodePoint(0x1F319);
-                    mensaje += `- ${icono} ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
+                    const icono = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
+                    mensaje += `- ${icono}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
             
+            mensaje = mensaje.replace(/TARDE:/g, '☀️ TARDE:').replace(/NOCHE:/g, '🌙 NOCHE:');
             const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
