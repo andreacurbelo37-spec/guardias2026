@@ -1150,7 +1150,7 @@
                         fechaAnterior = fechaStr;
                     }
                     
-                    const icono = g.turno.toUpperCase() === 'TARDE' ? '\u2600' : '\u263D';
+                    const icono = g.turno.toUpperCase() === 'TARDE' ? String.fromCodePoint(0x2600) : String.fromCodePoint(0x1F319);
                     mensaje += `- ${icono} ${g.turno.toUpperCase()}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
                 });
             }
