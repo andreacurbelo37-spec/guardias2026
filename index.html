@@ -1155,7 +1155,7 @@
                 });
             }
             
-            mensaje = mensaje.replace(/TARDE:/g, decodeURIComponent('%E2%98%80%EF%B8%8F') + ' TARDE:').replace(/NOCHE:/g, decodeURIComponent('%F0%9F%8C%99') + ' NOCHE:');
+            mensaje = mensaje.replace(/TARDE:/g, '* TARDE:').replace(/NOCHE:/g, '** NOCHE:');;
             const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
