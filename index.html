@@ -1155,7 +1155,7 @@
                 });
             }
             
-            mensaje = mensaje.replace(/TARDE:/g, '* TARDE:').replace(/NOCHE:/g, '** NOCHE:');;
+            mensaje = mensaje.replace(/\* TARDE:/g, '\u2600\uFE0F TARDE:').replace(/\*\* NOCHE:/g, '\uD83C\uDF19 NOCHE:');
             const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
             window.open(url, '_blank');
         }
