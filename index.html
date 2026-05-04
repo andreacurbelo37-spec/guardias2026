@@ -813,6 +813,24 @@
     }
 
        async function eliminarGuardia(fecha, turno, socioId) {
+    // Lista de socios autorizados a borrar
+    const autorizados = [
+       'Maria Andrea Curbelo',
+        'Maria Noel Carbajal',
+        'Virginia Diaz',
+        'Juan Pablo Gallulo'
+    ];
+    
+    const socioActual = document.getElementById('socioSelect').value;
+    const esAutorizado = autorizados.some(auth => 
+        socioActual.includes(auth) || socioActual === auth
+    );
+    
+    if (!esAutorizado) {
+        alert('No tenes permiso para eliminar guardias.\n\nContacta a la administracion.');
+        return;
+    }
+    
     if (!confirm('¿Eliminar este registro?')) return;
     
     showLoading(true);
