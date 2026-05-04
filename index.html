@@ -658,15 +658,15 @@
                 <label>Tipo de Registro:</label>
                 <div class="tipo-registro">
                     <button class="tipo-btn selected" onclick="seleccionarTipo('titular')">👤 Titular</button>
-                    <button class="tipo-btn" onclick="seleccionarTipo('colaborador')">🤝 Colaborador</button>
+                    <button class="tipo-btn" onclick="seleccionarTipo('Me Cubre')">🤝 Me Cubre</button>
                     <button class="tipo-btn" onclick="seleccionarTipo('nucleo')">👨‍👩‍👧 Núcleo Familiar</button>
                 </div>
             </div>
 
-            <div class="campo-adicional" id="campoColaborador">
+            <div class="campo-adicional" id="campoMe Cubre">
     <div class="form-group">
-        <label>Nombre del colaborador:</label>
-        <input type="text" id="inputColaborador" placeholder="Nombre completo del colaborador">
+        <label>Nombre del Me Cubre:</label>
+        <input type="text" id="inputMe Cubre" placeholder="Nombre completo del Me Cubre">
     </div>
 </div>
 
@@ -1002,10 +1002,10 @@
             document.querySelectorAll('.turno-btn').forEach(btn => btn.classList.remove('selected'));
             document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
             document.querySelector('.tipo-btn').classList.add('selected');
-            document.getElementById('campoColaborador').classList.remove('visible');
+            document.getElementById('campoMe Cubre').classList.remove('visible');
             document.getElementById('campoNucleo').classList.remove('visible');
             document.getElementById('inputNucleo').value = '';
-            document.getElementById('inputColaborador').value = '';
+            document.getElementById('inputMe Cubre').value = '';
             
             mostrarRegistrosDelDia(fechaStr);
             
@@ -1056,7 +1056,7 @@
             document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             
-            document.getElementById('campoColaborador').classList.toggle('visible', tipo === 'colaborador');
+            document.getElementById('campoMe Cubre').classList.toggle('visible', tipo === 'Me Cubre');
             document.getElementById('campoNucleo').classList.toggle('visible', tipo === 'nucleo');
         }
 
@@ -1103,14 +1103,14 @@
             let tipo = 'Titular';
         let cubre = '';
         
-        if (selectedTipo === 'colaborador') {
-            const nombreColaborador = document.getElementById('inputColaborador').value.trim();
-            if (!nombreColaborador) {
-                alert('⚠️ Ingresá el nombre del colaborador');
+        if (selectedTipo === 'Me Cubre') {
+            const nombreColaborador = document.getElementById('inputMe Cubre').value.trim();
+            if (!nombreMe Cubre) {
+                alert('⚠️ Ingresá el nombre del Me Cubre');
                 return;
             }
-            tipo = 'Colaborador';
-            cubre = nombreColaborador;
+            tipo = 'Me Cubre';
+            cubre = nombreMe Cubre;
         } else if (selectedTipo === 'nucleo') {
             const nombreFamiliar = document.getElementById('inputNucleo').value.trim();
             if (!nombreFamiliar) {
