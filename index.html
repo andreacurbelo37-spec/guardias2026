@@ -1092,14 +1092,17 @@
                 alert(`⚠️ Ya alcanzaste el límite de ${limite} guardias de ${selectedTurno} este mes`);
                 return;
             }
-            
-            // Verificar capacidad del día
-            const guardiasDelDia = guardias.filter(g => g.fecha === selectedDate && g.turno === selectedTurno);
-            if (guardiasDelDia.length >= limite) {
-                alert('⚠️ Este turno ya tiene 2 personas registradas');
-                return;
-            }
-            
+              // Verificar límite DIARIO por turno
+    const guardiasDelDia = guardias.filter(g => 
+        g.fecha === selectedDate && 
+        g.turno === selectedTurno
+    );
+    
+    const limiteDiario = selectedTurno === 'tarde' ? 2 : 3;
+    if (guardiasDelDia.length >= limiteDiario) {
+        alert(`⚠️ Ya hay ${limiteDiario} personas en ${selectedTurno.toUpperCase()} para este día`);
+        return;
+    }         
             let tipo = 'Titular';
         let cubre = '';
         
