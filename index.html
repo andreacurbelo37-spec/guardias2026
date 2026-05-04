@@ -814,13 +814,16 @@
 
        async function eliminarGuardia(fecha, turno, socioId) {
     // Lista de socios autorizados a borrar
-    const autorizados = [
-       'Maria Andrea Curbelo',
+     const autorizados = [
+        'Administrador',
+        'Maria Andrea Curbelo',
+        'María Andrea Curbelo',
         'Maria Noel Carbajal',
+        'María Noel Carbajal',
         'Virginia Diaz',
+        'Virginia Díaz',
         'Juan Pablo Gallulo'
     ];
-    
     const socioActual = document.getElementById('socioSelect').value;
     const esAutorizado = autorizados.some(auth => 
         socioActual.includes(auth) || socioActual === auth
