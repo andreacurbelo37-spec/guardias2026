@@ -663,10 +663,10 @@
                 </div>
             </div>
 
-            <div class="campo-adicional" id="campoMe Cubre">
+            <div class="campo-adicional" id="campoMeCubre">
     <div class="form-group">
         <label>Nombre del Me Cubre:</label>
-        <input type="text" id="inputMe Cubre" placeholder="Nombre completo del Me Cubre">
+        <input type="text" id="inputMeCubre" placeholder="Nombre completo del Me Cubre">
     </div>
 </div>
 
@@ -1002,10 +1002,10 @@
             document.querySelectorAll('.turno-btn').forEach(btn => btn.classList.remove('selected'));
             document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
             document.querySelector('.tipo-btn').classList.add('selected');
-            document.getElementById('campoMe Cubre').classList.remove('visible');
+            document.getElementById('campoMeCubre').classList.remove('visible');
             document.getElementById('campoNucleo').classList.remove('visible');
             document.getElementById('inputNucleo').value = '';
-            document.getElementById('inputMe Cubre').value = '';
+            document.getElementById('inputMeCubre').value = '';
             
             mostrarRegistrosDelDia(fechaStr);
             
@@ -1056,7 +1056,7 @@
             document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
             event.target.classList.add('selected');
             
-            document.getElementById('campoMe Cubre').classList.toggle('visible', tipo === 'Me Cubre');
+            document.getElementById('campoMeCubre').classList.toggle('visible', tipo === 'Me Cubre');
             document.getElementById('campoNucleo').classList.toggle('visible', tipo === 'nucleo');
         }
 
@@ -1104,13 +1104,13 @@
         let cubre = '';
         
         if (selectedTipo === 'Me Cubre') {
-            const nombreMe Cubre = document.getElementById('inputMe Cubre').value.trim();
-            if (!nombreMe Cubre) {
+            const nombreMeCubre = document.getElementById('inputMeCubre').value.trim();
+            if (!nombreMeCubre) {
                 alert('⚠️ Ingresá el nombre del Me Cubre');
                 return;
             }
             tipo = 'Me Cubre';
-            cubre = nombreMe Cubre;
+            cubre = nombreMeCubre;
         } else if (selectedTipo === 'nucleo') {
             const nombreFamiliar = document.getElementById('inputNucleo').value.trim();
             if (!nombreFamiliar) {
