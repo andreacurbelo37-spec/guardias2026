@@ -1095,8 +1095,8 @@
             
             // Verificar capacidad del día
             const guardiasDelDia = guardias.filter(g => g.fecha === selectedDate && g.turno === selectedTurno);
-            if (guardiasDelDia.length >= 3) {
-                alert('⚠️ Este turno ya tiene 3 personas registradas');
+            if (guardiasDelDia.length >= 2) {
+                alert('⚠️ Este turno ya tiene 2 personas registradas');
                 return;
             }
             
