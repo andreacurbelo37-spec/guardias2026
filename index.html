@@ -824,11 +824,14 @@
         'Virginia Díaz',
         'Juan Pablo Gallulo'
     ];
-    const socioActual = document.getElementById('socioSelect').value;
-    const esAutorizado = autorizados.some(auth => 
-        socioActual.includes(auth) || socioActual === auth
+    const selectElement = document.getElementById('socioSelect');
+    const socioActual = selectElement.value.toLowerCase(); 
+    const textoSocio = selectElement.options[selectElement.selectedIndex].text.toLowerCase();
+
+    const esAutorizado = autorizados.some(auth =>        
+        socioActual.includes(auth.toLowerCase()) || 
+        textoSocio.includes(auth.toLowerCase())
     );
-    
     if (!esAutorizado) {
         alert('No tenes permiso para eliminar guardias.\n\nContacta a la administracion.');
         return;
