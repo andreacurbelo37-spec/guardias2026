@@ -1092,6 +1092,11 @@
                 alert(`⚠️ Ya alcanzaste el límite de ${limite} guardias de ${selectedTurno} este mes`);
                 return;
             }
+
+             console.log('Fecha seleccionada:', selectedDate);
+    console.log('Turno seleccionado:', selectedTurno);
+    console.log('Guardias existentes:', guardias.map(g => ({fecha: g.fecha, turno: g.turno})));
+            
               // Verificar límite DIARIO por turno
     const guardiasDelDia = guardias.filter(g => 
         g.fecha === selectedDate && 
