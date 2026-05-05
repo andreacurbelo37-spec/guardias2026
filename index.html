@@ -1100,7 +1100,7 @@
     
     const guardiasSocioCiclo = guardias.filter(g => {
         const fechaGuardia = new Date(g.fecha);
-        return g.visibleId === visibleIdSocio && 
+        return g.visibleId === selectedSocio.visibleId && 
                fechaGuardia >= inicioCicloActual && 
                fechaGuardia <= finCicloActual;
     });
