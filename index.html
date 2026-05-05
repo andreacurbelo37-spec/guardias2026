@@ -1239,12 +1239,11 @@ link.download = `guardias_covisuel_${currentMonth + 1}_${currentYear}.csv`;
 link.click();
 }
 
-function verCompliance() {
+        function verCompliance() {
         // Usar el mes y año seleccionados
         const mesActual = parseInt(document.getElementById('mesSelect').value);
         const anioActual = parseInt(document.getElementById('anioSelect').value);
-        
-        // Calcular qué ciclo corresponde al mes seleccionado
+       // Calcular qué ciclo corresponde al mes seleccionado
         const fechaInicioCiclos = new Date('2026-05-01');
         const primerDiaMes = new Date(anioActual, mesActual, 1);
         const ultimoDiaMes = new Date(anioActual, mesActual + 1, 0);
