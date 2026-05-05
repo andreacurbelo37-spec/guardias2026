@@ -1240,10 +1240,17 @@ link.click();
 }
 
 function verCompliance() {
-        // Calcular ciclo de 34 días desde 1 mayo 2026
+        // Usar el mes y año seleccionados
+        const mesActual = parseInt(document.getElementById('mesSelect').value);
+        const anioActual = parseInt(document.getElementById('anioSelect').value);
+        
+        // Calcular qué ciclo corresponde al mes seleccionado
         const fechaInicioCiclos = new Date('2026-05-01');
-        const hoy = new Date();
-        const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+        const primerDiaMes = new Date(anioActual, mesActual, 1);
+        const ultimoDiaMes = new Date(anioActual, mesActual + 1, 0);
+        
+        // Encontrar el ciclo que contiene la mayor parte del mes seleccionado
+        const diasTranscurridos = Math.floor((primerDiaMes - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
         const numeroCiclo = Math.floor(diasTranscurridos / 34);
         const inicioCicloActual = new Date(fechaInicioCiclos);
         inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
@@ -1253,21 +1260,20 @@ function verCompliance() {
         const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
         const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
         
-        let reporte = 'CUMPLIMIENTO CICLO\n' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
+        // Filtrar guardias del ciclo
+        const guardiasCiclo = guardias.filter(g => {
+            const fecha = new Date(g.fecha);
+            return fecha >= inicioCicloActual && fecha <= finCicloActual;
+        });
         
+        let reporte = 'Ciclo: ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
         let cumplidos = 0;
         let pendientes = 0;
         
         SOCIOS.forEach(socio => {
-            const guardiasSocio = guardias.filter(g => {
-                const fecha = new Date(g.fecha);
-                return g.visibleId === socio.visibleId &&
-                       fecha >= inicioCicloActual &&
-                       fecha <= finCicloActual;
-            });
-            
-            const tarde = guardiasSocio.filter(g => g.turno === 'tarde').length;
-            const noche = guardiasSocio.filter(g => g.turno === 'noche').length;
+            const guardiasSocio = guardiasCiclo.filter(g => g.visibleId === socio.visibleId);
+            const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
+            const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
             
             const cumpleTarde = tarde >= 2;
             const cumpleNoche = noche >= 3;
@@ -1294,6 +1300,7 @@ function verCompliance() {
             reporte + '</pre><button id="btnCerrarModal" style="margin-top:10px;padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer;">Cerrar</button></div>';
         document.body.appendChild(modalDiv);
         document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
+    }
     }
     </script>
 </body>
