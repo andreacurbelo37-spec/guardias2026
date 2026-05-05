@@ -1240,8 +1240,8 @@ link.click();
 
         function verCompliance() {
         // Usar el mes y año seleccionados
-        const mesActual = parseInt(document.getElementById('mesSelect').value);
-        const anioActual = parseInt(document.getElementById('anioSelect').value);
+        const mesActual = currentMonth;
+        const anioActual = currentYear;
        // Calcular qué ciclo corresponde al mes seleccionado
         const fechaInicioCiclos = new Date('2026-05-01');
         const primerDiaMes = new Date(anioActual, mesActual, 1);
