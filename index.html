@@ -1244,48 +1244,61 @@ link.click();
 }
 
 function verCompliance() {
-    const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];       
-            
-            let reporte = 'CUMPLIMIENTO ' + meses[currentMonth] + ' ' + currentYear + '\n\n';
-            
-            let cumplidos = 0;
-            let pendientes = 0;
-            
-            SOCIOS.forEach(socio => {
-                const guardiasSocio = guardias.filter(g => {
-                    const fecha = new Date(g.fecha);
-                    return g.socioId == socio.id && 
-                           fecha.getMonth() === currentMonth && 
-                           fecha.getFullYear() === currentYear;
-                });
-                
-                const tarde = guardiasSocio.filter(g => g.turno === 'tarde').length;
-                const noche = guardiasSocio.filter(g => g.turno === 'noche').length;
-                
-                const cumpleTarde = tarde >= 2;
-                const cumpleNoche = noche >= 3;
-                
-                if (cumpleTarde && cumpleNoche) {
-                    cumplidos++;
-                } else {
-                    pendientes++;
-                }
-                
-                const estadoTarde = cumpleTarde ? '✅' : '⏳';
-                const estadoNoche = cumpleNoche ? '✅' : '⏳';
-                
-                reporte += '• ' + socio.nombre + '\n  T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
+        // Calcular ciclo de 34 días desde 1 mayo 2026
+        const fechaInicioCiclos = new Date('2026-05-01');
+        const hoy = new Date();
+        const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+        const numeroCiclo = Math.floor(diasTranscurridos / 34);
+        const inicioCicloActual = new Date(fechaInicioCiclos);
+        inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+        const finCicloActual = new Date(inicioCicloActual);
+        finCicloActual.setDate(finCicloActual.getDate() + 33);
+        
+        const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
+        const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
+        
+        let reporte = 'CUMPLIMIENTO CICLO\n' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
+        
+        let cumplidos = 0;
+        let pendientes = 0;
+        
+        SOCIOS.forEach(socio => {
+            const guardiasSocio = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return g.visibleId === socio.visibleId &&
+                       fecha >= inicioCicloActual &&
+                       fecha <= finCicloActual;
             });
             
-            reporte = `✅ Cumplidos: ${cumplidos}/${SOCIOS.length}\n⏳ Pendientes: ${pendientes}\n\n` + reporte;
+            const tarde = guardiasSocio.filter(g => g.turno === 'tarde').length;
+            const noche = guardiasSocio.filter(g => g.turno === 'noche').length;
             
-// Crear modal para mostrar cumplimiento
-let modalDiv = document.createElement('div');
-modalDiv.id = 'modalCumplimiento';
-modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
-modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;color:black;"><h3 style="color:black;">Cumplimiento Mensual</h3><pre style="font-size:12px;color:black;">' + reporte + '</pre><button id="btnCerrarModal" style="width:100%;padding:10px;background:#e74c3c;color:white;border:none;border-radius:5px;cursor:pointer;">Cerrar</button></div>';document.body.appendChild(modalDiv);
-document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
-        }
+            const cumpleTarde = tarde >= 2;
+            const cumpleNoche = noche >= 3;
+            
+            if (cumpleTarde && cumpleNoche) {
+                cumplidos++;
+            } else {
+                pendientes++;
+            }
+            
+            const estadoTarde = cumpleTarde ? '✅' : '❌';
+            const estadoNoche = cumpleNoche ? '✅' : '❌';
+            
+            reporte += '• ' + socio.nombre + '\n T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
+        });
+        
+        reporte = '✅ Cumplidos: ' + cumplidos + '/' + SOCIOS.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
+        
+        // Crear modal para mostrar cumplimiento
+        let modalDiv = document.createElement('div');
+        modalDiv.id = 'modalCumplimiento';
+        modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
+        modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;color:black;"><h3 style="color:black;">Cumplimiento por Ciclo</h3><pre style="font-size:12px;color:black;">' +
+            reporte + '</pre><button id="btnCerrarModal" style="margin-top:10px;padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer;">Cerrar</button></div>';
+        document.body.appendChild(modalDiv);
+        document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
+    }
     </script>
 </body>
 </html>
