@@ -1191,8 +1191,8 @@
          // ==================== EXPORTAR ====================
     function exportarWhatsApp() {
         // Usar el mes y año seleccionados en la vista actual
-        const mesActual = parseInt(document.getElementById('mesSelect').value);
-        const anioActual = parseInt(document.getElementById('anioSelect').value);
+        const mesActual = currentMonth;
+        const anioActual = currentYear;
         
         // Filtrar guardias del mes seleccionado
         const guardiasDelMes = guardias.filter(g => {
