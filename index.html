@@ -1078,20 +1078,34 @@
                 return;
             }
             
-            // Verificar límites mensuales
-            const guardiasSocioMes = guardias.filter(g => {
-                const fecha = new Date(g.fecha);
-                return g.socioId == selectedSocio.id && 
-                       fecha.getMonth() === currentMonth && 
-                       fecha.getFullYear() === currentYear &&
-                       g.turno === selectedTurno;
-            });
-            
-            const limite = selectedTurno === 'tarde' ? 2 : 3;
-            if (guardiasSocioMes.length >= limite) {
-                alert(`⚠️ Ya alcanzaste el límite de ${limite} guardias de ${selectedTurno} este mes`);
-                return;
-            }
+            // Verificar límite por CICLO DE 34 DÍAS (máx 2 tarde, 3 noche por socio)
+    const fechaInicioCiclos = new Date('2026-05-01');
+    const fechaSeleccionada = new Date(selectedDate);
+    const diasTranscurridos = Math.floor((fechaSeleccionada - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+    const numeroCiclo = Math.floor(diasTranscurridos / 34);
+    const inicioCicloActual = new Date(fechaInicioCiclos);
+    inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+    const finCicloActual = new Date(inicioCicloActual);
+    finCicloActual.setDate(finCicloActual.getDate() + 33);
+    
+    const guardiasSocioCiclo = guardias.filter(g => {
+        const fechaGuardia = new Date(g.fecha);
+        return g.visibleId === visibleIdSocio && 
+               fechaGuardia >= inicioCicloActual && 
+               fechaGuardia <= finCicloActual;
+    });
+    
+    const tardesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
+    const nochesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
+    
+    if (selectedTurno === 'tarde' && tardesSocioCiclo >= 2) {
+        alert('⚠️ Ya tenés 2 guardias TARDE en este ciclo de 34 días');
+        return;
+    }
+    if (selectedTurno === 'noche' && nochesSocioCiclo >= 3) {
+        alert('⚠️ Ya tenés 3 guardias NOCHE en este ciclo de 34 días');
+        return;
+    }
 
              console.log('Fecha seleccionada:', selectedDate);
     console.log('Turno seleccionado:', selectedTurno);
