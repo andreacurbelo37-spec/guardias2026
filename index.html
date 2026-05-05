@@ -1189,39 +1189,57 @@
         }
 
         // ==================== EXPORTAR ====================
-        function exportarWhatsApp() {
-            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-            
-            let mensaje = `*GUARDIAS COVISUEL*\n ${meses[currentMonth]} ${currentYear}\n\n`;
-            
-            const guardiasMes = guardias.filter(g => {
+    function exportarWhatsApp() {
+        // Calcular ciclo de 34 días desde 1 mayo 2026
+        const fechaInicioCiclos = new Date('2026-05-01');
+        const hoy = new Date();
+        const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+        const numeroCiclo = Math.floor(diasTranscurridos / 34);
+        const inicioCicloActual = new Date(fechaInicioCiclos);
+        inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+        const finCicloActual = new Date(inicioCicloActual);
+        finCicloActual.setDate(finCicloActual.getDate() + 33);
+        
+        const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
+        const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
+        
+        let mensaje = '*GUARDIAS COVISUEL*\nCiclo: ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
+        
+        const guardiasCiclo = guardias.filter(g => {
+            const fecha = new Date(g.fecha);
+            return fecha >= inicioCicloActual && fecha <= finCicloActual;
+        }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+        
+        if (guardiasCiclo.length === 0) {
+            mensaje += 'No hay guardias registradas en este ciclo.';
+        } else {
+            let fechaAnterior = '';
+            guardiasCiclo.forEach(g => {
                 const fecha = new Date(g.fecha);
-                return fecha.getMonth() === currentMonth && fecha.getFullYear() === currentYear;
-            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-            
-            if (guardiasMes.length === 0) {
-                mensaje += 'No hay guardias registradas este mes.';
-            } else {
-                let fechaAnterior = '';
-                guardiasMes.forEach(g => {
-                    const fecha = new Date(g.fecha);
-                    const fechaStr = `${fecha.getDate()}/${currentMonth + 1}`;
-                    
-                    if (fechaStr !== fechaAnterior) {
-                        mensaje += `\n*${fechaStr}*\n`;
-                        fechaAnterior = fechaStr;
-                    }
-                    
-                    const icono = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
-                    mensaje += `- ${icono}: ${g.socioNombre}${g.cubre ? ' (Cubre: ' + g.cubre + ')' : ''}\n`;
-                });
-            }
-            
-            mensaje = mensaje.replace(/\* TARDE:/g, '\u2600\uFE0F TARDE:').replace(/\*\* NOCHE:/g, '\uD83C\uDF19 NOCHE:');
-            const url = `https://wa.me/?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, '_blank');
+                const fechaStr = fecha.getDate() + '/' + (fecha.getMonth() + 1);
+                
+                if (fechaStr !== fechaAnterior) {
+                    mensaje += '\n*' + fechaStr + '*\n';
+                    fechaAnterior = fechaStr;
+                }
+                
+                const turnoTexto = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
+                mensaje += '- ' + turnoTexto + ': ' + g.socioNombre + (g.cubre ? ' (Me Cubre: ' + g.cubre + ')' : '') + '\n';
+            });
         }
+        
+        // Agregar resumen de cumplimiento
+        mensaje += '\n*CUMPLIMIENTO DEL CICLO*\n';
+        SOCIOS.forEach(socio => {
+            const guardiasSocio = guardiasCiclo.filter(g => g.visibleId === socio.visibleId);
+            const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
+            const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
+            mensaje += socio.nombre + ': T:' + tarde + '/2 N:' + noche + '/3\n';
+        });
+        
+        const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
+        window.open(url, '_blank');
+    }
 
         function exportarExcel() {
             let csv = '\uFEFFSFecha;Turno;ID Socio;Nombre;Tipo;Cubre;Detalle\n';
