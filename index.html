@@ -595,7 +595,7 @@
             </div>
 
             <div class="contador-guardias" id="contadorGuardias">
-                <h3>📊 Guardias del Mes</h3>
+               <h3>📊 Guardias del Ciclo (34 días)</h3>
                 <div class="contador-items">
                     <div class="contador-item">
                         <div class="numero" id="contadorTarde">0/2</div>
@@ -967,24 +967,34 @@
         }
 
         function actualizarContador() {
-            if (!selectedSocio) return;
-            
-            const guardiasSocioMes = guardias.filter(g => {
-                const fecha = new Date(g.fecha);
-                return g.socioId == selectedSocio.id && 
-                       fecha.getMonth() === currentMonth && 
-                       fecha.getFullYear() === currentYear;
-            });
-            
-            const tarde = guardiasSocioMes.filter(g => g.turno === 'tarde').length;
-            const noche = guardiasSocioMes.filter(g => g.turno === 'noche').length;
-            
-            document.getElementById('contadorTarde').textContent = `${tarde}/2`;
-            document.getElementById('contadorNoche').textContent = `${noche}/3`;
-            
-            document.getElementById('contadorTarde').style.color = tarde >= 2 ? '#e74c3c' : 'white';
-            document.getElementById('contadorNoche').style.color = noche >= 3 ? '#e74c3c' : 'white';
-        }
+        if (!selectedSocio) return;
+        
+        // Calcular ciclo de 34 días desde 1 mayo 2026
+        const fechaInicioCiclos = new Date('2026-05-01');
+        const hoy = new Date();
+        const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+        const numeroCiclo = Math.floor(diasTranscurridos / 34);
+        const inicioCicloActual = new Date(fechaInicioCiclos);
+        inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+        const finCicloActual = new Date(inicioCicloActual);
+        finCicloActual.setDate(finCicloActual.getDate() + 33);
+        
+        const guardiasSocioCiclo = guardias.filter(g => {
+            const fechaGuardia = new Date(g.fecha);
+            return g.visibleId === selectedSocio.visibleId && 
+                   fechaGuardia >= inicioCicloActual && 
+                   fechaGuardia <= finCicloActual;
+        });
+        
+        const tarde = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
+        const noche = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
+        
+        document.getElementById('contadorTarde').textContent = `${tarde}/2`;
+        document.getElementById('contadorNoche').textContent = `${noche}/3`;
+        
+        document.getElementById('contadorTarde').style.color = tarde >= 2 ? '#e74c3c' : 'white';
+        document.getElementById('contadorNoche').style.color = noche >= 3 ? '#e74c3c' : 'white';
+    }
 
         // ==================== MODAL ====================
         function abrirModal(dia, fechaStr) {
