@@ -1288,7 +1288,7 @@
         const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
         
         // Filtrar guardias del ciclo
-        const guardiasCiclo = guardias.filter(g => {
+        const guardiasCiclo = GUARDIAS.filter(g => {
             const fecha = new Date(g.fecha);
             return fecha >= inicioCicloActual && fecha <= finCicloActual;
         });
