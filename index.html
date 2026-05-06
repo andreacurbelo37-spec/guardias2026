@@ -1297,8 +1297,8 @@
         let cumplidos = 0;
         let pendientes = 0;
         
-        SOCIOS.forEach(socio => {
-            const guardiasSocio = guardiasCiclo.filter(g => g.visibleId === socio.visibleId);
+        socios.forEach(socio => {
+            const guardiasSocio = guardiasCiclo.filter(g => g.socioId === socio.id);
             const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
             const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
             
@@ -1317,14 +1317,14 @@
             reporte += '• ' + socio.nombre + '\n T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
         });
         
-        reporte = '✅ Cumplidos: ' + cumplidos + '/' + SOCIOS.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
+        reporte = '✅ Cumplidos: ' + cumplidos + '/' + socios.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
         
         // Crear modal para mostrar cumplimiento
         let modalDiv = document.createElement('div');
         modalDiv.id = 'modalCumplimiento';
         modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
         modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;color:black;"><h3 style="color:black;">Cumplimiento por Ciclo</h3><pre style="font-size:12px;color:black;">' +
-            reporte + '</pre><button id="btnCerrarModal" style="margin-top:10px;padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer;">Cerrar</button></div>';
+            reporte = '✅ Cumplidos: ' + cumplidos + '/' + socios.length +
         document.body.appendChild(modalDiv);
         document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
     }
