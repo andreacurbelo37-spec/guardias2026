@@ -823,14 +823,14 @@
                 }
                 
                 const params = new URLSearchParams({
-                    action: 'registrar',
-                    fecha: guardia.fecha,
-                    turno: guardia.turno,
-                    socioId: guardia.socioId,
-                    socioNombre: guardia.socioNombre,
-                    tipo: guardia.tipo || 'Titular',
-                    cubre: guardia.cubre || ''
-                });
+                   action: 'registrarGuardia',
+                   fecha: guardia.fecha,
+                   turno: guardia.turno,
+                   odoo: guardia.socioId,
+                   nombre: guardia.socioNombre,
+                   tipo: guardia.tipo || 'Titular',
+                   cubre: guardia.cubre || ''
+});
 
                 await fetch(`${SCRIPT_URL}?${params.toString()}`);
                 await cargarGuardias();
