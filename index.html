@@ -1190,52 +1190,81 @@
 
          // ==================== EXPORTAR ====================
     function exportarWhatsApp() {
-        // Usar el mes y año seleccionados en la vista actual
-        const mesActual = currentMonth;
-        const anioActual = currentYear;
+    // Calcular todos los ciclos de 34 días desde 01/05/2026
+    const fechaInicioCiclos = new Date('2026-05-01');
+    const fechaFinSistema = new Date('2027-12-31');
+    const ciclos = [];
+    
+    let inicioActual = new Date(fechaInicioCiclos);
+    let numCiclo = 1;
+    
+    while (inicioActual <= fechaFinSistema) {
+        const finCiclo = new Date(inicioActual);
+        finCiclo.setDate(finCiclo.getDate() + 33); // 34 días (0-33)
         
-        // Filtrar guardias del mes seleccionado
-        const guardiasDelMes = guardias.filter(g => {
+        ciclos.push({
+            numero: numCiclo,
+            inicio: new Date(inicioActual),
+            fin: new Date(finCiclo)
+        });
+        
+        inicioActual.setDate(inicioActual.getDate() + 34);
+        numCiclo++;
+    }
+    
+    // Crear selector de ciclos
+    const nombresMeses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+    
+    let opcionesCiclos = ciclos.map(c => {
+        const inicioStr = c.inicio.getDate() + '/' + nombresMeses[c.inicio.getMonth()] + '/' + c.inicio.getFullYear();
+        const finStr = c.fin.getDate() + '/' + nombresMeses[c.fin.getMonth()] + '/' + c.fin.getFullYear();
+        return `Ciclo ${c.numero}: ${inicioStr} - ${finStr}`;
+    }).join('\n');
+    
+    const seleccion = prompt('Seleccioná el número de ciclo a exportar:\n\n' + opcionesCiclos + '\n\nEscribí el número de ciclo:');
+    
+    if (!seleccion) return;
+    
+    const cicloSeleccionado = parseInt(seleccion);
+    if (isNaN(cicloSeleccionado) || cicloSeleccionado < 1 || cicloSeleccionado > ciclos.length) {
+        alert('Número de ciclo inválido');
+        return;
+    }
+    
+    const ciclo = ciclos[cicloSeleccionado - 1];
+    
+    // Filtrar guardias del ciclo seleccionado
+    const guardiasDelCiclo = guardias.filter(g => {
+        const fecha = new Date(g.fecha);
+        return fecha >= ciclo.inicio && fecha <= ciclo.fin;
+    }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    
+    // Formatear fecha del ciclo para el título
+    const inicioTitulo = ciclo.inicio.getDate() + '/' + (ciclo.inicio.getMonth() + 1) + '/' + ciclo.inicio.getFullYear();
+    const finTitulo = ciclo.fin.getDate() + '/' + (ciclo.fin.getMonth() + 1) + '/' + ciclo.fin.getFullYear();
+    
+    let mensaje = '*GUARDIAS COVISUEL*\n' + 'Ciclo ' + cicloSeleccionado + ': ' + inicioTitulo + ' al ' + finTitulo + '\n\n';
+    
+    if (guardiasDelCiclo.length === 0) {
+        mensaje += 'No hay guardias registradas en este ciclo.';
+    } else {
+        let fechaAnterior = '';
+        guardiasDelCiclo.forEach(g => {
             const fecha = new Date(g.fecha);
-            return fecha.getMonth() === mesActual && fecha.getFullYear() === anioActual;
-        }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-        
-        const nombreMes = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                          'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][mesActual];
-        
-        let mensaje = '*GUARDIAS COVISUEL*\n' + nombreMes + ' ' + anioActual + '\n\n';
-        
-        if (guardiasDelMes.length === 0) {
-            mensaje += 'No hay guardias registradas en este mes.';
-        } else {
-            let fechaAnterior = '';
-            guardiasDelMes.forEach(g => {
-                const fecha = new Date(g.fecha);
-                const fechaStr = fecha.getDate() + '/' + (fecha.getMonth() + 1);
-                
-                if (fechaStr !== fechaAnterior) {
-                    mensaje += '\n*' + fechaStr + '*\n';
-                    fechaAnterior = fechaStr;
-                }
-                
-                const turnoTexto = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
-                mensaje += '- ' + turnoTexto + ': ' + g.socioNombre + (g.cubre ? ' (Me Cubre: ' + g.cubre + ')' : '') + '\n';
-            });
-        }
-        
-        const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
-        window.open(url, '_blank');
-                      
-guardiasDelMes.forEach(g => {
-    let fechaFormato = new Date(g.fecha).toISOString().split('T')[0];
-csv += `${fechaFormato};${g.turno};${g.socioId};${g.socioNombre};${g.tipo || ''};${g.cubre || ''};${g.detalle || ''}\n`;
-});
-
-const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-const link = document.createElement('a');
-link.href = URL.createObjectURL(blob);
-link.download = `guardias_covisuel_${currentMonth + 1}_${currentYear}.csv`;
-link.click();
+            const fechaStr = fecha.getDate() + '/' + (fecha.getMonth() + 1);
+            
+            if (fechaStr !== fechaAnterior) {
+                mensaje += '\n*' + fechaStr + '*\n';
+                fechaAnterior = fechaStr;
+            }
+            
+            const turnoTexto = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
+            mensaje += '- ' + turnoTexto + ': ' + g.socioNombre + (g.cubre ? ' (Me Cubre: ' + g.cubre + ')' : '') + '\n';
+        });
+    }
+    
+    const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
+    window.open(url, '_blank');
 }
 
         function verCompliance() {
