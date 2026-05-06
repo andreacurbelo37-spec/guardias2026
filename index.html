@@ -803,26 +803,34 @@
     }
 }
          async function guardarGuardia(guardia) {
-        showLoading(true);
-        try {
-            const params = new URLSearchParams({
-                action: 'registrar',
-                fecha: guardia.fecha,
-                turno: guardia.turno,
-                socioId: guardia.socioId,
-                socioNombre: guardia.socioNombre,
-                tipo: guardia.tipo || 'Titular',
-                cubre: guardia.cubre || ''
-            });
-            
-            await fetch(`${SCRIPT_URL}?${params.toString()}`);
-            await cargarGuardias();
-        } catch (error) {
-            console.error('Error guardando guardia:', error);
-            alert('Error al guardar. Intente nuevamente.');
+    showLoading(true);
+    try {
+        // Validar que la fecha pertenece al ciclo activo
+        const cicloFecha = obtenerCiclo(guardia.fecha);
+        if (cicloFecha !== cicloActivo) {
+            alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
+            showLoading(false);
+            return;
         }
-        showLoading(false);
+        
+        const params = new URLSearchParams({
+            action: 'registrar',
+            fecha: guardia.fecha,
+            turno: guardia.turno,
+            socioId: guardia.socioId,
+            socioNombre: guardia.socioNombre,
+            tipo: guardia.tipo || 'Titular',
+            cubre: guardia.cubre || ''
+        });
+
+        await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        await cargarGuardias();
+    } catch (error) {
+        console.error('Error guardando guardia:', error);
+        alert('Error al guardar. Intente nuevamente.');
     }
+    showLoading(false);
+}
 
        async function eliminarGuardia(fecha, turno, socioId) {
     // Lista de socios autorizados a borrar
