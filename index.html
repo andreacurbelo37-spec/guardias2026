@@ -1008,7 +1008,7 @@
             
             const guardiasSocioCiclo = guardias.filter(g => {
                 const fechaGuardia = new Date(g.fecha);
-                return g.socioId == selectedSocio.id && 
+                return g.odoo == selectedSocio.id && 
                        fechaGuardia >= inicioCicloActual && 
                        fechaGuardia <= finCicloActual;
             });
@@ -1060,17 +1060,17 @@
             
             let html = '<h4>Registros del día:</h4>';
             registros.forEach(r => {
-                const esPropio = r.socioId == selectedSocio.id;
+                const esPropio = r.odoo == selectedSocio.id;
                 const puedeEliminar = esPropio || isAdmin;
                 
                 html += `
                     <div class="registro-item">
                         <div class="registro-info">
                             <span class="registro-turno ${r.turno}">${r.turno === 'tarde' ? '☀️' : '🌙'} ${r.turno.toUpperCase()}</span>
-                            <span>${r.socioNombre} (${r.timestamp})</span>
+                            <span>${r.nombre} (${r.odoo})</span>
                             ${r.detalle ? `<small style="opacity:0.7">${r.detalle}</small>` : ''}
                         </div>
-                        ${puedeEliminar ? `<button class="btn-eliminar" onclick="event.stopPropagation(); eliminarGuardia('${r.fecha.substring(0,10)}', '${r.turno}', '${r.socioId}')">🗑️</button>` : ''}
+                        ${puedeEliminar ? `<button class="btn-eliminar" onclick="event.stopPropagation(); eliminarGuardia('${r.fecha.substring(0,10)}', '${r.turno}', '${r.odoo}'">🗑️</button>` : ''}
                     </div>
                 `;
             });
@@ -1105,7 +1105,7 @@
             const yaRegistrado = guardias.find(g => 
                 g.fecha === selectedDate && 
                 g.turno === selectedTurno && 
-                g.socioId == selectedSocio.id
+                g.odoo == selectedSocio.id
             );
             
             if (yaRegistrado) {
@@ -1124,7 +1124,7 @@
             
             const guardiasSocioCiclo = guardias.filter(g => {
                 const fechaGuardia = new Date(g.fecha);
-                return g.socioId == selectedSocio.id && 
+                return g.odoo == selectedSocio.id && 
                        fechaGuardia >= inicioCicloActual && 
                        fechaGuardia <= finCicloActual;
             });
