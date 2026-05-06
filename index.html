@@ -816,7 +816,7 @@
         if (cicloFecha !== cicloActivo) {
             alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
             showLoading(false);
-            return;
+            return false;
         }
         
         const params = new URLSearchParams({
@@ -831,6 +831,7 @@
 
         await fetch(`${SCRIPT_URL}?${params.toString()}`);
         await cargarGuardias();
+        return true;
     } catch (error) {
         console.error('Error guardando guardia:', error);
         alert('Error al guardar. Intente nuevamente.');
@@ -1188,10 +1189,11 @@
             cubre: cubre
         };
         
-        await guardarGuardia(guardia);
-        cerrarModal();
-        alert('✅ Guardia registrada correctamente');
-    }
+        const resultado = await guardarGuardia(guardia);
+        if (resultado === true) {
+            cerrarModal();
+            alert('✅ Guardia registrada correctamente');
+        }
     
         // ==================== ADMIN ====================
         function abrirAdmin() {
