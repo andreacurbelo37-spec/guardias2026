@@ -780,7 +780,7 @@
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getGuardias`);
                 const data = await response.json();
-                guardias = data.data || [];
+                guardias = data.guardias || [];
                 renderCalendar();
                 actualizarContador();
             } catch (error) {
