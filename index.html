@@ -755,11 +755,12 @@
         let selectedTipo = 'titular';
         let guardias = [];
         let isAdmin = false;
-
+        let cicloActivo = 1;
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
             cargarSocios();
             cargarGuardias();
+            cargarCicloActivo();
         });
 
         function cargarSocios() {
@@ -789,7 +790,18 @@
             }
             showLoading(false);
         }
-
+        async function cargarCicloActivo() {
+    try {
+        const response = await fetch(`${SCRIPT_URL}?action=getCicloActivo`);
+        const data = await response.json();
+        if (data.ciclo) {
+            cicloActivo = parseInt(data.ciclo);
+        }
+    } catch (error) {
+        console.error('Error cargando ciclo activo:', error);
+        cicloActivo = 1;
+    }
+}
          async function guardarGuardia(guardia) {
         showLoading(true);
         try {
