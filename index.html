@@ -664,11 +664,11 @@
             </div>
 
             <div class="campo-adicional" id="campoMeCubre">
-    <div class="form-group">
-        <label>Nombre del que Me Cubre Guardia:</label>
-        <input type="text" id="inputMeCubre" placeholder="Nombre completo del Me Cubre">
-    </div>
-</div>
+                <div class="form-group">
+                    <label>Nombre del que Me Cubre Guardia:</label>
+                    <input type="text" id="inputMeCubre" placeholder="Nombre completo del Me Cubre">
+                </div>
+            </div>
 
             <div class="campo-adicional" id="campoNucleo">
                 <div class="form-group">
@@ -703,7 +703,7 @@
 
     <script>
         // ==================== CONFIGURACIÓN ====================
-       const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTYAMBSZUE4DlNLGpaB3hGkqZnRLMPdEIXbfYFkCc--GeKVCv34eXiScMhXkefFMDp/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTYAMBSZUE4DlNLGpaB3hGkqZnRLMPdEIXbfYFkCc--GeKVCv34eXiScMhXkefFMDp/exec';
         
         // SOCIOS CORRECTOS DE COVISUEL
         const SOCIOS = [
@@ -743,11 +743,11 @@
             {id: 269, nombre: "Claudia Rios"}
         ];
 
-        const ADMINS = [240, 245, 253, 266]; // Andrea, Virginia, Juan Pablo, María Noel
+        const ADMINS = [240, 245, 253, 266];
         const ADMIN_PASSWORD = "Molas2026";
 
         // ==================== ESTADO ====================
-        let currentMonth = 3; // Abril (0-indexed)
+        let currentMonth = 3;
         let currentYear = 2026;
         let selectedSocio = null;
         let selectedDate = null;
@@ -756,6 +756,7 @@
         let guardias = [];
         let isAdmin = false;
         let cicloActivo = 1;
+
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
             cargarSocios();
@@ -764,23 +765,22 @@
         });
 
         function cargarSocios() {
-    const select = document.getElementById('socioSelect');
-
-    SOCIOS.forEach(socio => {
-        const option = document.createElement('option');
-        option.value = socio.id;
-        option.textContent = `${socio.id} - ${socio.nombre}`;
-        select.appendChild(option);
-    });
-}
+            const select = document.getElementById('socioSelect');
+            SOCIOS.forEach(socio => {
+                const option = document.createElement('option');
+                option.value = socio.id;
+                option.textContent = `${socio.id} - ${socio.nombre}`;
+                select.appendChild(option);
+            });
+        }
 
         // ==================== API GOOGLE SHEETS ====================
         async function cargarGuardias() {
             showLoading(true);
             try {
-               const response = await fetch(`${SCRIPT_URL}?action=getGuardias`);
+                const response = await fetch(`${SCRIPT_URL}?action=getGuardias`);
                 const data = await response.json();
-               guardias = data.data || [];
+                guardias = data.data || [];
                 renderCalendar();
                 actualizarContador();
             } catch (error) {
@@ -790,113 +790,116 @@
             }
             showLoading(false);
         }
+
         async function cargarCicloActivo() {
-    try {
-        const response = await fetch(`${SCRIPT_URL}?action=getCicloActivo`);
-        const data = await response.json();
-        if (data.ciclo) {
-            cicloActivo = parseInt(data.ciclo);
+            try {
+                const response = await fetch(`${SCRIPT_URL}?action=getCicloActivo`);
+                const data = await response.json();
+                if (data.ciclo) {
+                    cicloActivo = parseInt(data.ciclo);
+                }
+            } catch (error) {
+                console.error('Error cargando ciclo activo:', error);
+                cicloActivo = 1;
+            }
         }
-    } catch (error) {
-        console.error('Error cargando ciclo activo:', error);
-        cicloActivo = 1;
-    }
-}
+
         function obtenerCiclo(fecha) {
-    const fechaInicio = new Date('2026-05-01');
-    const fechaGuardia = new Date(fecha);
-    const diasTranscurridos = Math.floor((fechaGuardia - fechaInicio) / (1000 * 60 * 60 * 24));
-    return Math.floor(diasTranscurridos / 34) + 1;
-}
-         async function guardarGuardia(guardia) {
-    showLoading(true);
-    try {
-        // Validar que la fecha pertenece al ciclo activo
-        const cicloFecha = obtenerCiclo(guardia.fecha);
-        if (cicloFecha !== cicloActivo) {
-            alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
+            const fechaInicio = new Date('2026-05-01');
+            const fechaGuardia = new Date(fecha);
+            const diasTranscurridos = Math.floor((fechaGuardia - fechaInicio) / (1000 * 60 * 60 * 24));
+            return Math.floor(diasTranscurridos / 34) + 1;
+        }
+
+        async function guardarGuardia(guardia) {
+            showLoading(true);
+            try {
+                // Validar que la fecha pertenece al ciclo activo
+                const cicloFecha = obtenerCiclo(guardia.fecha);
+                if (cicloFecha !== cicloActivo) {
+                    alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
+                    showLoading(false);
+                    return false;
+                }
+                
+                const params = new URLSearchParams({
+                    action: 'registrar',
+                    fecha: guardia.fecha,
+                    turno: guardia.turno,
+                    socioId: guardia.socioId,
+                    socioNombre: guardia.socioNombre,
+                    tipo: guardia.tipo || 'Titular',
+                    cubre: guardia.cubre || ''
+                });
+
+                await fetch(`${SCRIPT_URL}?${params.toString()}`);
+                await cargarGuardias();
+                showLoading(false);
+                return true;
+            } catch (error) {
+                console.error('Error guardando guardia:', error);
+                alert('Error al guardar. Intente nuevamente.');
+                showLoading(false);
+                return false;
+            }
+        }
+
+        async function eliminarGuardia(fecha, turno, socioId) {
+            const autorizados = [
+                'administrador',
+                'admin',
+                'andrea curbelo',
+                'maria andrea curbelo',
+                '240',
+                'maria noel carbajal',
+                'noel carbajal',
+                '266',
+                'virginia diaz',
+                'virginia díaz',
+                'juan pablo gallulo'
+            ];
+            const selectElement = document.getElementById('socioSelect');
+            const socioActual = selectElement.value.toLowerCase(); 
+            const textoSocio = selectElement.options[selectElement.selectedIndex].text.toLowerCase();
+
+            const esAutorizado = autorizados.some(auth =>        
+                socioActual.includes(auth.toLowerCase()) || 
+                textoSocio.includes(auth.toLowerCase())
+            );
+            if (!esAutorizado) {
+                alert('No tenes permiso para eliminar guardias.\n\nContacta a la administracion.');
+                return;
+            }
+            
+            if (!confirm('¿Eliminar este registro?')) return;
+            
+            showLoading(true);
+            console.log('Enviando:', fecha, turno, socioId);
+            
+            try {
+                const params = new URLSearchParams({
+                    action: 'cancelar',
+                    fecha: fecha,
+                    turno: turno,
+                    socioId: String(socioId)
+                });
+                
+                const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+                const result = await response.json();
+                console.log('Result:', result);
+                
+                if (result.success) {
+                    await cargarGuardias();
+                    mostrarRegistrosDelDia(fecha.substring(0,10));
+                } else {
+                    alert('Error al eliminar: ' + (result.error || 'Error desconocido'));
+                }
+            } catch (error) {
+                console.error('Error eliminando guardia:', error);
+                alert('Error al eliminar. Intente nuevamente.');
+            }
             showLoading(false);
-            return false;
         }
-        
-        const params = new URLSearchParams({
-            action: 'registrar',
-            fecha: guardia.fecha,
-            turno: guardia.turno,
-            socioId: guardia.socioId,
-            socioNombre: guardia.socioNombre,
-            tipo: guardia.tipo || 'Titular',
-            cubre: guardia.cubre || ''
-        });
-
-        await fetch(`${SCRIPT_URL}?${params.toString()}`);
-        await cargarGuardias();
-        return true;
-    } catch (error) {
-        console.error('Error guardando guardia:', error);
-        alert('Error al guardar. Intente nuevamente.');
-    }
-    showLoading(false);
-}
-
-       async function eliminarGuardia(fecha, turno, socioId) {
-    // Lista de socios autorizados a borrar
-     const autorizados = [
-        'administrador',
-        'admin',
-        'andrea curbelo',
-        'maria andrea curbelo',
-        '240',
-        'maria noel carbajal',
-        'noel carbajal',
-        '266',
-        'virginia diaz',
-        'virginia díaz',
-        'juan pablo gallulo'
-    ];
-    const selectElement = document.getElementById('socioSelect');
-    const socioActual = selectElement.value.toLowerCase(); 
-    const textoSocio = selectElement.options[selectElement.selectedIndex].text.toLowerCase();
-
-    const esAutorizado = autorizados.some(auth =>        
-        socioActual.includes(auth.toLowerCase()) || 
-        textoSocio.includes(auth.toLowerCase())
-    );
-    if (!esAutorizado) {
-        alert('No tenes permiso para eliminar guardias.\n\nContacta a la administracion.');
-        return;
-    }
-    
-    if (!confirm('¿Eliminar este registro?')) return;
-    
-    showLoading(true);
-    console.log('Enviando:', fecha, turno, socioId);
-    
-    try {
-        const params = new URLSearchParams({
-            action: 'cancelar',
-            fecha: fecha,
-            turno: turno,
-            socioId: String(socioId)
-        });
-        
-        const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
-        const result = await response.json();
-        console.log('Result:', result);
-        
-        if (result.success) {
-            await cargarGuardias();
-            mostrarRegistrosDelDia(fecha.substring(0,10));
-        } else {
-            alert('Error al eliminar: ' + (result.error || 'Error desconocido'));
-        }
-    } catch (error) {
-        console.error('Error eliminando guardia:', error);
-        alert('Error al eliminar. Intente nuevamente.');
-    }
-    showLoading(false);
-}
-
 
         function showLoading(show) {
             document.getElementById('loading').classList.toggle('active', show);
@@ -919,14 +922,12 @@
             
             grid.innerHTML = '';
             
-            // Días vacíos al inicio
             for (let i = 0; i < diaInicio; i++) {
                 const emptyDay = document.createElement('div');
                 emptyDay.className = 'calendar-day empty';
                 grid.appendChild(emptyDay);
             }
             
-            // Días del mes
             for (let dia = 1; dia <= diasEnMes; dia++) {
                 const dayElement = document.createElement('div');
                 dayElement.className = 'calendar-day';
@@ -994,34 +995,33 @@
         }
 
         function actualizarContador() {
-        if (!selectedSocio) return;
-        
-        // Calcular ciclo de 34 días desde 1 mayo 2026
-        const fechaInicioCiclos = new Date('2026-05-01');
-        const hoy = new Date();
-        const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-        const numeroCiclo = Math.floor(diasTranscurridos / 34);
-        const inicioCicloActual = new Date(fechaInicioCiclos);
-        inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-        const finCicloActual = new Date(inicioCicloActual);
-        finCicloActual.setDate(finCicloActual.getDate() + 33);
-        
-        const guardiasSocioCiclo = guardias.filter(g => {
-            const fechaGuardia = new Date(g.fecha);
-            return g.visibleId === selectedSocio.visibleId && 
-                   fechaGuardia >= inicioCicloActual && 
-                   fechaGuardia <= finCicloActual;
-        });
-        
-        const tarde = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
-        const noche = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
-        
-        document.getElementById('contadorTarde').textContent = `${tarde}/2`;
-        document.getElementById('contadorNoche').textContent = `${noche}/3`;
-        
-        document.getElementById('contadorTarde').style.color = tarde >= 2 ? '#e74c3c' : 'white';
-        document.getElementById('contadorNoche').style.color = noche >= 3 ? '#e74c3c' : 'white';
-    }
+            if (!selectedSocio) return;
+            
+            const fechaInicioCiclos = new Date('2026-05-01');
+            const hoy = new Date();
+            const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+            const numeroCiclo = Math.floor(diasTranscurridos / 34);
+            const inicioCicloActual = new Date(fechaInicioCiclos);
+            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+            const finCicloActual = new Date(inicioCicloActual);
+            finCicloActual.setDate(finCicloActual.getDate() + 33);
+            
+            const guardiasSocioCiclo = guardias.filter(g => {
+                const fechaGuardia = new Date(g.fecha);
+                return g.socioId == selectedSocio.id && 
+                       fechaGuardia >= inicioCicloActual && 
+                       fechaGuardia <= finCicloActual;
+            });
+            
+            const tarde = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
+            const noche = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
+            
+            document.getElementById('contadorTarde').textContent = `${tarde}/2`;
+            document.getElementById('contadorNoche').textContent = `${noche}/3`;
+            
+            document.getElementById('contadorTarde').style.color = tarde >= 2 ? '#e74c3c' : 'white';
+            document.getElementById('contadorNoche').style.color = noche >= 3 ? '#e74c3c' : 'white';
+        }
 
         // ==================== MODAL ====================
         function abrirModal(dia, fechaStr) {
@@ -1071,7 +1071,6 @@
                             ${r.detalle ? `<small style="opacity:0.7">${r.detalle}</small>` : ''}
                         </div>
                         ${puedeEliminar ? `<button class="btn-eliminar" onclick="event.stopPropagation(); eliminarGuardia('${r.fecha.substring(0,10)}', '${r.turno}', '${r.socioId}')">🗑️</button>` : ''}
-
                     </div>
                 `;
             });
@@ -1103,7 +1102,6 @@
                 return;
             }
             
-            // Verificar si ya está registrado
             const yaRegistrado = guardias.find(g => 
                 g.fecha === selectedDate && 
                 g.turno === selectedTurno && 
@@ -1115,86 +1113,82 @@
                 return;
             }
             
-            // Verificar límite por CICLO DE 34 DÍAS (máx 2 tarde, 3 noche por socio)
-    const fechaInicioCiclos = new Date('2026-05-01');
-    const fechaSeleccionada = new Date(selectedDate);
-    const diasTranscurridos = Math.floor((fechaSeleccionada - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-    const numeroCiclo = Math.floor(diasTranscurridos / 34);
-    const inicioCicloActual = new Date(fechaInicioCiclos);
-    inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-    const finCicloActual = new Date(inicioCicloActual);
-    finCicloActual.setDate(finCicloActual.getDate() + 33);
-    
-    const guardiasSocioCiclo = guardias.filter(g => {
-        const fechaGuardia = new Date(g.fecha);
-        return g.visibleId === selectedSocio.visibleId && 
-               fechaGuardia >= inicioCicloActual && 
-               fechaGuardia <= finCicloActual;
-    });
-    
-    const tardesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
-    const nochesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
-    
-    if (selectedTurno === 'tarde' && tardesSocioCiclo >= 2) {
-        alert('⚠️ Ya tenés 2 guardias TARDE en este ciclo de 34 días');
-        return;
-    }
-    if (selectedTurno === 'noche' && nochesSocioCiclo >= 3) {
-        alert('⚠️ Ya tenés 3 guardias NOCHE en este ciclo de 34 días');
-        return;
-    }
-
-             console.log('Fecha seleccionada:', selectedDate);
-    console.log('Turno seleccionado:', selectedTurno);
-    console.log('Guardias existentes:', guardias.map(g => ({fecha: g.fecha, turno: g.turno})));
+            const fechaInicioCiclos = new Date('2026-05-01');
+            const fechaSeleccionada = new Date(selectedDate);
+            const diasTranscurridos = Math.floor((fechaSeleccionada - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+            const numeroCiclo = Math.floor(diasTranscurridos / 34);
+            const inicioCicloActual = new Date(fechaInicioCiclos);
+            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+            const finCicloActual = new Date(inicioCicloActual);
+            finCicloActual.setDate(finCicloActual.getDate() + 33);
             
-              // Verificar límite DIARIO por turno
-    const guardiasDelDia = guardias.filter(g =>
-        g.fecha.substring(0, 10) === selectedDate &&
-        g.turno === selectedTurno
-    );
-    
-    const limiteDiario = selectedTurno === 'tarde' ? 2 : 3;
-    if (guardiasDelDia.length >= limiteDiario) {
-        alert(`⚠️ Ya hay ${limiteDiario} personas en ${selectedTurno.toUpperCase()} para este día`);
-        return;
-    }         
+            const guardiasSocioCiclo = guardias.filter(g => {
+                const fechaGuardia = new Date(g.fecha);
+                return g.socioId == selectedSocio.id && 
+                       fechaGuardia >= inicioCicloActual && 
+                       fechaGuardia <= finCicloActual;
+            });
+            
+            const tardesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'tarde').length;
+            const nochesSocioCiclo = guardiasSocioCiclo.filter(g => g.turno === 'noche').length;
+            
+            if (selectedTurno === 'tarde' && tardesSocioCiclo >= 2) {
+                alert('⚠️ Ya tenés 2 guardias TARDE en este ciclo de 34 días');
+                return;
+            }
+            if (selectedTurno === 'noche' && nochesSocioCiclo >= 3) {
+                alert('⚠️ Ya tenés 3 guardias NOCHE en este ciclo de 34 días');
+                return;
+            }
+
+            const guardiasDelDia = guardias.filter(g =>
+                g.fecha.substring(0, 10) === selectedDate &&
+                g.turno === selectedTurno
+            );
+            
+            const limiteDiario = selectedTurno === 'tarde' ? 2 : 3;
+            if (guardiasDelDia.length >= limiteDiario) {
+                alert(`⚠️ Ya hay ${limiteDiario} personas en ${selectedTurno.toUpperCase()} para este día`);
+                return;
+            }
+            
             let tipo = 'Titular';
-        let cubre = '';
-        
-        if (selectedTipo === 'Me Cubre') {
-            const nombreMeCubre = document.getElementById('inputMeCubre').value.trim();
-            if (!nombreMeCubre) {
-                alert('⚠️ Ingresá el nombre del Me Cubre');
-                return;
+            let cubre = '';
+            
+            if (selectedTipo === 'Me Cubre') {
+                const nombreMeCubre = document.getElementById('inputMeCubre').value.trim();
+                if (!nombreMeCubre) {
+                    alert('⚠️ Ingresá el nombre del Me Cubre');
+                    return;
+                }
+                tipo = 'Me Cubre';
+                cubre = nombreMeCubre;
+            } else if (selectedTipo === 'nucleo') {
+                const nombreFamiliar = document.getElementById('inputNucleo').value.trim();
+                if (!nombreFamiliar) {
+                    alert('⚠️ Ingresá el nombre del familiar');
+                    return;
+                }
+                tipo = 'Núcleo';
+                cubre = nombreFamiliar;
             }
-            tipo = 'Me Cubre';
-            cubre = nombreMeCubre;
-        } else if (selectedTipo === 'nucleo') {
-            const nombreFamiliar = document.getElementById('inputNucleo').value.trim();
-            if (!nombreFamiliar) {
-                alert('⚠️ Ingresá el nombre del familiar');
-                return;
+            
+            const guardia = {
+                fecha: selectedDate,
+                turno: selectedTurno,
+                socioId: selectedSocio.id,
+                socioNombre: selectedSocio.nombre,
+                tipo: tipo,
+                cubre: cubre
+            };
+            
+            const resultado = await guardarGuardia(guardia);
+            if (resultado === true) {
+                cerrarModal();
+                alert('✅ Guardia registrada correctamente');
             }
-            tipo = 'Núcleo';
-            cubre = nombreFamiliar;
         }
-        
-        const guardia = {
-            fecha: selectedDate,
-            turno: selectedTurno,
-            socioId: selectedSocio.id,
-            socioNombre: selectedSocio.nombre,
-            tipo: tipo,
-            cubre: cubre
-        };
-        
-        const resultado = await guardarGuardia(guardia);
-        if (resultado === true) {
-            cerrarModal();
-            alert('✅ Guardia registrada correctamente');
-        }
-    
+
         // ==================== ADMIN ====================
         function abrirAdmin() {
             document.getElementById('modalAdmin').classList.add('active');
@@ -1216,145 +1210,139 @@
             }
         }
 
-         // ==================== EXPORTAR ====================
-    function exportarWhatsApp() {
-    // Calcular todos los ciclos de 34 días desde 01/05/2026
-    const fechaInicioCiclos = new Date('2026-05-01');
-    const fechaFinSistema = new Date('2027-12-31');
-    const ciclos = [];
-    
-    let inicioActual = new Date(fechaInicioCiclos);
-    let numCiclo = 1;
-    
-    while (inicioActual <= fechaFinSistema) {
-        const finCiclo = new Date(inicioActual);
-        finCiclo.setDate(finCiclo.getDate() + 33); // 34 días (0-33)
-        
-        ciclos.push({
-            numero: numCiclo,
-            inicio: new Date(inicioActual),
-            fin: new Date(finCiclo)
-        });
-        
-        inicioActual.setDate(inicioActual.getDate() + 34);
-        numCiclo++;
-    }
-    
-    // Crear selector de ciclos
-    const nombresMeses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
-    
-    let opcionesCiclos = ciclos.map(c => {
-        const inicioStr = c.inicio.getDate() + '/' + nombresMeses[c.inicio.getMonth()] + '/' + c.inicio.getFullYear();
-        const finStr = c.fin.getDate() + '/' + nombresMeses[c.fin.getMonth()] + '/' + c.fin.getFullYear();
-        return `Ciclo ${c.numero}: ${inicioStr} - ${finStr}`;
-    }).join('\n');
-    
-    const seleccion = prompt('Seleccioná el número de ciclo a exportar:\n\n' + opcionesCiclos + '\n\nEscribí el número de ciclo:');
-    
-    if (!seleccion) return;
-    
-    const cicloSeleccionado = parseInt(seleccion);
-    if (isNaN(cicloSeleccionado) || cicloSeleccionado < 1 || cicloSeleccionado > ciclos.length) {
-        alert('Número de ciclo inválido');
-        return;
-    }
-    
-    const ciclo = ciclos[cicloSeleccionado - 1];
-    
-    // Filtrar guardias del ciclo seleccionado
-    const guardiasDelCiclo = guardias.filter(g => {
-        const fecha = new Date(g.fecha);
-        return fecha >= ciclo.inicio && fecha <= ciclo.fin;
-    }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-    
-    // Formatear fecha del ciclo para el título
-    const inicioTitulo = ciclo.inicio.getDate() + '/' + (ciclo.inicio.getMonth() + 1) + '/' + ciclo.inicio.getFullYear();
-    const finTitulo = ciclo.fin.getDate() + '/' + (ciclo.fin.getMonth() + 1) + '/' + ciclo.fin.getFullYear();
-    
-    let mensaje = '*GUARDIAS COVISUEL*\n' + 'Ciclo ' + cicloSeleccionado + ': ' + inicioTitulo + ' al ' + finTitulo + '\n\n';
-    
-    if (guardiasDelCiclo.length === 0) {
-        mensaje += 'No hay guardias registradas en este ciclo.';
-    } else {
-        let fechaAnterior = '';
-        guardiasDelCiclo.forEach(g => {
-            const fecha = new Date(g.fecha);
-            const fechaStr = fecha.getDate() + '/' + (fecha.getMonth() + 1);
+        // ==================== EXPORTAR ====================
+        function exportarWhatsApp() {
+            const fechaInicioCiclos = new Date('2026-05-01');
+            const fechaFinSistema = new Date('2027-12-31');
+            const ciclos = [];
             
-            if (fechaStr !== fechaAnterior) {
-                mensaje += '\n*' + fechaStr + '*\n';
-                fechaAnterior = fechaStr;
+            let inicioActual = new Date(fechaInicioCiclos);
+            let numCiclo = 1;
+            
+            while (inicioActual <= fechaFinSistema) {
+                const finCiclo = new Date(inicioActual);
+                finCiclo.setDate(finCiclo.getDate() + 33);
+                
+                ciclos.push({
+                    numero: numCiclo,
+                    inicio: new Date(inicioActual),
+                    fin: new Date(finCiclo)
+                });
+                
+                inicioActual.setDate(inicioActual.getDate() + 34);
+                numCiclo++;
             }
             
-            const turnoTexto = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
-            mensaje += '- ' + turnoTexto + ': ' + g.socioNombre + (g.cubre ? ' (Me Cubre: ' + g.cubre + ')' : '') + '\n';
-        });
-    }
-    
-    const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
-    window.open(url, '_blank');
-}
+            const nombresMeses = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+            
+            let opcionesCiclos = ciclos.map(c => {
+                const inicioStr = c.inicio.getDate() + '/' + nombresMeses[c.inicio.getMonth()] + '/' + c.inicio.getFullYear();
+                const finStr = c.fin.getDate() + '/' + nombresMeses[c.fin.getMonth()] + '/' + c.fin.getFullYear();
+                return `Ciclo ${c.numero}: ${inicioStr} - ${finStr}`;
+            }).join('\n');
+            
+            const seleccion = prompt('Seleccioná el número de ciclo a exportar:\n\n' + opcionesCiclos + '\n\nEscribí el número de ciclo:');
+            
+            if (!seleccion) return;
+            
+            const cicloSeleccionado = parseInt(seleccion);
+            if (isNaN(cicloSeleccionado) || cicloSeleccionado < 1 || cicloSeleccionado > ciclos.length) {
+                alert('Número de ciclo inválido');
+                return;
+            }
+            
+            const ciclo = ciclos[cicloSeleccionado - 1];
+            
+            const guardiasDelCiclo = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return fecha >= ciclo.inicio && fecha <= ciclo.fin;
+            }).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+            
+            const inicioTitulo = ciclo.inicio.getDate() + '/' + (ciclo.inicio.getMonth() + 1) + '/' + ciclo.inicio.getFullYear();
+            const finTitulo = ciclo.fin.getDate() + '/' + (ciclo.fin.getMonth() + 1) + '/' + ciclo.fin.getFullYear();
+            
+            let mensaje = '*GUARDIAS COVISUEL*\n' + 'Ciclo ' + cicloSeleccionado + ': ' + inicioTitulo + ' al ' + finTitulo + '\n\n';
+            
+            if (guardiasDelCiclo.length === 0) {
+                mensaje += 'No hay guardias registradas en este ciclo.';
+            } else {
+                let fechaAnterior = '';
+                guardiasDelCiclo.forEach(g => {
+                    const fecha = new Date(g.fecha);
+                    const fechaStr = fecha.getDate() + '/' + (fecha.getMonth() + 1);
+                    
+                    if (fechaStr !== fechaAnterior) {
+                        mensaje += '\n*' + fechaStr + '*\n';
+                        fechaAnterior = fechaStr;
+                    }
+                    
+                    const turnoTexto = g.turno.toUpperCase() === 'TARDE' ? 'TARDE' : 'NOCHE';
+                    mensaje += '- ' + turnoTexto + ': ' + g.socioNombre + (g.cubre ? ' (Me Cubre: ' + g.cubre + ')' : '') + '\n';
+                });
+            }
+            
+            const url = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
+            window.open(url, '_blank');
+        }
+
+        function exportarExcel() {
+            alert('Función de exportar a Excel próximamente');
+        }
 
         function verCompliance() {
-        // Usar el mes y año seleccionados
-        const mesActual = currentMonth;
-        const anioActual = currentYear;
-       // Calcular qué ciclo corresponde al mes seleccionado
-        const fechaInicioCiclos = new Date('2026-05-01');
-        const primerDiaMes = new Date(anioActual, mesActual, 1);
-        const ultimoDiaMes = new Date(anioActual, mesActual + 1, 0);
-        
-        // Encontrar el ciclo que contiene la mayor parte del mes seleccionado
-        const diasTranscurridos = Math.floor((primerDiaMes - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-        const numeroCiclo = Math.floor(diasTranscurridos / 34);
-        const inicioCicloActual = new Date(fechaInicioCiclos);
-        inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-        const finCicloActual = new Date(inicioCicloActual);
-        finCicloActual.setDate(finCicloActual.getDate() + 33);
-        
-        const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
-        const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
-        
-        // Filtrar guardias del ciclo
-        const guardiasCiclo = guardias.filter(g => {
-            const fecha = new Date(g.fecha);
-            return fecha >= inicioCicloActual && fecha <= finCicloActual;
-        });
-        
-        let reporte = 'Ciclo: ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
-        let cumplidos = 0;
-        let pendientes = 0;
-        
-        SOCIOS.forEach(socio => {
-            const guardiasSocio = guardiasCiclo.filter(g => g.socioId === socio.id);
-            const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
-            const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
+            const mesActual = currentMonth;
+            const anioActual = currentYear;
+            const fechaInicioCiclos = new Date('2026-05-01');
+            const primerDiaMes = new Date(anioActual, mesActual, 1);
             
-            const cumpleTarde = tarde >= 2;
-            const cumpleNoche = noche >= 3;
+            const diasTranscurridos = Math.floor((primerDiaMes - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
+            const numeroCiclo = Math.floor(diasTranscurridos / 34);
+            const inicioCicloActual = new Date(fechaInicioCiclos);
+            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
+            const finCicloActual = new Date(inicioCicloActual);
+            finCicloActual.setDate(finCicloActual.getDate() + 33);
             
-            if (cumpleTarde && cumpleNoche) {
-                cumplidos++;
-            } else {
-                pendientes++;
-            }
+            const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
+            const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
             
-            const estadoTarde = cumpleTarde ? '✅' : '❌';
-            const estadoNoche = cumpleNoche ? '✅' : '❌';
+            const guardiasCiclo = guardias.filter(g => {
+                const fecha = new Date(g.fecha);
+                return fecha >= inicioCicloActual && fecha <= finCicloActual;
+            });
             
-            reporte += '• ' + socio.nombre + '\n T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
-        });
-        
-        reporte = '✅ Cumplidos: ' + cumplidos + '/' + SOCIOS.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
-        
-        // Crear modal para mostrar cumplimiento
-        let modalDiv = document.createElement('div');
-        modalDiv.id = 'modalCumplimiento';
-        modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
-        modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;color:black;"><h3 style="color:black;">Cumplimiento por Ciclo</h3><pre style="font-size:12px;color:black;">' + reporte + '</pre><button id="btnCerrarModal" style="margin-top:10px;padding:10px 20px;cursor:pointer;">Cerrar</button></div>';
-        document.body.appendChild(modalDiv);
-        document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
-    }
+            let reporte = 'Ciclo: ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
+            let cumplidos = 0;
+            let pendientes = 0;
+            
+            SOCIOS.forEach(socio => {
+                const guardiasSocio = guardiasCiclo.filter(g => g.socioId == socio.id);
+                const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
+                const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
+                
+                const cumpleTarde = tarde >= 2;
+                const cumpleNoche = noche >= 3;
+                
+                if (cumpleTarde && cumpleNoche) {
+                    cumplidos++;
+                } else {
+                    pendientes++;
+                }
+                
+                const estadoTarde = cumpleTarde ? '✅' : '❌';
+                const estadoNoche = cumpleNoche ? '✅' : '❌';
+                
+                reporte += '• ' + socio.nombre + '\n T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
+            });
+            
+            reporte = '✅ Cumplidos: ' + cumplidos + '/' + SOCIOS.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
+            
+            let modalDiv = document.createElement('div');
+            modalDiv.id = 'modalCumplimiento';
+            modalDiv.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;';
+            modalDiv.innerHTML = '<div style="background:white;padding:20px;border-radius:10px;max-width:90%;max-height:80%;overflow-y:auto;color:black;"><h3 style="color:black;">Cumplimiento por Ciclo</h3><pre style="font-size:12px;color:black;">' + reporte + '</pre><button id="btnCerrarModal" style="margin-top:10px;padding:10px 20px;cursor:pointer;">Cerrar</button></div>';
+            document.body.appendChild(modalDiv);
+            document.getElementById('btnCerrarModal').onclick = function() { modalDiv.remove(); };
+        }
     </script>
 </body>
 </html>
