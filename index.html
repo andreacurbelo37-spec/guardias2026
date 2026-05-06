@@ -802,6 +802,12 @@
         cicloActivo = 1;
     }
 }
+        function obtenerCiclo(fecha) {
+    const fechaInicio = new Date('2026-05-01');
+    const fechaGuardia = new Date(fecha);
+    const diasTranscurridos = Math.floor((fechaGuardia - fechaInicio) / (1000 * 60 * 60 * 24));
+    return Math.floor(diasTranscurridos / 34) + 1;
+}
          async function guardarGuardia(guardia) {
     showLoading(true);
     try {
