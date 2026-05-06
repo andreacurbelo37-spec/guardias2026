@@ -795,8 +795,8 @@
             try {
                 const response = await fetch(`${SCRIPT_URL}?action=getCicloActivo`);
                 const data = await response.json();
-                if (data.ciclo) {
-                    cicloActivo = parseInt(data.ciclo);
+                if (data.cicloActivo) {
+                    cicloActivo = parseInt(data.cicloActivo);
                 }
             } catch (error) {
                 console.error('Error cargando ciclo activo:', error);
