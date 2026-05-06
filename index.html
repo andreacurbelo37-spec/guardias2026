@@ -1315,7 +1315,7 @@
             let pendientes = 0;
             
             SOCIOS.forEach(socio => {
-                const guardiasSocio = guardiasCiclo.filter(g => g.socioId == socio.id);
+                const guardiasSocio = guardiasCiclo.filter(g => g.odoo == socio.id);
                 const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
                 const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
                 
