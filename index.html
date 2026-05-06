@@ -1297,7 +1297,7 @@
         let cumplidos = 0;
         let pendientes = 0;
         
-        socios.forEach(socio => {
+        SOCIOS.forEach(socio => {
             const guardiasSocio = guardiasCiclo.filter(g => g.socioId === socio.id);
             const tarde = guardiasSocio.filter(g => g.turno.toLowerCase() === 'tarde').length;
             const noche = guardiasSocio.filter(g => g.turno.toLowerCase() === 'noche').length;
@@ -1317,7 +1317,7 @@
             reporte += '• ' + socio.nombre + '\n T:' + estadoTarde + ' ' + tarde + '/2  N:' + estadoNoche + ' ' + noche + '/3\n\n';
         });
         
-        reporte = '✅ Cumplidos: ' + cumplidos + '/' + socios.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
+        reporte = '✅ Cumplidos: ' + cumplidos + '/' + SOCIOS.length + '\n❌ Pendientes: ' + pendientes + '\n\n' + reporte;
         
         // Crear modal para mostrar cumplimiento
         let modalDiv = document.createElement('div');
