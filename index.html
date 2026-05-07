@@ -1088,7 +1088,7 @@
                             <span>${r.nombre} (${r.odoo})</span>
                             ${r.detalle ? `<small style="opacity:0.7">${r.detalle}</small>` : ''}
                         </div>
-                        ${puedeEliminar ? `<button class="btn-eliminar" onclick="event.stopPropagation(); eliminarGuardia('${r.fecha.substring(0,10)}', '${r.turno}', '${r.odoo}'">🗑️</button>` : ''}
+                        ${puedeEliminar ? `<button class="btn-eliminar" onclick="event.stopPropagation(); eliminarGuardia('${r.fecha.substring(0,10)}', '${r.turno}', '${r.odoo}')">🗑</button>` : ''}
                     </div>
                 `;
             });
