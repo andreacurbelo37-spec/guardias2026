@@ -1246,7 +1246,6 @@ mostrarBotonDesbloquear();
         for (let i = 1; i <= 18; i++) {
             select.innerHTML += `<option value="${i}">Ciclo ${i}</option>`;
         }
-        actualizarListaCiclos();
         document.getElementById('modalDesbloquear').classList.add('active');
     }
 
@@ -1262,7 +1261,6 @@ mostrarBotonDesbloquear();
         }
         if (!ciclosDesbloqueados.includes(ciclo) && ciclo !== cicloActivo) {
             ciclosDesbloqueados.push(ciclo);
-            actualizarListaCiclos();
             alert(`✅ Ciclo ${ciclo} desbloqueado`);
         } else if (ciclo === cicloActivo) {
             alert(`El Ciclo ${ciclo} ya está activo`);
@@ -1280,19 +1278,9 @@ mostrarBotonDesbloquear();
         const index = ciclosDesbloqueados.indexOf(ciclo);
         if (index > -1) {
             ciclosDesbloqueados.splice(index, 1);
-            actualizarListaCiclos();
             alert(`🔒 Ciclo ${ciclo} bloqueado`);
         } else {
             alert(`El Ciclo ${ciclo} no estaba desbloqueado`);
-        }
-    }
-
-    function actualizarListaCiclos() {
-        const lista = document.getElementById('listaCiclos');
-        if (ciclosDesbloqueados.length === 0) {
-            lista.textContent = 'Ninguno';
-        } else {
-            lista.textContent = ciclosDesbloqueados.sort((a,b) => a-b).join(', ');
         }
     }
         function mostrarFechasCiclo() {
