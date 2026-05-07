@@ -1285,9 +1285,39 @@
             window.open(url, '_blank');
         }
 
-        function exportarExcel() {
-            alert('Función de exportar a Excel próximamente');
-        }
+       function exportarExcel() {
+    if (guardias.length === 0) {
+        alert('No hay guardias registradas para exportar');
+        return;
+    }
+    
+    // Crear contenido CSV
+    let csv = 'Fecha,Turno,ID Socio,Nombre,Tipo,Cubre a\n';
+    
+    // Ordenar por fecha
+    const guardiasOrdenadas = [...guardias].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    
+    guardiasOrdenadas.forEach(g => {
+        const fecha = g.fecha || '';
+        const turno = g.turno || '';
+        const odoo = g.odoo || '';
+        const nombre = g.nombre || '';
+        const tipo = g.tipo || 'Titular';
+        const cubre = g.cubre || '';
+        csv += `${fecha},${turno},${odoo},"${nombre}",${tipo},"${cubre}"\n`;
+    });
+    
+    // Crear y descargar archivo
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `guardias_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
 
         function verCompliance() {
             const mesActual = currentMonth;
