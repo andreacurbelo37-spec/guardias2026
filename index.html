@@ -1223,13 +1223,80 @@
             const password = document.getElementById('adminPassword').value;
             if (password === ADMIN_PASSWORD) {
                 isAdmin = true;
-                alert('✅ Acceso de administrador activado\n\nAhora podés eliminar cualquier registro.');
+                alert('✅ Acceso de administrador activado\n\nAhora podés:\n- Eliminar cualquier registro\n- Desbloquear ciclos');
+mostrarBotonDesbloquear();
                 cerrarModalAdmin();
             } else {
                 alert('❌ Contraseña incorrecta');
             }
         }
+         function mostrarBotonDesbloquear() {
+        // Crear botón flotante para admin
+        if (!document.getElementById('btnDesbloquearCiclo')) {
+            const btn = document.createElement('button');
+            btn.id = 'btnDesbloquearCiclo';
+            btn.innerHTML = '🔓 Ciclos';
+            btn.style.cssText = 'position:fixed;bottom:20px;right:20px;padding:10px 20px;background:#ff9800;color:white;border:none;border-radius:5px;cursor:pointer;font-size:14px;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.3);';
+            btn.onclick = abrirModalDesbloquear;
+            document.body.appendChild(btn);
+        }
+    }
 
+    function abrirModalDesbloquear() {
+        const select = document.getElementById('selectCicloDesbloquear');
+        select.innerHTML = '<option value="">-- Seleccionar --</option>';
+        for (let i = 1; i <= 18; i++) {
+            select.innerHTML += `<option value="${i}">Ciclo ${i}</option>`;
+        }
+        actualizarListaCiclos();
+        document.getElementById('modalDesbloquear').classList.add('active');
+    }
+
+    function cerrarModalDesbloquear() {
+        document.getElementById('modalDesbloquear').classList.remove('active');
+    }
+
+    function desbloquearCiclo() {
+        const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
+        if (!ciclo) {
+            alert('Seleccioná un ciclo');
+            return;
+        }
+        if (!ciclosDesbloqueados.includes(ciclo) && ciclo !== cicloActivo) {
+            ciclosDesbloqueados.push(ciclo);
+            actualizarListaCiclos();
+            alert(`✅ Ciclo ${ciclo} desbloqueado`);
+        } else if (ciclo === cicloActivo) {
+            alert(`El Ciclo ${ciclo} ya está activo`);
+        } else {
+            alert(`El Ciclo ${ciclo} ya está desbloqueado`);
+        }
+    }
+
+    function bloquearCiclo() {
+        const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
+        if (!ciclo) {
+            alert('Seleccioná un ciclo');
+            return;
+        }
+        const index = ciclosDesbloqueados.indexOf(ciclo);
+        if (index > -1) {
+            ciclosDesbloqueados.splice(index, 1);
+            actualizarListaCiclos();
+            alert(`🔒 Ciclo ${ciclo} bloqueado`);
+        } else {
+            alert(`El Ciclo ${ciclo} no estaba desbloqueado`);
+        }
+    }
+
+    function actualizarListaCiclos() {
+        const lista = document.getElementById('listaCiclos');
+        if (ciclosDesbloqueados.length === 0) {
+            lista.textContent = 'Ninguno';
+        } else {
+            lista.textContent = ciclosDesbloqueados.sort((a,b) => a-b).join(', ');
+        }
+    }
         // ==================== EXPORTAR ====================
         function exportarWhatsApp() {
             const fechaInicioCiclos = new Date('2026-05-01');
