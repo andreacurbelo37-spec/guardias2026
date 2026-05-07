@@ -756,6 +756,7 @@
         let guardias = [];
         let isAdmin = false;
         let cicloActivo = 1;
+        let ciclosDesbloqueados = [];
 
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
@@ -816,7 +817,7 @@
             try {
                 // Validar que la fecha pertenece al ciclo activo
                 const cicloFecha = obtenerCiclo(guardia.fecha);
-                if (cicloFecha !== cicloActivo) {
+                if (cicloFecha !== cicloActivo && !ciclosDesbloqueados.includes(cicloFecha)) {
                     alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
                     showLoading(false);
                     return false;
