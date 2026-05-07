@@ -1292,7 +1292,7 @@
     }
     
     // Crear contenido CSV
-    let csv = 'Fecha,Turno,ID Socio,Nombre,Tipo,Cubre a\n';
+    let csv = 'Fecha;Turno;ID Socio;Nombre;Tipo;Cubre a\n';
     
     // Ordenar por fecha
     const guardiasOrdenadas = [...guardias].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
@@ -1304,7 +1304,7 @@
         const nombre = g.nombre || '';
         const tipo = g.tipo || 'Titular';
         const cubre = g.cubre || '';
-        csv += `${fecha},${turno},${odoo},"${nombre}",${tipo},"${cubre}"\n`;
+        csv += `${fecha};${turno};${odoo};${nombre};${tipo};${cubre}\n`;
     });
     
     // Crear y descargar archivo
