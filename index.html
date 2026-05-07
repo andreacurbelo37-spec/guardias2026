@@ -1291,11 +1291,67 @@
         return;
     }
     
+    // Crear selector de ciclo
+    const ciclosDisponibles = [];
+    for (let i = 1; i <= 18; i++) {
+        ciclosDisponibles.push(i);
+    }
+    
+    // Calcular ciclo actual
+    const hoy = new Date();
+    const inicioApp = new Date('2026-04-01');
+    const diasDesdeInicio = Math.floor((hoy - inicioApp) / (1000 * 60 * 60 * 24));
+    const cicloActual = Math.min(18, Math.max(1, Math.floor(diasDesdeInicio / 34) + 1));
+    
+    // Mostrar selector
+    const cicloSeleccionado = prompt(
+        `¿Qué ciclo querés exportar?\n\n` +
+        `Ciclo actual: ${cicloActual}\n` +
+        `Ingresá un número del 1 al 18\n` +
+        `O escribí "todos" para exportar todo:`,
+        cicloActual
+    );
+    
+    if (cicloSeleccionado === null) return; // Canceló
+    
+    let guardiasAExportar;
+    let nombreArchivo;
+    
+    if (cicloSeleccionado.toLowerCase() === 'todos') {
+        guardiasAExportar = [...guardias];
+        nombreArchivo = `guardias_todos_ciclos_${new Date().toISOString().split('T')[0]}.csv`;
+    } else {
+        const numCiclo = parseInt(cicloSeleccionado);
+        if (isNaN(numCiclo) || numCiclo < 1 || numCiclo > 18) {
+            alert('Ciclo inválido. Ingresá un número del 1 al 18.');
+            return;
+        }
+        
+        // Calcular fechas del ciclo seleccionado
+        const inicioCiclo = new Date('2026-04-01');
+        inicioCiclo.setDate(inicioCiclo.getDate() + (numCiclo - 1) * 34);
+        const finCiclo = new Date(inicioCiclo);
+        finCiclo.setDate(finCiclo.getDate() + 33);
+        
+        // Filtrar guardias del ciclo
+        guardiasAExportar = guardias.filter(g => {
+            const fechaGuardia = new Date(g.fecha);
+            return fechaGuardia >= inicioCiclo && fechaGuardia <= finCiclo;
+        });
+        
+        if (guardiasAExportar.length === 0) {
+            alert(`No hay guardias registradas en el ciclo ${numCiclo}`);
+            return;
+        }
+        
+        nombreArchivo = `guardias_ciclo${numCiclo}_${new Date().toISOString().split('T')[0]}.csv`;
+    }
+    
     // Crear contenido CSV
     let csv = 'Fecha;Turno;ID Socio;Nombre;Tipo;Cubre a\n';
     
     // Ordenar por fecha
-    const guardiasOrdenadas = [...guardias].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+    const guardiasOrdenadas = [...guardiasAExportar].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
     
     guardiasOrdenadas.forEach(g => {
         const fecha = g.fecha || '';
@@ -1312,7 +1368,7 @@
     const link = document.createElement('a');
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
-    link.setAttribute('download', `guardias_${new Date().toISOString().split('T')[0]}.csv`);
+    link.setAttribute('download', nombreArchivo);
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
