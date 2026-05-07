@@ -704,14 +704,12 @@
     <div class="modal" id="modalDesbloquear">
         <div class="modal-content">
             <h2>🔓 Desbloquear Ciclo</h2>
-            <div class="form-group">
+           <div class="form-group">
                 <label>Seleccionar Ciclo:</label>
-                <select id="selectCicloDesbloquear">
+                <select id="selectCicloDesbloquear" onchange="mostrarFechasCiclo()">
                     <option value="">-- Seleccionar --</option>
                 </select>
-            </div>
-            <div id="ciclosDesbloqueadosLista" style="margin: 10px 0; padding: 10px; background: #f0f0f0; border-radius: 5px;">
-                <strong>Ciclos desbloqueados:</strong> <span id="listaCiclos">Ninguno</span>
+                <div id="fechasCiclo" style="margin-top:8px;font-size:13px;color:#666;"></div>
             </div>
             <div class="modal-buttons">
                 <button class="btn-cancelar" onclick="cerrarModalDesbloquear()">Cerrar</button>
