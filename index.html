@@ -1295,6 +1295,21 @@ mostrarBotonDesbloquear();
             lista.textContent = ciclosDesbloqueados.sort((a,b) => a-b).join(', ');
         }
     }
+        function mostrarFechasCiclo() {
+        const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
+        const divFechas = document.getElementById('fechasCiclo');
+        if (!ciclo) {
+            divFechas.textContent = '';
+            return;
+        }
+        const fechaInicio = new Date('2026-05-01');
+        const inicio = new Date(fechaInicio);
+        inicio.setDate(inicio.getDate() + (ciclo - 1) * 34);
+        const fin = new Date(inicio);
+        fin.setDate(fin.getDate() + 33);
+        const formatear = (f) => f.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric'});
+        divFechas.innerHTML = `📅 <strong>${formatear(inicio)}</strong> al <strong>${formatear(fin)}</strong>`;
+    }
         // ==================== EXPORTAR ====================
         function exportarWhatsApp() {
             const fechaInicioCiclos = new Date('2026-05-01');
