@@ -896,10 +896,10 @@
             
             try {
                 const params = new URLSearchParams({
-                    action: 'eliminar',
+                    action: 'cancelarGuardia',
                     fecha: fecha,
                     turno: turno,
-                    socioId: String(socioId)
+                    odoo: String(socioId)
                 });
                 
                 const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
