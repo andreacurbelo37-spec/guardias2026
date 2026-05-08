@@ -286,13 +286,24 @@
             color: white;
             font-weight: bold;
         }
+        .turno-verde {
+            background: #27ae60;
+        }
 
-        .turno-tarde { background: #f39c12; }
-        .turno-noche { background: #3498db; }
+        .turno-naranja {
+            background: #f39c12;
+        }
+
+        .turno-azul {
+            background: #3498db;
+        }
+
+        .turno-rojo {
+            background: #e74c3c;
+        }
 
         .turno-verde { background: #27ae60; }
         .turno-amarillo { background: #f1c40f; }
-        .turno-rojo { background: #e74c3c; }
 
         /* Modal */
         .modal {
@@ -959,8 +970,8 @@
                 dayElement.innerHTML = `
                     <span class="day-number">${dia}</span>
                     <div class="turnos">
-                        ${tardeCant > 0 ? `<span class="turno-indicator ${getColorClass(tardeCant)}" title="Tarde: ${tardeCant}/2">T${tardeCant}</span>` : ''}
-                        ${nocheCant > 0 ? `<span class="turno-indicator ${getColorClass(nocheCant)}" style="background:#3498db" title="Noche: ${nocheCant}/3">N${nocheCant}</span>` : ''}
+                        ${tardeCant > 0 ? `<span class="turno-indicator ${getTardeColorClass(tardeCant)}" title="Tarde: ${tardeCant}/2">T${tardeCant}</span>` : ''}
+                        ${nocheCant > 0 ? `<span class="turno-indicator ${getNocheColorClass(nocheCant)}" title="Noche: ${nocheCant}/3">N${nocheCant}</span>` : ''}
                     </div>
                 `;
                 
@@ -969,12 +980,14 @@
             }
         }
 
-        function getColorClass(cantidad) {
-            if (cantidad >= 3) return 'turno-rojo';
-            if (cantidad === 2) return 'turno-amarillo';
+        function getTardeColorClass(cantidad) {
+            if (cantidad >= 2) return 'turno-naranja';
             return 'turno-verde';
+        };
+        function getNocheColorClass(cantidad) {
+            if (cantidad >= 3) return 'turno-rojo';
+            return 'turno-azul';
         }
-
         function mesAnterior() {
             if (currentMonth === 3 && currentYear === 2026) return;
             currentMonth--;
