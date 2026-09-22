@@ -6,7 +6,7 @@
     <title>COVISUEL - Sistema de Guardias</title>
     <meta property="og:title" content="GUARDIAS COVISUEL">
     <meta property="og:description" content="Sistema de registro de turnos">
-    <meta property="og:image" content="https://andreacurbelo37-spec.github.io/guardias2026/Covisuel%20logo%20para%20llavero.jpg">
+    <meta property="og:image" content="https://andreacurbelo37-spec.github.io/guardias2026/Covisuel_logo_para_llavero.jpg">
     <meta property="og:url" content="https://andreacurbelo37-spec.github.io/guardias2026/">
     <style>    
         * {
@@ -302,7 +302,6 @@
             background: #e74c3c;
         }
 
-        .turno-verde { background: #27ae60; }
         .turno-amarillo { background: #f1c40f; }
 
         /* Modal */
@@ -593,7 +592,7 @@
         <!-- Panel Izquierdo -->
         <div class="left-panel">
             <div class="logo-container">
-         <img src="Covisuel%20logo%20para%20llavero.jpg" alt="COVISUEL Logo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #4facfe;">
+         <img src="Covisuel_logo_para_llavero.jpg" alt="COVISUEL Logo" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #4facfe;">
             </div>
             
             <h2 class="app-title">🛡️ COVISUEL</h2>
@@ -668,9 +667,9 @@
             <div class="form-group">
                 <label>Tipo de Registro:</label>
                 <div class="tipo-registro">
-                    <button class="tipo-btn selected" onclick="seleccionarTipo('titular')">👤 Titular</button>
-                    <button class="tipo-btn" onclick="seleccionarTipo('Me Cubre')">🤝 Me Cubre</button>
-                    <button class="tipo-btn" onclick="seleccionarTipo('nucleo')">👨‍👩‍👧 Núcleo Familiar</button>
+                    <button class="tipo-btn selected" onclick="seleccionarTipo('titular', event)">👤 Titular</button>
+                    <button class="tipo-btn" onclick="seleccionarTipo('Me Cubre', event)">🤝 Me Cubre</button>
+                    <button class="tipo-btn" onclick="seleccionarTipo('nucleo', event)">👨‍👩‍👧 Núcleo Familiar</button>
                 </div>
             </div>
 
@@ -732,7 +731,13 @@
     <script>
         // ==================== CONFIGURACIÓN ====================
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwATcL70e_h4t8hB5_rGId6qyg0tyr7WXUrT-e9rk5IkxhYTNX0lZCK4ldXPs9hZsw/exec';
-        
+
+        // Fecha de inicio de ciclos: usada por TODAS las funciones (antes había
+        // fechas distintas en distintos lugares, lo que descuadraba el Excel
+        // respecto al calendario). Cambiar acá si el inicio real cambia.
+        const FECHA_INICIO_CICLOS = new Date('2026-05-01');
+        const DIAS_POR_CICLO = 34;
+
         // SOCIOS CORRECTOS DE COVISUEL
         const SOCIOS = [
             {id: 215, nombre: "Mary Yacqueline Cunha Gómez"},
@@ -784,7 +789,7 @@
         let guardias = [];
         let isAdmin = false;
         let cicloActivo = 1;
-        let ciclosDesbloqueados = [];
+        let ciclosDesbloqueadosHasta = 1; // se sincroniza con el servidor (Config!B2)
 
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
@@ -827,17 +832,31 @@
                 if (data.cicloActivo) {
                     cicloActivo = parseInt(data.cicloActivo);
                 }
+                if (data.ciclosDesbloqueadosHasta) {
+                    ciclosDesbloqueadosHasta = parseInt(data.ciclosDesbloqueadosHasta);
+                }
             } catch (error) {
                 console.error('Error cargando ciclo activo:', error);
                 cicloActivo = 1;
+                ciclosDesbloqueadosHasta = 1;
             }
         }
 
+        // Calcula el número de ciclo (1, 2, 3...) al que pertenece una fecha.
+        // Única fuente de verdad: usa siempre FECHA_INICIO_CICLOS / DIAS_POR_CICLO.
         function obtenerCiclo(fecha) {
-            const fechaInicio = new Date('2026-05-01');
             const fechaGuardia = new Date(fecha);
-            const diasTranscurridos = Math.floor((fechaGuardia - fechaInicio) / (1000 * 60 * 60 * 24));
-            return Math.floor(diasTranscurridos / 34) + 1;
+            const diasTranscurridos = Math.floor((fechaGuardia - FECHA_INICIO_CICLOS) / (1000 * 60 * 60 * 24));
+            return Math.floor(diasTranscurridos / DIAS_POR_CICLO) + 1;
+        }
+
+        // Devuelve {inicio, fin} (objetos Date) del ciclo N.
+        function obtenerRangoCiclo(numeroCiclo) {
+            const inicio = new Date(FECHA_INICIO_CICLOS);
+            inicio.setDate(inicio.getDate() + (numeroCiclo - 1) * DIAS_POR_CICLO);
+            const fin = new Date(inicio);
+            fin.setDate(fin.getDate() + (DIAS_POR_CICLO - 1));
+            return { inicio, fin };
         }
 
         async function guardarGuardia(guardia) {
@@ -845,7 +864,7 @@
             try {
                 // Validar que la fecha pertenece al ciclo activo
                 const cicloFecha = obtenerCiclo(guardia.fecha);
-                if (cicloFecha !== cicloActivo && !ciclosDesbloqueados.includes(cicloFecha)) {
+                if (cicloFecha !== cicloActivo && cicloFecha > ciclosDesbloqueadosHasta) {
                     alert(`No se puede registrar. Solo está habilitado el Ciclo ${cicloActivo}.`);
                     showLoading(false);
                     return false;
@@ -861,7 +880,15 @@
                    cubre: guardia.cubre || ''
 });
 
-                await fetch(`${SCRIPT_URL}?${params.toString()}`);
+                const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+                const result = await response.json();
+
+                if (result && result.success === false) {
+                    alert('Error al guardar: ' + (result.error || 'Error desconocido'));
+                    showLoading(false);
+                    return false;
+                }
+
                 await cargarGuardias();
                 showLoading(false);
                 return true;
@@ -873,28 +900,17 @@
             }
         }
 
+        // Un socio puede eliminar sus propios registros. Los admins (los que
+        // entraron con la contraseña de administrador) pueden eliminar
+        // cualquier registro. Antes esta función ignoraba isAdmin y solo
+        // dejaba borrar a una lista fija de nombres hardcodeados.
         async function eliminarGuardia(fecha, turno, socioId) {
-            const autorizados = [
-                'administrador',
-                'admin',
-                'andrea curbelo',
-                'maria andrea curbelo',
-                '240',
-                'maria noel carbajal',
-                'noel carbajal',
-                '266',
-                'virginia diaz',
-                'virginia díaz',
-                'juan pablo gallulo'
-            ];
             const selectElement = document.getElementById('socioSelect');
-            const socioActual = selectElement.value.toLowerCase(); 
-            const textoSocio = selectElement.options[selectElement.selectedIndex].text.toLowerCase();
+            const socioSeleccionadoId = parseInt(selectElement.value);
 
-            const esAutorizado = autorizados.some(auth =>        
-                socioActual.includes(auth.toLowerCase()) || 
-                textoSocio.includes(auth.toLowerCase())
-            );
+            const esPropio = selectedSocio && String(selectedSocio.id) === String(socioId);
+            const esAutorizado = isAdmin || esPropio;
+
             if (!esAutorizado) {
                 alert('No tenes permiso para eliminar guardias.\n\nContacta a la administracion.');
                 return;
@@ -910,7 +926,8 @@
                     action: 'cancelarGuardia',
                     fecha: fecha,
                     turno: turno,
-                    odoo: String(socioId)
+                    odoo: String(socioId),
+                    esAdmin: isAdmin ? '1' : '0'
                 });
                 
                 const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
@@ -983,7 +1000,7 @@
         function getTardeColorClass(cantidad) {
             if (cantidad >= 2) return 'turno-naranja';
             return 'turno-verde';
-        };
+        }
         function getNocheColorClass(cantidad) {
             if (cantidad >= 3) return 'turno-rojo';
             return 'turno-azul';
@@ -1027,16 +1044,10 @@
 
         function actualizarContador() {
             if (!selectedSocio) return;
-            
-            const fechaInicioCiclos = new Date('2026-05-01');
-            const hoy = new Date();
-            const diasTranscurridos = Math.floor((hoy - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-            const numeroCiclo = Math.floor(diasTranscurridos / 34);
-            const inicioCicloActual = new Date(fechaInicioCiclos);
-            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-            const finCicloActual = new Date(inicioCicloActual);
-            finCicloActual.setDate(finCicloActual.getDate() + 33);
-            
+
+            const numeroCiclo = obtenerCiclo(new Date());
+            const { inicio: inicioCicloActual, fin: finCicloActual } = obtenerRangoCiclo(numeroCiclo);
+
             const guardiasSocioCiclo = guardias.filter(g => {
                 const fechaGuardia = new Date(g.fecha);
                 return g.odoo == selectedSocio.id && 
@@ -1091,7 +1102,7 @@
             
             let html = '<h4>Registros del día:</h4>';
             registros.forEach(r => {
-                const esPropio = r.odoo == selectedSocio.id;
+                const esPropio = selectedSocio && r.odoo == selectedSocio.id;
                 const puedeEliminar = esPropio || isAdmin;
                 
                 html += `
@@ -1118,10 +1129,10 @@
             document.querySelector(`.turno-btn.${turno}`).classList.add('selected');
         }
 
-        function seleccionarTipo(tipo) {
+        function seleccionarTipo(tipo, evt) {
             selectedTipo = tipo;
             document.querySelectorAll('.tipo-btn').forEach(btn => btn.classList.remove('selected'));
-            event.target.classList.add('selected');
+            (evt && evt.target ? evt.target : window.event.target).classList.add('selected');
             
             document.getElementById('campoMeCubre').classList.toggle('visible', tipo === 'Me Cubre');
             document.getElementById('campoNucleo').classList.toggle('visible', tipo === 'nucleo');
@@ -1143,16 +1154,10 @@
                 alert('⚠️ Ya estás registrado en este turno');
                 return;
             }
-            
-            const fechaInicioCiclos = new Date('2026-05-01');
-            const fechaSeleccionada = new Date(selectedDate);
-            const diasTranscurridos = Math.floor((fechaSeleccionada - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-            const numeroCiclo = Math.floor(diasTranscurridos / 34);
-            const inicioCicloActual = new Date(fechaInicioCiclos);
-            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-            const finCicloActual = new Date(inicioCicloActual);
-            finCicloActual.setDate(finCicloActual.getDate() + 33);
-            
+
+            const numeroCiclo = obtenerCiclo(selectedDate);
+            const { inicio: inicioCicloActual, fin: finCicloActual } = obtenerRangoCiclo(numeroCiclo);
+
             const guardiasSocioCiclo = guardias.filter(g => {
                 const fechaGuardia = new Date(g.fecha);
                 return g.odoo == selectedSocio.id && 
@@ -1235,8 +1240,11 @@
             if (password === ADMIN_PASSWORD) {
                 isAdmin = true;
                 alert('✅ Acceso de administrador activado\n\nAhora podés:\n- Eliminar cualquier registro\n- Desbloquear ciclos');
-mostrarBotonDesbloquear();
+                mostrarBotonDesbloquear();
                 cerrarModalAdmin();
+                if (selectedDate) {
+                    mostrarRegistrosDelDia(selectedDate);
+                }
             } else {
                 alert('❌ Contraseña incorrecta');
             }
@@ -1253,11 +1261,23 @@ mostrarBotonDesbloquear();
         }
     }
 
-    function abrirModalDesbloquear() {
+    const MESES_ES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+
+    function formatearFechaCorta(f) {
+        return `${f.getDate()} ${MESES_ES[f.getMonth()]}`;
+    }
+
+    async function abrirModalDesbloquear() {
+        // Traer el estado real desde el servidor antes de mostrar el modal
+        await cargarCicloActivo();
+
         const select = document.getElementById('selectCicloDesbloquear');
         select.innerHTML = '<option value="">-- Seleccionar --</option>';
         for (let i = 1; i <= 18; i++) {
-            select.innerHTML += `<option value="${i}">Ciclo ${i}</option>`;
+            const { inicio, fin } = obtenerRangoCiclo(i);
+            const rango = `${formatearFechaCorta(inicio)} al ${formatearFechaCorta(fin)}`;
+            const estado = (i <= cicloActivo || i <= ciclosDesbloqueadosHasta) ? '🔓' : '🔒';
+            select.innerHTML += `<option value="${i}">${estado} Ciclo ${i} (${rango})</option>`;
         }
         document.getElementById('modalDesbloquear').classList.add('active');
     }
@@ -1266,63 +1286,115 @@ mostrarBotonDesbloquear();
         document.getElementById('modalDesbloquear').classList.remove('active');
     }
 
-    function desbloquearCiclo() {
+    // NOTA: los ciclos pasados y el ciclo actual ya están siempre habilitados
+    // automáticamente (avanzan solos con la fecha, sin que haga falta tocar
+    // nada). Este botón solo sirve para el caso especial de querer habilitar
+    // un ciclo FUTURO antes de que le toque (por ejemplo, para planificar con
+    // anticipación).
+    async function desbloquearCiclo() {
         const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
         if (!ciclo) {
             alert('Seleccioná un ciclo');
             return;
         }
-        if (!ciclosDesbloqueados.includes(ciclo) && ciclo !== cicloActivo) {
-            ciclosDesbloqueados.push(ciclo);
-            alert(`✅ Ciclo ${ciclo} desbloqueado`);
-        } else if (ciclo === cicloActivo) {
-            alert(`El Ciclo ${ciclo} ya está activo`);
-        } else {
-            alert(`El Ciclo ${ciclo} ya está desbloqueado`);
+        if (ciclo <= cicloActivo) {
+            alert(`El Ciclo ${ciclo} ya está habilitado automáticamente (es un ciclo pasado o el actual).`);
+            return;
         }
+        if (ciclo <= ciclosDesbloqueadosHasta) {
+            alert(`El Ciclo ${ciclo} ya está desbloqueado.`);
+            return;
+        }
+
+        showLoading(true);
+        try {
+            const params = new URLSearchParams({ action: 'desbloquearHastaCiclo', hastaCiclo: String(ciclo) });
+            const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+            const result = await response.json();
+            if (result && result.success === false) {
+                alert('Error al desbloquear: ' + (result.error || 'Error desconocido'));
+            } else {
+                await cargarCicloActivo();
+                alert(`✅ Ciclo ${ciclo} habilitado por adelantado. Esto ya quedó guardado en el servidor y vale para todos.`);
+                abrirModalDesbloquear();
+            }
+        } catch (error) {
+            console.error('Error desbloqueando ciclo:', error);
+            alert('Error al desbloquear. Intente nuevamente.');
+        }
+        showLoading(false);
     }
 
-    function bloquearCiclo() {
+    // Cierra cualquier ciclo futuro que se haya habilitado por adelantado.
+    // Los ciclos pasados y el actual NO se pueden bloquear: siguen abiertos
+    // automáticamente, eso no se puede desactivar.
+    async function bloquearCiclo() {
         const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
         if (!ciclo) {
             alert('Seleccioná un ciclo');
             return;
         }
-        const index = ciclosDesbloqueados.indexOf(ciclo);
-        if (index > -1) {
-            ciclosDesbloqueados.splice(index, 1);
-            alert(`🔒 Ciclo ${ciclo} bloqueado`);
-        } else {
-            alert(`El Ciclo ${ciclo} no estaba desbloqueado`);
+        if (ciclo <= cicloActivo) {
+            alert(`El Ciclo ${ciclo} es un ciclo pasado o el actual: siempre queda habilitado automáticamente, no se puede bloquear.`);
+            return;
         }
+        if (ciclo > ciclosDesbloqueadosHasta) {
+            alert(`El Ciclo ${ciclo} no estaba desbloqueado.`);
+            return;
+        }
+
+        showLoading(true);
+        try {
+            const nuevoHasta = Math.max(cicloActivo, ciclo - 1);
+            const params = new URLSearchParams({ action: 'desbloquearHastaCiclo', hastaCiclo: String(nuevoHasta) });
+            const response = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+            const result = await response.json();
+            if (result && result.success === false) {
+                alert('Error al bloquear: ' + (result.error || 'Error desconocido'));
+            } else {
+                await cargarCicloActivo();
+                alert(`🔒 Ciclo ${ciclo} vuelto a bloquear.`);
+                abrirModalDesbloquear();
+            }
+        } catch (error) {
+            console.error('Error bloqueando ciclo:', error);
+            alert('Error al bloquear. Intente nuevamente.');
+        }
+        showLoading(false);
     }
-        function mostrarFechasCiclo() {
+
+    function mostrarFechasCiclo() {
         const ciclo = parseInt(document.getElementById('selectCicloDesbloquear').value);
         const divFechas = document.getElementById('fechasCiclo');
         if (!ciclo) {
             divFechas.textContent = '';
             return;
         }
-        const fechaInicio = new Date(2026, 4, 1); // Mayo es mes 4 (0-indexado)
-        const inicio = new Date(fechaInicio);
-        inicio.setDate(inicio.getDate() + (ciclo - 1) * 34);
-        const fin = new Date(inicio);
-        fin.setDate(fin.getDate() + 33);
+        const { inicio, fin } = obtenerRangoCiclo(ciclo);
         const formatear = (f) => f.toLocaleDateString('es-ES', {day:'2-digit', month:'2-digit', year:'numeric'});
-        divFechas.innerHTML = `📅 <strong>${formatear(inicio)}</strong> al <strong>${formatear(fin)}</strong>`;
+        let estado;
+        if (ciclo === cicloActivo) {
+            estado = '🔓 Es el ciclo activo (automático)';
+        } else if (ciclo < cicloActivo) {
+            estado = '🔓 Ciclo pasado (habilitado automáticamente)';
+        } else if (ciclo <= ciclosDesbloqueadosHasta) {
+            estado = '🔓 Habilitado por adelantado';
+        } else {
+            estado = '🔒 Todavía no llegó';
+        }
+        divFechas.innerHTML = `📅 <strong>${formatear(inicio)}</strong> al <strong>${formatear(fin)}</strong><br>${estado}`;
     }
         // ==================== EXPORTAR ====================
         function exportarWhatsApp() {
-            const fechaInicioCiclos = new Date(2026, 4, 1);
             const fechaFinSistema = new Date('2027-12-31');
             const ciclos = [];
             
-            let inicioActual = new Date(fechaInicioCiclos);
+            let inicioActual = new Date(FECHA_INICIO_CICLOS);
             let numCiclo = 1;
             
             while (inicioActual <= fechaFinSistema) {
                 const finCiclo = new Date(inicioActual);
-                finCiclo.setDate(finCiclo.getDate() + 33);
+                finCiclo.setDate(finCiclo.getDate() + (DIAS_POR_CICLO - 1));
                 
                 ciclos.push({
                     numero: numCiclo,
@@ -1330,7 +1402,7 @@ mostrarBotonDesbloquear();
                     fin: new Date(finCiclo)
                 });
                 
-                inicioActual.setDate(inicioActual.getDate() + 34);
+                inicioActual.setDate(inicioActual.getDate() + DIAS_POR_CICLO);
                 numCiclo++;
             }
             
@@ -1392,17 +1464,8 @@ mostrarBotonDesbloquear();
         return;
     }
     
-    // Crear selector de ciclo
-    const ciclosDisponibles = [];
-    for (let i = 1; i <= 18; i++) {
-        ciclosDisponibles.push(i);
-    }
-    
-    // Calcular ciclo actual
-    const hoy = new Date();
-    const inicioApp = new Date('2026-04-01');
-    const diasDesdeInicio = Math.floor((hoy - inicioApp) / (1000 * 60 * 60 * 24));
-    const cicloActual = Math.min(18, Math.max(1, Math.floor(diasDesdeInicio / 34) + 1));
+    // Calcular ciclo actual (misma fecha de inicio que el resto de la app)
+    const cicloActual = Math.min(18, Math.max(1, obtenerCiclo(new Date())));
     
     // Mostrar selector
     const cicloSeleccionado = prompt(
@@ -1428,11 +1491,8 @@ mostrarBotonDesbloquear();
             return;
         }
         
-        // Calcular fechas del ciclo seleccionado
-        const inicioCiclo = new Date('2026-04-01');
-        inicioCiclo.setDate(inicioCiclo.getDate() + (numCiclo - 1) * 34);
-        const finCiclo = new Date(inicioCiclo);
-        finCiclo.setDate(finCiclo.getDate() + 33);
+        // Calcular fechas del ciclo seleccionado (misma fuente que el resto de la app)
+        const { inicio: inicioCiclo, fin: finCiclo } = obtenerRangoCiclo(numCiclo);
         
         // Filtrar guardias del ciclo
         guardiasAExportar = guardias.filter(g => {
@@ -1479,15 +1539,10 @@ mostrarBotonDesbloquear();
         function verCompliance() {
             const mesActual = currentMonth;
             const anioActual = currentYear;
-            const fechaInicioCiclos = new Date('2026-05-01');
             const primerDiaMes = new Date(anioActual, mesActual, 1);
-            
-            const diasTranscurridos = Math.floor((primerDiaMes - fechaInicioCiclos) / (1000 * 60 * 60 * 24));
-            const numeroCiclo = Math.floor(diasTranscurridos / 34);
-            const inicioCicloActual = new Date(fechaInicioCiclos);
-            inicioCicloActual.setDate(inicioCicloActual.getDate() + (numeroCiclo * 34));
-            const finCicloActual = new Date(inicioCicloActual);
-            finCicloActual.setDate(finCicloActual.getDate() + 33);
+
+            const numeroCiclo = obtenerCiclo(primerDiaMes);
+            const { inicio: inicioCicloActual, fin: finCicloActual } = obtenerRangoCiclo(numeroCiclo);
             
             const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
             const fechaFinStr = finCicloActual.toLocaleDateString('es-UY');
