@@ -791,8 +791,24 @@
         let cicloActivo = 1;
         let ciclosDesbloqueadosHasta = 1; // se sincroniza con el servidor (Config!B2)
 
+        // Pone el calendario en el mes de HOY al abrir la app (en vez de
+        // arrancar siempre en abril 2026). Si hoy cae fuera del rango del
+        // sistema (antes de abril 2026 o después de diciembre 2027), lo deja
+        // en el límite más cercano.
+        function ajustarMesActualAHoy() {
+            const hoy = new Date();
+            const limiteInicio = new Date(2026, 3, 1);   // abril 2026
+            const limiteFin = new Date(2027, 11, 1);     // diciembre 2027
+            let objetivo = hoy;
+            if (hoy < limiteInicio) objetivo = limiteInicio;
+            if (hoy > limiteFin) objetivo = limiteFin;
+            currentMonth = objetivo.getMonth();
+            currentYear = objetivo.getFullYear();
+        }
+
         // ==================== INICIALIZACIÓN ====================
         document.addEventListener('DOMContentLoaded', function() {
+            ajustarMesActualAHoy();
             cargarSocios();
             cargarGuardias();
             cargarCicloActivo();
