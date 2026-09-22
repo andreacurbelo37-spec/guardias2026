@@ -1552,11 +1552,22 @@
 }
 
         function verCompliance() {
-            const mesActual = currentMonth;
-            const anioActual = currentYear;
-            const primerDiaMes = new Date(anioActual, mesActual, 1);
+            const cicloSugerido = Math.min(18, Math.max(1, obtenerCiclo(new Date())));
+            const seleccion = prompt(
+                `¿Qué ciclo querés consultar?\n\n` +
+                `Ciclo actual: ${cicloSugerido}\n` +
+                `Ingresá un número del 1 al 18:`,
+                cicloSugerido
+            );
 
-            const numeroCiclo = obtenerCiclo(primerDiaMes);
+            if (seleccion === null) return; // Canceló
+
+            const numeroCiclo = parseInt(seleccion);
+            if (isNaN(numeroCiclo) || numeroCiclo < 1 || numeroCiclo > 18) {
+                alert('Ciclo inválido. Ingresá un número del 1 al 18.');
+                return;
+            }
+
             const { inicio: inicioCicloActual, fin: finCicloActual } = obtenerRangoCiclo(numeroCiclo);
             
             const fechaInicioStr = inicioCicloActual.toLocaleDateString('es-UY');
@@ -1567,7 +1578,7 @@
                 return fecha >= inicioCicloActual && fecha <= finCicloActual;
             });
             
-            let reporte = 'Ciclo: ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
+            let reporte = 'Ciclo ' + numeroCiclo + ': ' + fechaInicioStr + ' al ' + fechaFinStr + '\n\n';
             let cumplidos = 0;
             let pendientes = 0;
             
